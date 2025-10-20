@@ -1,29 +1,22 @@
 /* CONTROLADORES DE INFORMATIVA -- MANTENIMIENTO */
 import { fechaMantenimientoSeleccionado, fechasMantenimientosRealizados, obtenerArchivoMantenimiento, obtenerArchivosMantenimientos } from '../../services/Informativas/ManteInfoSer.js';
 
-// Pedir el número economico 
-const economico = async (req, res) => {
+// Mandar las fechas vinculadas al economico
+const fechasr = async (req, res) => {
   try {
-    const numero = req.params.economico;
-    const id = req.params.id;
-    req.session.numeroMante = numero;
-    req.session.numeroManteid = id;
-    req.session.save(err => {
-      if (err) {
-        console.error('Error al guardar el numero economico:', err);
-      }
-    });
-    res.sendStatus(200);
+    const economico = req.params.economico; // Obtiene el número económico de la URL    
+    const fechasr = await fechasMantenimientosRealizados(economico)
+    return res.status(200).json(fechasr);
   } catch (error) {
-    console.error('Error: // Pedir el número economico, ', error);
-    res.sendStatus(500)
+    console.error('Error: // Manda las fechas vinculadas al economico, ', error);
+    res.status(error?.code || 500).json({ message: error?.message || 'Fechas no encontradas' });
   }
 };
 
 // Mandar el documento del mantemiento seleccionado
 const mantenimientoSeleccionado = async (req, res) => {
   try {
-    const id = req.session.numeroManteid;
+    const id = req.params.id;
     if (id === '0') throw { code: 404, message: 'Mantenimiento no valido' };
 
     const mantenimiento = await fechaMantenimientoSeleccionado(id);
@@ -40,26 +33,13 @@ const mantenimientoSeleccionado = async (req, res) => {
   }
 };
 
-// Mandar las fechas vinculadas al economico
-const fechasr = async (req, res) => {
-  try {
-    const economico = req.session.numeroMante;
-    const fechasr = await fechasMantenimientosRealizados(economico)
-    return res.status(200).json(fechasr);
-  } catch (error) {
-    console.error('Error: // Manda las fechas vinculadas al economico, ', error);
-    res.status(error?.code || 500).json({ message: error?.message || 'Fechas no encontradas' });
-  }
-};
-
 // Mandar el archivo de la constancia de la fecha seleccionada
 const info = async (req, res) => {
   try {
     const fechasr = req.params.fechasr;
 
     if (fechasr && fechasr !== null && fechasr !== 'null') {
-      const economico = req.session.numeroMante;
-      const constanciaArchivo = await obtenerArchivoMantenimiento(fechasr, economico);
+      const constanciaArchivo = await obtenerArchivoMantenimiento(fechasr);
       if (!constanciaArchivo.constancia) {
         return res.sendStatus(404);
       }
@@ -78,7 +58,7 @@ const info = async (req, res) => {
 // Mandar todas las constancias
 const infos = async (req, res) => {
   try {
-    const economico = req.session.numeroMante;
+    const economico = req.params.economico;
     const constancias = await obtenerArchivosMantenimientos(economico);
     res.status(200).json(constancias);
   } catch (error) {
@@ -87,4 +67,4 @@ const infos = async (req, res) => {
   }
 };
 
-export default { economico, mantenimientoSeleccionado, fechasr, info, infos };
+export default { mantenimientoSeleccionado, fechasr, info, infos };

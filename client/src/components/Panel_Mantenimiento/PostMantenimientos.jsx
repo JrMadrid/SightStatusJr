@@ -36,7 +36,7 @@ const PostMantenimientos = () => {
     <>
       <div className='caja agregar'>
         <form onSubmit={Agregar}>
-          <h5>Agregar</h5>
+          <h5 className='TitAgregar'>Agregar</h5>
           <label htmlFor="festimada"><span className='ReAgregar'>*</span>Fecha Estimada: </label>
           <input type="date" id="festimada" name="festimada" value={formData.festimada} onChange={cambio} required style={{ marginBottom: '4px' }} />
           <p className="paviso">Mes/Dia/Año</p>

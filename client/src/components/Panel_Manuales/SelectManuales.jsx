@@ -1,12 +1,25 @@
 /* PANEL DE ADMINISTRACIÓN DE MANUALES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetchData from '../../api/fetchConfig.js';
 import { Paginador } from '../Elements/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectManuales = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Manuales";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Pedir los datos de los manuales
   useEffect(() => {
@@ -57,22 +70,12 @@ const SelectManuales = () => {
 
   // Pedir el id del manual
   const ver = async (id) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/manuales/vermanual/${id}`;
-    try {
-      const response = await fetchData(url)
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-    } catch (error) {
-      console.error('Error: // Pedir el id del manual, ', error);
-      toast.error(error.message || 'Error con los datos');
-    }
-  }
+    navigate(`/informativa/manual`, { state: { id } });
+  };
 
   return (
     <>
-      <Paginador tipo='manuales' titulo='MANUALES' placeholder='Buscar por Nombre o Descripción' data={data} save='Manual' cantidad={count} eleccion={eleccion} ver={ver} />
+      <Paginador tipo='manuales' data={data} cantidad={count} eleccion={eleccion} ver={ver} />
     </>
   );
 };

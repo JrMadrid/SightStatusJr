@@ -63,7 +63,6 @@ export const informeArchivo = async (id) => {
 /* Comprobar que existe la sucursal antes de cualquier operación con los informes */
 async function SucursalExiste(economico) {
   try {
-
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico';
     const request = new sql.Request();
     request.input('economico', sql.VarChar, economico)
@@ -77,13 +76,11 @@ async function SucursalExiste(economico) {
 /* Comprobar que existe la sucursal le pertenezca a ese usuario */
 async function SucursalPerteneciente(economico, ingeniero) {
   try {
-
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico AND ingresponsable = @usuario';
     const request = new sql.Request();
     request.input('economico', sql.VarChar, economico)
     request.input('usuario', sql.VarChar, ingeniero)
     const resultado = await request.query(query);
-
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error al comprobar la sucursal:', error);
@@ -93,8 +90,7 @@ async function SucursalPerteneciente(economico, ingeniero) {
 /* Comprobar que ID del informe existe para corrobar ejecución */
 async function comprobarID(id) {
   try {
-    // await dbConnection(); solo se inicia la conexion al arrancar el servidor
-    const query = 'SELECT id FROM informes WHERE id = @id'
+    const query = 'SELECT id FROM informes WHERE id = @id';
     const request = new sql.Request();
     request.input('id', sql.VarChar, id)
     const resultado = await request.query(query);

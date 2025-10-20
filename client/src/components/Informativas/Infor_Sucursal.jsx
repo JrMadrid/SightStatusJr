@@ -1,7 +1,8 @@
 /* COMPONENTE DE INFORMATIVA -- SUCURSAL */
 import { useEffect, useState } from 'react';
-import Pingdispo from '../Elements/ping.jsx';
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Toaster, toast } from 'react-hot-toast';
+import Pingdispo from '../Elements/ping.jsx';
 import fetchData from '../../api/fetchConfig.js';
 import SelectedPDF from '../PDF/SelectedPDF.jsx';
 import ALLPDF from '../PDF/AllPDF.jsx';
@@ -11,27 +12,53 @@ import InfoAppMEDIUM from './screens/MEDIUMscreen.jsx';
 import InfoAppSMALL from './screens/SMALLscreen.jsx';
 import InfoAppMT from './screens/MTscreen.jsx';
 import '../css/Infor_Sucursal.css';
+import { FaTools } from 'react-icons/fa';
+import { FaMapLocationDot } from "react-icons/fa6";
 import { HiExternalLink } from "react-icons/hi";
 import logoSoporte from '../../imgs/LogoSoporte.png';
 
 export default function InfoSucursal() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [impre, SetImpre] = useState(false);
   const [dispositivoIp, SetDispositivoIp] = useState('');
   const [impreE, SetImpreE] = useState(false);
   const [appslist, setAppslist] = useState([]);
-  const [appshead, setAppshead] = useState([]);
   const [content, setContent] = useState('');
   const [data, setData] = useState([]);
+  const [hay, setHay] = useState(false);
+  const [aviso, setAviso] = useState('');
+  const { economico } = useParams();
+  const nombre = location.state?.nombre || '';
+  const ingresponsable = location.state?.ingresponsable || '';
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Pagina Informativa de Sucursal";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Consultar y retornar los dispositivos registrados por número económico
   useEffect(() => {
-    const aplicaciones = async () => {
+    // Evita ejecutar si aún no hay un número económico válido
+    if (!economico) return;
+
+    // Consultar y retornar los dispositivos registrados por número económico
+    const dispositivos = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/status/aplicaciones`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/status/numero/${economico}`;
         const response = await fetchData(url);
         const lista = await response.json();
         if (!response.ok) { throw new Error(lista.message || 'Lo sentimos, ocurrió un problema'); }
-        if (!lista.length) { throw new Error("Sin dispositivos asignados"); }
+        if (!lista.length) {
+          setAviso("Sin dispositivos asignados");
+          throw new Error("Sin dispositivos asignados");
+        }
 
         // Función para contar dispositivos válidos
         const contarDispositivosValidos = (lista) => {
@@ -40,11 +67,14 @@ export default function InfoSucursal() {
               !dispositivo.ip.startsWith("000.") && !dispositivo.ip.startsWith("001.")
           ).length;
         };
-
+        setHay(true);
+        setAviso("Elija un dispositivo");
         setAppslist(lista);
-        setAppshead(lista[0])
 
-        if (contarDispositivosValidos(lista) === 0) { throw new Error("Sin dispositivos validos"); }
+        if (contarDispositivosValidos(lista) === 0) {
+          setAviso("Sin dispositivos validos");
+          throw new Error("Sin dispositivos validos");
+        }
 
       } catch (error) {
         console.error('Error // Consultar y retornar los dispositivos registrados por número económico, ', error);
@@ -52,8 +82,13 @@ export default function InfoSucursal() {
       }
     };
 
-    aplicaciones();
-  }, []);
+    dispositivos();
+  }, [economico]);
+
+  /* Navegacion entre paginas informativas de la sucursal */
+  const sumGo = async (tipo, economico) => {
+    navigate(`/informativa/${tipo}/${economico}`, { state: { id: '0', ingresponsable } });
+  };
 
   // Verificar si es una impresa para elistar
   useEffect(() => {
@@ -103,15 +138,17 @@ export default function InfoSucursal() {
 
   // Recorrer los dispositivos de una sucursal y actualizar la información si es necesario
   useEffect(() => {
+    // Evita ejecutar si aún no hay un número económico válido
+    if (!economico) return;
+
     const dispositivos = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/status/dispositivos`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/status/dispositivos/${economico}`;
         const response = await fetchData(url);
         const todos = await response.json();
         if (!response.ok) {
           throw new Error(todos.message || 'Lo sentimos, ocurrió un problema');
         }
-
         setData(todos)
       } catch (error) {
         console.error('Error // Recorrer los dispositivos de una sucursal y actualizar la información si es necesario, ', error);
@@ -120,14 +157,14 @@ export default function InfoSucursal() {
     };
 
     dispositivos();
-  }, []);
+  }, [economico]);
 
   return (
     <>
       <div className='sidebar'>
-        <h3 className='heading'>{appshead?.ingresponsable}</h3>
-        <h3 className='heading'>{appshead?.sucursal}</h3>
-        <h3 className='heading'>{appshead?.economico}</h3>
+        <h3 className='heading'>{ingresponsable}</h3>
+        <h3 className='heading'>{nombre}</h3>
+        <h3 className='heading'>{economico}</h3>
         <h3 className='principal'>Dispositivos</h3>
         <ul className='list'>
           {appslist.map((dispositivo, index) => (
@@ -162,13 +199,24 @@ export default function InfoSucursal() {
           )}
         </ul>
         <br />
-        <br />
-        <ALLPDF titulo='Reporte de la Sucursal' guardado='apps' data={data} />
-        <ListExcel data={appslist} tipo="inforApps" titulo='Lista Excel' />
+        <div className='funcionesExtras'>
+          <div className='sumCaja'>
+            <FaMapLocationDot title='Ubicación' className='sumSeccion' onClick={() => { sumGo('ubicacion', economico) }} />
+            <FaTools title='Mantenimientos' className='sumSeccion' onClick={() => { sumGo('mantenimiento', economico) }} />
+          </div>
+          {hay === true && (
+            <>
+              <ALLPDF titulo='Reporte de la Sucursal' guardado='apps' data={data} />
+              <ListExcel data={appslist} tipo="inforApps" titulo='Lista Excel' />
+            </>
+          )}
+        </div>
         <div className='logodiv'>
           <img src={logoSoporte} className='logo' alt="Logo de Soporte" />
         </div>
       </div >
+
+      {/* Contenido */}
       {(content?.nombre && content?.nombre === 'UPS') && (
         <>
           <SelectedPDF titulo='Reporte del Dispositivo' ingresponsable={content?.ingresponsable} economico={content?.economico} sucursal={content?.sucursal} nombre={content?.nombre} ip={content?.ip} descripcion={content?.descripcion} informacionimportante={content?.informacionimportante} informacionimportante2={content?.informacionimportante2} informacionrelevante={content?.informacionrelevante} informaciontecnica={content?.informaciontecnica} informaciongeneral={content?.general} />
@@ -176,10 +224,15 @@ export default function InfoSucursal() {
       )}
       <div>
         <h2 className='titulo'>Soporte Técnico Honduras</h2>
-        {(content?.ip && content?.nombre && (content?.nombre === 'Biometrico' || content?.nombre === 'UPS')) && impre === false && (
+        {/*   {(content?.ip && content?.nombre && (content?.nombre === 'Biometrico' || content?.nombre === 'UPS')) && impre === false && (
           <>
             <a href={`https://${content?.ip}`} target='_blank' rel="noreferrer" className='appi'><button className='ir'>Acceso {`https://${content?.ip}`}</button></a>
           </>
+        )} */}
+        {!content?.nombre && impre === false && (
+          <div className='contenedorAviso'>
+            <h5>{aviso}</h5>
+          </div>
         )}
         {(content?.nombre && content?.nombre === 'UPS') && impre === false && (
           <>

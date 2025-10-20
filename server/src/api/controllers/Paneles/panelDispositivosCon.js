@@ -1,16 +1,31 @@
 /* CONTROLADORES DE PANEL DE DISPOSITIVOS */
-import { obtenerDatosDispositivos, agregarDispositivo, actualizarDispositivo, eliminarDispositivo } from '../../services/Paneles/panelDispositivosSer.js';
+import { obtenerDatosDispositivos, obtenerListaDispositivos, agregarDispositivo, actualizarDispositivo, eliminarDispositivo } from '../../services/Paneles/panelDispositivosSer.js';
 import { SchemaCrearDispositivo, SchemaActualizarDispositivo, SchemaEliminarDispositivo } from '../../validators/Paneles/panelDispositivosVal.js';
 import pingHost from '../../../connection/PING.js';
 
 // Pedir los datos de los dispositivos
 const getDatosDispositivos = async (req, res) => {
   try {
-    const dispositivos = await obtenerDatosDispositivos();
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const dispositivos = await obtenerDatosDispositivos(responsable, tipo);
     res.status(200).json(dispositivos);
   } catch (error) {
     console.error('Error: // Pedir los datos de los dispositivos, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error pidiendo los datos de los dispositivos' });
+  }
+};
+
+// Pedir la lista de los dispositivos
+const getListaDispositivos = async (req, res) => {
+  try {
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const lista = await obtenerListaDispositivos(responsable, tipo);
+    res.status(200).json(lista);
+  } catch (error) {
+    console.error('Error: // Pedir la lista de los dispositivos, ', error);
+    res.status(error?.code || 500).json({ message: error?.message || "Error pidiendo la lista de los dispositivos" });
   }
 };
 
@@ -93,4 +108,4 @@ const ping = async (req, res) => {
   }
 };
 
-export const methods = { getDatosDispositivos, postDispositivo, updateDispositivo, deleteDispositivo, ping };
+export const methods = { getDatosDispositivos, getListaDispositivos, postDispositivo, updateDispositivo, deleteDispositivo, ping };

@@ -20,9 +20,9 @@ export default function InfoAppSMALL(content) {
                 </td>
               </tr>
             </tbody>
-            <div className="accesomini">
+            {/* <div className="accesomini">
               <a href={`https://${content?.content?.ip}`} target='_blank' rel="noreferrer" className='appimini'><button className='irmini'>Acceso {`https://${content?.content?.ip}`}</button></a>
-            </div>
+            </div> */}
           </table>
         </div>
       </div>

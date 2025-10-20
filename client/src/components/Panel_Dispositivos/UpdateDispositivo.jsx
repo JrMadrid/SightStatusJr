@@ -42,7 +42,7 @@ const UpdateDispositivo = () => {
   return (
     <>
       <div className='caja actualizar'>
-        <h5>Actualizar</h5>
+        <h5 className='TitActualizar'>Actualizar</h5>
         <form onSubmit={Actualizar}>
           <label htmlFor="nombre">Dispositivo:</label>
           <input type="text" id="nombre" name="nombre" maxLength="75" placeholder='Nombre del dispositivo (Opcional)' title="Nombre del dispositivo (Opcional)" onChange={cambio} value={formData.nombre} />

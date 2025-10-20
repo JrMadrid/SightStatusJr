@@ -1,27 +1,10 @@
 /* CONTROLADORES DE INFORMATIVA -- MANUAL */
 import { obtenerDatosManual, obtenerArchivoManual } from '../../services/Informativas/ManualInfoSer.js';
 
-// Pedir el id del manual
-const verid = async (req, res) => {
-  try {
-    const vermanualid = req.params.id;
-    req.session.vermanual = vermanualid;
-    req.session.save(err => {
-      if (err) {
-        console.error('Error al guardar la sesión:', err);
-      }
-    });
-    res.sendStatus(200);
-  } catch (error) {
-    console.error('Error: // Pedir el id del manual, ', error);
-    res.sendStatus(500);
-  }
-}
-
 // Mandar los datos del manual
 const manualinfo = async (req, res) => {
   try {
-    const manualid = req.session.vermanual;
+    const manualid = req.params.id;
     const manualinfo = await obtenerDatosManual(manualid);
     return res.status(200).json(manualinfo);
 
@@ -34,7 +17,7 @@ const manualinfo = async (req, res) => {
 // Mandar el manual
 const manual = async (req, res) => {
   try {
-    const manualid = req.session.vermanual;
+    const manualid = req.params.id;
     let manualAr = await obtenerArchivoManual(manualid);
     if (!manualAr.manual) {
       return res.sendStatus(404);
@@ -49,4 +32,4 @@ const manual = async (req, res) => {
   }
 };
 
-export const methods = { verid, manualinfo, manual };
+export const methods = { manualinfo, manual };

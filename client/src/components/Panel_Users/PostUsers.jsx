@@ -47,7 +47,7 @@ const PostUsers = () => {
   return (
     <>
       <div className='caja agregar'>
-        <h5>Agregar</h5>
+        <h5 className='TitAgregar'>Agregar</h5>
         <form onSubmit={Agregar}>
           <label htmlFor="nickname"><span className='ReAgregar'>*</span>Nombre:</label>
           <input type="text" id="nickname" name="nickname" maxLength="50" required placeholder='Nombre del Usuario' title="Nombre del Usuario" value={formData.nickname} onChange={cambio} />

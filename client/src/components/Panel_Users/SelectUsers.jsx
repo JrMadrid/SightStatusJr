@@ -1,12 +1,25 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- VISUALIZAR */
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetchData from '../../api/fetchConfig.js';
 import { Paginador } from '../Elements/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectUsers = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Usuarios";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Pedir los datos de los usuarios
   useEffect(() => {
@@ -32,23 +45,12 @@ const SelectUsers = () => {
 
   // Pedir el nombre del usuario
   const eleccion = async (nickname) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/users/usuario/${nickname}`;
-    localStorage.setItem('nicknamePersonal', nickname); // guarda el nickname
-    try {
-      const response = await fetchData(url);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-    } catch (error) {
-      console.error('Error: // Pedir el nombre del usuario, ', error);
-      toast.error(error.message || 'error con eL nombre');
-    }
+    navigate(`/informativa/usuario`, { state: { nickname } });
   };
 
   return (
     <>
-      <Paginador tipo='usuarios' titulo='USUARIOS' placeholder='Buscar por Nombre o Usuario' data={data} eleccion={eleccion} cantidad={count} />
+      <Paginador tipo='usuarios' data={data} eleccion={eleccion} cantidad={count} />
     </>
   );
 };

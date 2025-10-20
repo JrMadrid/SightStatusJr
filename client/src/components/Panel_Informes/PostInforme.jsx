@@ -82,7 +82,7 @@ const PostInforme = () => {
     <>
       <div className='caja agregar'>
         <form onSubmit={Agregar}>
-          <h5>Agregar</h5>
+          <h5 className='TitAgregar'>Agregar</h5>
           <label><span className='ReAgregar' style={{ fontSize: '1.2rem', paddingLeft: '3px' }}>*</span>Informe: </label>
           <label htmlFor="informe" className="subirConstancia" style={{ marginTop: '5px' }}>
             Subir Informe

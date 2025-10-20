@@ -41,7 +41,7 @@ const UpdateUsers = () => {
   return (
     <>
       <div className='caja actualizar'>
-        <h5>Actualizar</h5>
+        <h5 className='TitActualizar'>Actualizar</h5>
         <form onSubmit={actualizar}>
           <label htmlFor="nickname">Nombre:</label>
           <input type="text" id="nickname" name="nickname" maxLength="50" placeholder='Nombre del Usuario (Opcional)' title="Nombre del Usuario (Opcional)" value={formData.nickname} onChange={cambio} />

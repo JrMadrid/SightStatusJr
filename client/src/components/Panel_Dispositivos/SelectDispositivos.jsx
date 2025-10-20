@@ -1,13 +1,26 @@
-/* PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS -- VISUALIZAR */
+/* TABLA DE DISPOSITIVOS Y PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS -- VISUALIZAR */
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import fetchData from '../../api/fetchConfig.js';
 import { Paginador } from '../Elements/Paginador.jsx';
 import toast from "react-hot-toast";
 
 const SelectDispositivos = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [dispolist, setDispolist] = useState([]);
   const [count, setCount] = useState(0);
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Dispositivos";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Pedir los datos de los dispositivo
   useEffect(() => {
@@ -33,7 +46,7 @@ const SelectDispositivos = () => {
 
   // Pedir la lista de los dispositivos
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/api/dispos`;
+    const url = `http://${process.env.REACT_APP_HOST}/panel/dispositivos/lista`;
     const dispositivoslista = async () => {
       try {
         const response = await fetchData(url);
@@ -53,18 +66,14 @@ const SelectDispositivos = () => {
   }, []);
 
   // Recibir el nombre del dispositivo
-  const eleccion = async (nombre) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/devices/dispositivo/${nombre}`;
-    try {
-      await fetchData(url);
-    } catch (error) {
-      console.error('Error: // Recibir el nombre del dispositivo, ', error);
-    }
+  const eleccion = async (nombre, id) => {
+    navigate(`/informativa/dispositivo/${nombre}`);
+    localStorage.setItem('idDispositivo', id); // guarda el ID
   };
 
   return (
     <>
-      <Paginador tipo='dispositivos' titulo='DISPOSITIVOS' placeholder='Buscar por Dispositivo, IP, Económico, Canal, Sucursal, Ing.Responsable' data={data} eleccion={eleccion} excel='si' save='Dispositivos' cantidad={count} listaDispositivos={dispolist} />
+      <Paginador tipo='dispositivos' data={data} eleccion={eleccion} excel='si' cantidad={count} listaDispositivos={dispolist} />
     </>
   )
 };

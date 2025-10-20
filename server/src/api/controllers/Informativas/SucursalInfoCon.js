@@ -22,27 +22,10 @@ const { BIOMETRICOsolicitudMock: MockBIOMETRICOsolicitud } = await import('../..
 const BIOMETRICOsolicitud = isMock ? MockBIOMETRICOsolicitud : RealBIOMETRICOsolicitud;
 // import { BIOMETRICOsolicitud } from '../../../datos/Solicitudes/SolBiometricos.js';
 
-// Pedir el número económico
-const economico = async (req, res) => {
-  try {
-    const numero = req.params.economico; // Obtiene el número económico de la URL
-    req.session.numero = numero; // Guarda el número económico en la sesión
-    req.session.save(err => { // Guarda la sesión y maneja posibles errores
-      if (err) {
-        console.error('Error al guardar la sesión:', err);
-      }
-    });
-    res.sendStatus(200);
-  } catch (error) {
-    console.error('Error: // Pedir el número económico, ', error);
-    res.sendStatus(500);
-  }
-};
-
 // Consultar y retornar los dispositivos registrados por número económico
 const getSucursalDispositivos = async (req, res) => {
   try {
-    const economico = req.session.numero; // Recupera el número económico de la sesión
+    const economico = req.params.economico; // Obtiene el número económico de la URL
     const aplicaciones = await DatosDispositivos(economico); // Ejecuta la consulta
     return res.status(200).json(aplicaciones) // Retorna el resultado en formato JSON
   } catch (error) {
@@ -87,8 +70,7 @@ const info = async (req, res) => {
 // Recorrer los dispositivos de una sucursal y actualizar la información si es necesario
 const dispositivos = async (req, res) => {
   try {
-
-    const economico = req.session.numero; // Obtiene el número económico de la sesión
+    const economico = req.params.economico; // Obtiene el número económico de la URL
 
     // Consultar todos los dispositivos válidos de la sucursal
     const dbInfo = await dispositiosValidos(economico);
@@ -156,4 +138,4 @@ const solicitudes = async (req, res) => {
 };
 
 // Exporta los métodos como un objeto para su uso en rutas
-export const methods = { info, economico, getSucursalDispositivos, dispositivos, solicitudes };
+export const methods = { info, getSucursalDispositivos, dispositivos, solicitudes };

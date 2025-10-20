@@ -1,22 +1,6 @@
 /* CONTROLADORES DE INFORMATIVA -- USUARIO */
 import { obtenerListaUsuarios, obtenerDatosSeleccionado, editarDatosPersonal, editarFotoPersonal, obtenerFotoSeleccionado } from "../../services/Informativas/UsuarioInfoSer.js";
 import { userSchema } from "../../validators/Informativas/UsuarioInfoVal.js";
-// Pedir el nombre del usuario
-const nickname = async (req, res) => {
-  try {
-    const nickname = req.params.nickname; // Obtiene el nickname del usuario de la URL    
-    req.session.nickname = nickname; // Guarda el nickname del usuario en la sesión
-    req.session.save(err => { // Guarda la sesión y maneja posibles errores
-      if (err) {
-        console.error('Error al guardar la sesión:', err);
-      }
-    });
-    res.sendStatus(200);
-  } catch (error) {
-    console.error('Error: // Pedir el nombre del usuario, ', error);
-    res.sendStatus(500);
-  }
-};
 
 // Pedir la lista de usuarios
 const getlistaUsuarios = async (req, res) => {
@@ -40,10 +24,9 @@ const getDatosSeleccionado = async (req, res) => {
   try {
     let seleccionado;
     const tipo = req.session.tipo;
-    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.session.nickname;
+    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickGuardado;
     const datos = await obtenerDatosSeleccionado(seleccionado);
-
-    return res.status(200).json(datos)
+    return res.status(200).json(datos);
   } catch (error) {
     console.error('Error: // Pedir los datos del personal seleccionado, ', error);
     res.status(error?.code || 500).json({ message: error?.message || "Error al obtener los datos del personal" });
@@ -55,7 +38,7 @@ const getFotoSeleccionado = async (req, res) => {
   try {
     let seleccionado;
     const tipo = req.session.tipo;
-    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.session.nickname;
+    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickGuardado;
     const archivo = await obtenerFotoSeleccionado(seleccionado);
     if (!archivo.foto) {
       return res.sendStatus(404);
@@ -63,7 +46,6 @@ const getFotoSeleccionado = async (req, res) => {
     res.set('Content-Type', 'image/jpeg'); // Cambia el tipo de contenido a JPEG
     res.set('Content-Disposition', `inline; filename="foto.jpg"`); // Cambia el nombre del archivo a descargar
     res.status(200).send(archivo.foto);
-
   } catch (error) {
     console.error('Error: // Pedir la foto del personal seleccionado, ', error);
     res.status(error?.code || 500).json({ message: error?.message || "Error al obtener la foto del personal" });
@@ -134,4 +116,4 @@ const updateFoto = async (req, res) => {
   }
 }
 
-export const methods = { nickname, getlistaUsuarios, getDatosSeleccionado, getFotoSeleccionado, getDatosSeleccion, getFotoSeleccion, updateDatos, updateFoto };
+export const methods = { getlistaUsuarios, getDatosSeleccionado, getFotoSeleccionado, getDatosSeleccion, getFotoSeleccion, updateDatos, updateFoto };

@@ -39,7 +39,7 @@ const PostSucursales = () => {
     <>
       <div className='caja agregar'>
         <form onSubmit={Agregar}>
-          <h5>Agregar</h5>
+          <h5 className='TitAgregar'>Agregar</h5>
           <label htmlFor="economico"><span className='ReAgregar'>*</span>Económico:</label>
           <input type="text" id="economico" name="economico" maxLength="6" minLength="6" required placeholder='Número económico' title="6 caracteres numéricos" value={formData.economico} onChange={cambio} />
           <label htmlFor="canal"><span className='ReAgregar'>*</span>Canal:</label>

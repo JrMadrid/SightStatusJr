@@ -54,7 +54,7 @@ const PostConstancia = () => {
     DatosParaEnviar.append('id', formData.id);
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/api/mantenimientos/agregar`, DatosParaEnviar, {
+      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/mantenimientos/constancia/agregar`, DatosParaEnviar, {
         headers: {
           'Content-Type': 'multipart/form-data', // Asegúrate de que el tipo de contenido sea correcto -- multipart/form-data es para archivos
         },
@@ -72,7 +72,7 @@ const PostConstancia = () => {
     <>
       <div className='caja agregar'>
         <form onSubmit={Agregar}>
-          <h5>Agregar</h5>
+          <h5 className='TitAgregar'>Agregar</h5>
           <label htmlFor="frealizada"><span className='ReAgregar'>*</span>Fecha Realizado: </label>
           <input type="date" id="frealizada" name="frealizada" value={formData.frealizada} onChange={cambio} required style={{ marginBottom: '4px' }} />
           <p className="paviso">Mes/Dia/Año</p>

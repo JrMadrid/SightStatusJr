@@ -37,7 +37,7 @@ const PostDispositivo = () => {
   return (
     <>
       <div className='caja agregar'>
-        <h5>Agregar</h5>
+        <h5 className='TitAgregar'>Agregar</h5>
         <form onSubmit={Agregar}>
           <label htmlFor="nombre"><span className='ReAgregar'>*</span>Dispositivo:</label>
           <input type="text" id="nombre" name="nombre" maxLength="75" placeholder='Nombre del dispositivo' title="Nombre del dispositivo" required value={formData.nombre} onChange={cambio} />

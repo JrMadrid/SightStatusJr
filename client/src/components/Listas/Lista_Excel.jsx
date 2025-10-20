@@ -92,7 +92,7 @@ const ListExcel = (props) => {
 
   return (
     <>
-      <button className={((props.tipo === 'inforApps' || props.tipo === 'inforMante') ? 'excel listaExcel' : props.tipo === 'inforDevice' ? 'excel listaExcelD' : 'excel')} onClick={handleGenerateExcel}>{props.titulo}</button>
+      <button className={`excel${props.tipo === 'inforApps' || props.tipo === 'inforMante' || props.tipo === 'inforDevice'  ? ' listaExcel' : ''}`} onClick={handleGenerateExcel}>{props.titulo}</button>
       <Toaster />
     </>
   );

@@ -72,57 +72,23 @@ export default function Navbar() {
         {/* ADMINISTRADOR, APLICATIVO & GEOGRAFIA */}
         {user && (user.id === 2 || user.id === 3 || user.id === 4) && (
           <li style={{ paddingBottom: '0rem', paddingTop: '0.3rem' }} >
-            <NavLink className={({ isActive }) => (isActive ? "active" : "")} style={{ fontSize: '1rem' }} to="/users">
+            <NavLink className={({ isActive }) => (isActive ? "active" : "")} style={{ fontSize: '1rem' }} to="/informativa/usuario">
               <FaAddressCard />
             </NavLink>
           </li>
         )}
 
-        {/* SUPER ADMINISTRADOR & ADMINISTRADOR */}
-        {user && (user.id === 1 || user.id === 2) && (
+        {/* TODOS */}
+        {user && (user.id === 1 || user.id === 2 || user.id === 3 || user.id === 4) && (
           <>
             {/* SUPER ADMINISTRADOR */}
             {user && user.id === 1 && (
               <li>
-                <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/panusers">
+                <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/usuarios">
                   Usuarios
                 </NavLink>
               </li>
             )}
-            <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/pansucursal">
-                Sucursales
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/panapps">
-                Dispositivos
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/panmantenimiento">
-                Mantenimientos
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/panmanuales">
-                Manuales
-              </NavLink>
-            </li>
-            <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/paninformes">
-                Informes
-              </NavLink>
-            </li>
-            <li className='tipo'>
-              {user.tipo}
-            </li>
-          </>
-        )}
-
-        {/* APLICATIVO & GEOGRAFIA */}
-        {user && (user.id === 3 || user.id === 4) && (
-          <>
             <li>
               <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/sucursales">
                 Sucursales
@@ -139,12 +105,12 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/panmanuales">
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/manuales">
                 Manuales
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/paninformes">
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/informes">
                 Informes
               </NavLink>
             </li>

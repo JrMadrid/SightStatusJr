@@ -34,7 +34,7 @@ const DeleteSucursales = () => {
   return (
     <>
       <div className='caja eliminar'>
-        <h5>Eliminar</h5>
+        <h5 className='TitEliminar'>Eliminar</h5>
         <form onSubmit={eliminar}>
           <div className="delete">
             <label htmlFor="id"><span className='ReEliminar'>*</span>ID: </label>

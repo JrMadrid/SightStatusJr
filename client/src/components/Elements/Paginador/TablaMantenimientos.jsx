@@ -1,16 +1,19 @@
 /* COMPONENTE DE ELEMENTO DE PAGINACIÓN -- MANTENIMIENTOS */
 import { FormatearFechaTabla } from '../date.jsx';
-import { FaTools } from "react-icons/fa";
+import { FaCircle, FaFileDownload, FaTools } from "react-icons/fa";
 
-const TablaMantenimientos = ({ data, eleccion, cantidad, cantidadTotal }) => {
+const TablaMantenimientos = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) => {
   return (
     <div className='cajahijo'>
       <table className='tablaData'>
         <thead>
           <tr>
+            <th className='thData eject' title='Descarga directa' ><FaFileDownload /></th>
             <th className='thData eject' title='Mantenimiento' ><FaTools /></th>
             <th className='thData'>Económico</th>
-            <th className='thData'>Ing. Responsable</th>
+            {user && user.id !== 4 && (
+              <th className='thData'>Ing. Responsable</th>
+            )}
             <th className='thData'>Fecha Estimada</th>
             <th className='thData'>Fecha Realizado</th>
             <th className='thData'>Descripción</th>
@@ -23,11 +26,18 @@ const TablaMantenimientos = ({ data, eleccion, cantidad, cantidadTotal }) => {
               <tr key={item.id}>
                 <td className='tdData'>
                   {(item.frealizada && item.frealizada !== null && item.frealizada !== 'null' && item.frealizada !== 'Pendiente') && (
-                    <a href='/mantes' onClick={() => { eleccion(item.economico, item.id) }} className='link select'><button className='ir'></button></a>
+                    <FaCircle onClick={() => { eleccion(item.id, item.economico, item.frealizada) }} className='select ir' />
+                  )}
+                </td>
+                <td className='tdData'>
+                  {(item.frealizada && item.frealizada !== null && item.frealizada !== 'null' && item.frealizada !== 'Pendiente') && (
+                    <FaCircle onClick={() => { ver(item.economico, item.id, item.frealizada, item.ingresponsable) }} className='select ir' />
                   )}
                 </td>
                 <td className='tdData'>{item.economico}</td>
-                <td className='tdData long-data'>{item.ingresponsable}</td>
+                {user && user.id !== 4 && (
+                  <td className='tdData long-data'>{item.ingresponsable}</td>
+                )}
                 <td className='tdData'><FormatearFechaTabla fecha={item.festimada} /></td>
                 <td className='tdData'>
                   {(item.frealizada && item.frealizada !== null && item.frealizada !== 'null' && item.frealizada !== 'Pendiente') && (

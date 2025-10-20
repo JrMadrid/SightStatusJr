@@ -1,19 +1,19 @@
 /* SERVICIOS DE INFORMATIVA -- MANTENIMIENTO */
 import { fechaSeleccionada, fechasRealizadas, getMantenimientoArchivo, getMantenimientosArchivos } from "../../models/Informativas/ManteInfoMod.js";
 
-// Mandar el documento del mantemiento seleccionado
-export const fechaMantenimientoSeleccionado = async (id) => {
-  return await fechaSeleccionada(id);
-};
-
 // Mandar las fechas vinculadas al economico
 export const fechasMantenimientosRealizados = async (economico) => {
   return await fechasRealizadas(economico);
 };
 
+// Mandar el documento del mantemiento seleccionado
+export const fechaMantenimientoSeleccionado = async (id) => {
+  return await fechaSeleccionada(id);
+};
+
 // Mandar el archivo de la constancia de la fecha seleccionada
-export const obtenerArchivoMantenimiento = async (fechasr, economico) => {
-  return await getMantenimientoArchivo(fechasr, economico);
+export const obtenerArchivoMantenimiento = async (fechasr) => {
+  return await getMantenimientoArchivo(fechasr);
 };
 
 // Mandar todas las constancias

@@ -6,7 +6,8 @@ const check = async (req, res) => {
   try {
     // req.session.user debería haberse creado al hacer login
     if (req.session?.user) {
-      return res.status(200).json({ admin: req.session?.admin });
+      
+      return res.status(200).json({ iniciado: req.session?.user });
     } else {
       // No hay sesión activa
       return res.sendStatus(401);
@@ -37,7 +38,7 @@ const login = async (req, res) => {
         console.error('Error al guardar la sesión:', err);
         return res.status(500).json({ message: 'Error al guardar sesión' });
       }
-      res.status(200).json({ admin: admon });
+      res.status(200).json({ iniciado: req.session?.user });
     });
 
   } catch (error) {

@@ -1,5 +1,5 @@
 /* COMPONENTE DE ELEMENTO DE PAGINACIÓN -- USUARIOS */
-import { FaAddressCard } from "react-icons/fa";
+import { FaCircle, FaAddressCard } from "react-icons/fa";
 
 const TablaUsuarios = ({ data, eleccion, cantidad, cantidadTotal }) => {
   return (
@@ -17,11 +17,7 @@ const TablaUsuarios = ({ data, eleccion, cantidad, cantidadTotal }) => {
         <tbody>
           {data.map(item => (
             <tr key={item.id}>
-              <td className='tdData'>
-                <a href='/users' onClick={() => eleccion(item.nickname)} className='link select'>
-                  <button className='ir'></button>
-                </a>
-              </td>
+              <td className='tdData'><FaCircle onClick={() => { eleccion(item.nickname) }} className='select ir' /></td>
               <td className='tdData long-data'>{item.nickname}</td>
               <td className='tdData long-data' style={{ overflowX: 'hidden' }}>{item.psw}</td>
               <td className='tdData'>{item.tipo}</td>

@@ -1,20 +1,21 @@
 /* COMPONENTE DE INFORMATIVA -- USUARIO */
-import { useEffect, useState } from 'react';
-import { useContext } from 'react';
+import { useEffect, useState, useContext } from 'react';
+import { useLocation } from 'react-router-dom';
 import { UserContext } from '../../context/UserContext';
 import { Toaster, toast } from 'react-hot-toast';
 import fetchData from '../../api/fetchConfig';
 import axios from '../../api/axiosConfig';
 import fechaFomatoSQL from '../../utils/formatoFecha.js';
 import calcularEdad from '../../utils/edad.js';
+import Whatsapp from '../../utils/wspNumber.jsx';
 import '../css/Infor_Sucursal.css';
-import { FaRegEdit, FaCheck, FaTimes, FaUserCheck, FaUserTimes, FaWhatsapp } from 'react-icons/fa';
+import { FaRegEdit, FaCheck, FaTimes, FaUserCheck, FaUserTimes } from 'react-icons/fa';
 import logoSoporte from '../../imgs/LogoSoporte.png';
 import profile from '../../imgs/profile.png';
 
 export default function InfoUsuario() {
+  const location = useLocation();
   const user = useContext(UserContext);
-
   const [userslist, setUserslist] = useState([]);
   const [nicknameGuardado, setNicknameGuardado] = useState('');
   const [userDatosSeleccionado, setUserDatosSeleccionado] = useState({});
@@ -23,6 +24,18 @@ export default function InfoUsuario() {
   const [edad, setEdad] = useState(0);
   const [editar, setEditar] = useState(null);
   const [valorTemporal, setValorTemporal] = useState('');
+  const nickGuardado = location.state?.nickname;
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Pagina Informativa de Usuarios";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Pedir la lista de usuarios
   useEffect(() => {
@@ -48,11 +61,10 @@ export default function InfoUsuario() {
 
   // Pedir los datos del personal seleccionado
   useEffect(() => {
-    const nickGuardado = localStorage.getItem('nicknamePersonal');
     setNicknameGuardado(nickGuardado);
     const DatosSeleccionado = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/users/datos/usuario`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/users/datos/usuario/${nickGuardado}`;
         const response = await fetchData(url);
         const seleccionado = await response.json();
         if (!response.ok) {
@@ -60,23 +72,20 @@ export default function InfoUsuario() {
         }
         setUserDatosSeleccionado(seleccionado);
         setEdad(calcularEdad(seleccionado?.fecha_nacimiento));
-        // localStorage.removeItem('nicknamePersonal');
+      
       } catch (error) {
         console.error('Error: // Pedir los datos del personal seleccionado, ', error);
         toast.error(error.message || 'Error con los datos del personal');
       }
     };
     DatosSeleccionado();
-  }, []);
+  }, [nickGuardado]);
 
   // Pedir la foto del personal seleccionado
   useEffect(() => {
-    const nickGuardado = localStorage.getItem('nicknamePersonal');
-    setNicknameGuardado(nickGuardado);
-
     const FotoSeleccionado = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/users/foto/usuario`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/users/foto/usuario/${nickGuardado}`;
         const response = await fetchData(url);
         if (!response) throw new Error('Sin foto');
         if (!response.ok) {
@@ -90,7 +99,7 @@ export default function InfoUsuario() {
 
         const imageUrl = window.URL.createObjectURL(imageBlob);
         setImagenPerfil(imageUrl)
-        // localStorage.removeItem('nicknamePersonal');
+      
       } catch (error) {
         console.error('Error: // Pedir la foto del personal seleccionado, ', error);
         toast.error(error.message || 'Error la foto del personal');
@@ -105,7 +114,7 @@ export default function InfoUsuario() {
     //         window.URL.revokeObjectURL(imagenPerfil);
     //     }
     // };
-  }, []);
+  }, [nickGuardado]);
 
   // Pedir los datos del personal seleccionado en seleccion
   const seleccion = async (nickname) => {
@@ -279,9 +288,7 @@ export default function InfoUsuario() {
                 {user.id === 1 && contenido && campo === 'telefono' ? (
                   <>
                     <span>{contenido}</span>
-                    <a href={`https://wa.me/${contenido}?text=${encodeURIComponent("Hola")}`} target="_blank" rel="noopener noreferrer" className="wspbutton" >
-                      <FaWhatsapp />
-                    </a>
+                    <Whatsapp number={contenido} />
                   </>
                 ) : (
                   <span>{contenido || `Sin registrar`}</span>
@@ -346,16 +353,14 @@ export default function InfoUsuario() {
           <h3 className='heading'>Personal</h3>
           <ul className='list'>
             {userslist.map((usuarios, index) => (
-              <li key={index} className='listItem'>
+              <li key={index} className='listItem' style={{ justifyContent: 'flex-start' }}>
                 <div className={usuarios.nickname?.toString() !== nicknameGuardado ? 'ListItemA' : 'seleccionado'} style={{ marginLeft: '1.75vw' }} onClick={(e) => { e.preventDefault(); setNicknameGuardado(usuarios.nickname); seleccion(usuarios.nickname); seleccionFoto(usuarios.nickname); }} >
                   <a href={`#${index}`} className={usuarios.nickname?.toString() !== nicknameGuardado ? 'appi' : 'appiSeleccionado'}>
                     {usuarios.nickname}
                   </a>
                 </div>
                 {usuarios.telefono && (
-                  <a href={`https://wa.me/${usuarios.telefono}`} target="_blank" rel="noopener noreferrer" className="wspbutton" >
-                    <FaWhatsapp />
-                  </a>
+                  <Whatsapp number={usuarios.telefono} />
                 )}
               </li>
             ))}
@@ -368,6 +373,7 @@ export default function InfoUsuario() {
         </div >
       )}
 
+      {/* Contenido */}
       <div>
         <h2 className={user.id === 1 ? 'titulo' : 'titulono'}>Soporte Técnico Honduras</h2>
         <div className={user.id === 1 ? 'cajaInformacion' : 'cajaInformacionno'} /* style={{ height: user.id === 1 ? '58vh' : '71vh' }} */>

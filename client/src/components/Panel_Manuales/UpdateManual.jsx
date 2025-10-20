@@ -38,7 +38,7 @@ const PostManual = () => {
     <>
       <div className='caja actualizar'>
         <form onSubmit={Actualizar}>
-          <h5>Actualizar</h5>
+          <h5 className='TitActualizar'>Actualizar</h5>
           <label htmlFor="nombre">Nombre: </label>
           <input type="text" id="nombre" name="nombre" maxLength="100" placeholder="Nombre del manual (Opcional)" value={formData.nombre} onChange={cambio} />
           <label htmlFor="descripcion" style={{ marginTop: '5px' }}>Descripción:</label>

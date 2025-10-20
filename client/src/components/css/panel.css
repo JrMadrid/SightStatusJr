@@ -4,7 +4,7 @@
 	padding: 15px 15px 15px 15px;
 	border-radius: 8px;
 	max-width: 25vh;
-	box-shadow: 0 2px 100px rgba(11, 23, 50, 0.9);
+	box-shadow: 0 2px 100px rgba(0, 0, 0, 0.9);
 	color: rgb(255, 255, 255);
 	text-align: center;
 	min-height: 85vh;
@@ -69,6 +69,11 @@ input::placeholder {
 .caja.agregar {
 	border: 1px solid rgba(0, 105, 16, 0.200);
 	box-shadow: 0px 0px 10px rgba(0, 105, 16, 0.400) inset;
+}
+
+.TitAgregar {
+	border-radius: 6px;
+	background-color: rgba(0, 105, 16, 0.120);
 }
 
 .ReAgregar {
@@ -138,7 +143,12 @@ input::placeholder {
 
 .caja.actualizar {
 	border: 1px solid rgba(101, 104, 0, 0.200);
-	box-shadow: 0px 0px 5px rgba(101, 104, 0, 0.400) inset;
+	box-shadow: 0px 0px 10px rgba(101, 104, 0, 0.400) inset;
+}
+
+.TitActualizar {
+	border-radius: 6px;
+	background-color: rgba(101, 104, 0, 0.175);
 }
 
 .ReActualizar {
@@ -204,6 +214,11 @@ input::placeholder {
 .caja.eliminar {
 	border: 1px solid rgba(106, 0, 0, 0.200);
 	box-shadow: 0px 0px 10px rgba(106, 0, 0, 0.400) inset;
+}
+
+.TitEliminar {
+	border-radius: 6px;
+	background-color: rgba(106, 0, 0, 0.175);
 }
 
 .ReEliminar {

@@ -17,12 +17,11 @@ const LoginPanel = () => {
         const ipCheck = `http://${process.env.REACT_APP_HOST}/auth/check`;
         const response = await axios.get(ipCheck);
 
-        // Si hay sesión activa, redirigir según el tipo de usuario
-        if (response.data.admin) {
-          window.location.href = '/pansucursal';
-        } else {
+        // Si hay sesión activa, redirigir al inicio
+        if (response.data.iniciado) {
           window.location.href = '/sucursales';
-        }
+        } 
+
       } catch (error) {
         // Si falla, no pasa nada, se queda en login
         console.log("No hay sesión activa");
@@ -46,11 +45,10 @@ const LoginPanel = () => {
       const response = await axios.post(ipLogin, body);
 
       // Si el login es exitoso, redirigir según el tipo de usuario
-      if (response.data.admin) {
-        window.location.href = '/pansucursal';  // Redirigir a la página del administrador
-      } else {
-        window.location.href = '/sucursales';  // Redirigir a la página de sucursales
-      }
+      if (response.data.iniciado) {
+        window.location.href = '/sucursales';  // Redirigir a la página de inicio
+      } 
+
     } catch (error) {
       if (error.response) {
         setError(error.response.data.message);

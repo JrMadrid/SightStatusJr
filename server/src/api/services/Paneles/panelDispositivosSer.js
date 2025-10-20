@@ -1,9 +1,14 @@
 /* SERVICIOS PARA VALIDAR DATOS DE DISPOSITIVOS */
-import { getDispositivos, postDispositivo, updateDispositivo, deleteDispositivo, SucursalExiste, IpOcupada, comprobarID } from '../../models/Paneles/panelDispositivosMod.js';
+import { getDispositivos, getListaDispositivos, postDispositivo, updateDispositivo, deleteDispositivo, SucursalExiste, IpOcupada, comprobarID } from '../../models/Paneles/panelDispositivosMod.js';
 
 // Pedir los datos de los dispositivos
-export async function obtenerDatosDispositivos() {
-  return await getDispositivos();
+export const obtenerDatosDispositivos = async (responsable, tipo) => {
+  return await getDispositivos(responsable, tipo);
+};
+
+// Pedir la lista de los dispositivos
+export const obtenerListaDispositivos = async (responsable, tipo) => {
+  return await getListaDispositivos(responsable, tipo);
 };
 
 // Agregar un nuevo dispositivo

@@ -1,11 +1,13 @@
 /* CONTROLADORES DE PANEL DE MANTENIMIENTOS */
-import { obtenerMantenimientos, publicarMantenimiento, actualizarMantenimiento, eliminarMantenimiento } from '../../services/Paneles/panelMantenimientoSer.js';
-import { SchemaAgregarMantenimiento, SchemaActualizarMantenimiento, SchemaEliminarMantenimiento } from '../../validators/Paneles/panelMantenimientoVal.js';
+import { obtenerMantenimientos, publicarMantenimiento, publicarConstancia, actualizarMantenimiento, eliminarMantenimiento } from '../../services/Paneles/panelMantenimientoSer.js';
+import { SchemaAgregarMantenimiento, SchemaAgregarConstanciaMantenimiento, SchemaActualizarMantenimiento, SchemaEliminarMantenimiento } from '../../validators/Paneles/panelMantenimientoVal.js';
 
 // Pedir los datos de los mantenimientos
 const getMantenimientos = async (req, res) => {
   try {
-    const mantenimientos = await obtenerMantenimientos();
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const mantenimientos = await obtenerMantenimientos(responsable, tipo);
     res.status(200).json(mantenimientos);
   } catch (error) {
     console.error('Error: // Pedir los datos de los mantenimientos, ', error);
@@ -28,6 +30,28 @@ const postMantenimiento = async (req, res) => {
   } catch (error) {
     console.error('Error: // Agregar un nuevo mantenimiento, ', error);
     res.status(500 || error?.code).json({ message: error?.message || 'Error agregando nuevo mantenimiento' });
+  }
+};
+
+// Agregar constancia de mantenimiento
+const postConstancia = async (req, res) => {
+  try {
+    const { frealizada, descripcion = '', id } = req.body;
+    const imagen = req.file.buffer; // Obtiene el archivo como un buffer
+    const responsable = req.session.user;
+
+    const { error } = SchemaAgregarConstanciaMantenimiento.validate(req.body, { abortEarly: false });
+    if (error) {
+      const erroresUnidos = error.details.map(err => err.message).join('\n');
+      res.status(400).json({ message: erroresUnidos })
+    }
+
+    await publicarConstancia({ frealizada, descripcion, id, imagen, responsable })
+    res.status(200).json({ message: 'Mantenimiento agregado exitosamente' }); // Responder con éxito
+
+  } catch (error) {
+    console.error('Error: // Agregar constancia de mantenimiento, ', error);
+    res.status(error?.code || 500).json({ message: error?.message || 'Error agregando nuevo mantenimiento' }); // Responder con falla
   }
 };
 
@@ -67,4 +91,4 @@ const deleteMantenimiento = async (req, res) => {
   }
 };
 
-export const methods = { getMantenimientos, postMantenimiento, deleteMantenimiento, updateMantenimiento };
+export const methods = { getMantenimientos, postMantenimiento, postConstancia, deleteMantenimiento, updateMantenimiento };

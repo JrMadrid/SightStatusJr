@@ -1,20 +1,34 @@
 /* COMPONENTE DE INFORMATIVA -- MANUAL */
 import { useEffect, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
 import fetchData from '../../api/fetchConfig.js';
 import logoSoporte from '../../imgs/LogoSoporte.png';
 import '../css/Infor_Sucursal.css';
-import toast from 'react-hot-toast';
 
 export default function InfoManual() {
+  const location = useLocation();
   const [manualInfo, setManualInfo] = useState({});
   const [manualBlob, setManualBlob] = useState(null);
+
+  const id = location.state?.id;
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Pagina Informativa de Manual";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Mandar los datos del manual
   useEffect(() => {
     const manualinfo = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/info`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/info/${id}`;
         const response = await fetchData(url);
         const manualinfo = await response.json();
         if (!response.ok) {
@@ -28,15 +42,15 @@ export default function InfoManual() {
     };
 
     manualinfo();
-  }, []);
+  }, [id]);
 
   // Mandar el manual
   useEffect(() => {
     const manualar = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/manual`;
+        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/manual/${id}`;
         const response = await fetchData(url);
-        if (!response) throw new Error('Sin manual');
+        if (!response) throw new Error('Sin documento');
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
@@ -59,7 +73,7 @@ export default function InfoManual() {
     };
 
     manualar();
-  }, []);
+  }, [id]);
 
   return (
     <>
@@ -75,6 +89,7 @@ export default function InfoManual() {
         </div>
       </div>
 
+      {/* Contenido */}
       <div>
         <h2 className="titulo">Soporte Técnico Honduras</h2>
         <div className="contenedorManual" >

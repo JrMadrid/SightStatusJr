@@ -42,7 +42,7 @@ const UpdateSucursales = () => {
     <>
       <div className='caja actualizar'>
         <form onSubmit={actualizar}>
-          <h5>Actualizar</h5>
+          <h5 className='TitActualizar'>Actualizar</h5>
           <label htmlFor="economico">Económico:</label>
           <p className='paviso'>También cambiará el económico de los dispositivos asociados.</p>
           <input type="text" id="economico" name="economico" maxLength="6" minLength="6" placeholder='Número económico (Opcional)' title=" 6 caracteres numéricos (Opcional)" value={formData.economico} onChange={cambio} />

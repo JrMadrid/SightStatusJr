@@ -2,7 +2,6 @@
 
 // Valida si el usuario tiene sesión iniciada
 export function requireUserSession(req, res, next) {
-  // if (req.session.user !== undefined) {
   if (req.session.login === true) {
     next(); // Continua con el siguiente middleware o controlador
   } else {

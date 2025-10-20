@@ -1,12 +1,25 @@
 /* PANEL DE ADMINISTRACIÓN DE INFORMES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import fetchData from '../../api/fetchConfig.js';
 import { Paginador } from '../Elements/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectInformes = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
+
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Informes";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
 
   // Pedir los datos de los informes
   useEffect(() => {
@@ -53,26 +66,16 @@ const SelectInformes = () => {
       console.error('Error: // Pedir el informe en formato PDF, ', error);
       toast.error(error.message || 'Error con el informe')
     }
-  }
+  };
 
   // Pedir el id del informe
   const ver = async (id) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/informes/verinforme/${id}`;
-    try {
-      const response = await fetchData(url)
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-    } catch (error) {
-      console.error('Error: // Pedir el id del informe, ', error);
-      toast.error(error.message || 'Error con el informe')
-    }
-  }
+    navigate(`/informativa/informe`, { state: { id } });
+  };
 
   return (
     <>
-      <Paginador tipo='informes' titulo='INFORMES' placeholder='Buscar por Económico, Canal, Sucursal, Fecha Realizada, Nombre, Descripción o Ing. Responsable' data={data} excel='si' save='Informes' cantidad={count} eleccion={eleccion} ver={ver} />
+      <Paginador tipo='informes' data={data} excel='si' cantidad={count} eleccion={eleccion} ver={ver} />
     </>
   );
 };

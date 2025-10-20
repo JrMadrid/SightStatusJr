@@ -5,7 +5,9 @@ import { SchemaCrearSucursal, SchemaActualizarSucursal, SchemaEliminarSucursal }
 // Pedir los datos de las sucursales
 const getSucursales = async (req, res) => {
   try {
-    const sucursales = await obtenerSucursales();
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const sucursales = await obtenerSucursales(responsable, tipo);
     res.status(200).json(sucursales);
   } catch (error) {
     console.error('Error: // Pedir los datos de las sucursales, ', error);

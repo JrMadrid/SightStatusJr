@@ -20,7 +20,7 @@ export const obtenerDispositivosNombre = async (dispositivo, responsable, tipo) 
         INNER JOIN sucursales sucu ON dispo.economico = sucu.economico
         WHERE dispo.nombre = @dispositivo
         ORDER BY sucu.canal ASC, sucu.nombre ASC
-        `;
+    `;
   };
   request.input('dispositivo', sql.VarChar, dispositivo);
   request.input('responsable', sql.VarChar, responsable);
@@ -48,7 +48,7 @@ export const obtenerInfoDispositivos = async (dispositivo, responsable, tipo) =>
 					INNER JOIN dispositivos dispo ON sucu.economico = dispo.economico
 					WHERE dispo.nombre = @dispositivo
 					ORDER BY sucu.canal ASC, sucu.nombre ASC
-					`;
+			`;
   };
   request.input('dispositivo', sql.VarChar, dispositivo);
   request.input('responsable', sql.VarChar, responsable);

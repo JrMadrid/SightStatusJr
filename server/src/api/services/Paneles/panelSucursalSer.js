@@ -1,9 +1,9 @@
 /* SERVICIOS PARA VALIDAR DATOS DE SUCURSALES */
-import { EconomicoOcupado, comprobarID, Neconomico, IngResponsable, getSucursales, postSucursal, updateSucursal, deleteSucursal } from '../../models/Paneles/panelSucursalMod.js';
+import { EconomicoOcupado, comprobarID, IngResponsable, getSucursales, postSucursal, updateSucursal, deleteSucursal } from '../../models/Paneles/panelSucursalMod.js';
 
 // Pedir los datos de las sucursales
-export const obtenerSucursales = async () => {
-  return await getSucursales();
+export const obtenerSucursales = async (responsable, tipo) => {
+  return await getSucursales(responsable, tipo);
 };
 
 // Agregar una nueva sucursal

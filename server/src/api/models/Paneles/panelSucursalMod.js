@@ -2,10 +2,34 @@
 import sql from 'mssql';
 
 // Pedir los datos de las sucursales
-export const getSucursales = async () => {
-  const request = new sql.Request()
-  const result = await request.query('SELECT id, economico, canal, nombre, ingresponsable FROM sucursales WHERE economico != 000000 ORDER BY canal ASC, nombre ASC');
-  return result.recordset;
+export const getSucursales = async (responsable, tipo) => {
+  const request = new sql.Request();
+  let query;
+  if (tipo === 'Super Administrador' || tipo === 'Administrador') {
+    query = `
+          SELECT id, economico, canal, nombre, ingresponsable 
+          FROM sucursales 
+          WHERE economico != 000000 
+          ORDER BY canal ASC, nombre ASC
+          `;
+  }
+  else if (tipo === 'Aplicativo') {
+    query = `
+          SELECT economico, canal, nombre, ingresponsable 
+          FROM sucursales 
+          WHERE economico != 000000 
+          ORDER BY canal ASC, nombre ASC 
+    `;
+  } else {
+    query = `
+          SELECT economico, canal, nombre 
+          FROM sucursales 
+          WHERE ingresponsable = @responsable 
+          ORDER BY canal ASC, nombre ASC 
+      `;
+    request.input('responsable', sql.VarChar, responsable);
+  }
+  return (await request.query(query)).recordset;
 };
 
 // Agregar una nueva sucursal

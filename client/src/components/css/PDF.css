@@ -19,16 +19,5 @@
 .pdfAll {
 	background-color: rgb(11, 23, 50);
 	color: whitesmoke;
-	position: absolute;
-	left: 2vw;
-	bottom: 25vh;
-	width: 70%;
-	padding: 5px;
-	cursor: pointer;
-	margin-bottom: 5px;
-}
-
-.pdfAll:hover {
-	background-color: #AFDBF6;
-	color: black;
+	width: 9vw !important;
 }

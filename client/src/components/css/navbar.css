@@ -40,6 +40,7 @@
 	font-family: 'Franklin Gothic';
 	position: fixed;
 	left: 0;
+	min-width: 12vw;
 	max-width: 16vw;
 	overflow-x: hidden;
 }

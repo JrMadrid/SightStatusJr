@@ -1,9 +1,10 @@
 /* COMPONENTE QUE GUARDA EN PDF TODA LA INFORMACION */
 import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import jsPDF from 'jspdf';
 import date from '../../utils/date.js';
+import '../css/listas.css';
 import imgBase64 from '../../utils/imgBase64.js';
 import logo from '../../imgs/LogoSoporteBN.png';
 import hn from '../../imgs/hnBN.png';
@@ -114,11 +115,11 @@ export default function ALLPDF(props) {
   return (
     <>
       {props && props.data.length !== 0 && (
-        <button className='pdfAll' onClick={downloadPDF} type="button">
+        <button className='pdfAll pdf' onClick={downloadPDF} type="button">
           {props.titulo}
         </button>
       )}
-      <Toaster />
+      {/* <Toaster /> */}
     </>
   );
 };

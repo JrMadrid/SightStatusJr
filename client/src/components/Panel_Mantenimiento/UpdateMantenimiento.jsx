@@ -37,7 +37,7 @@ const UpdateMantenimientos = () => {
     <>
       <div className='caja actualizar'>
         <form onSubmit={Actualizar}>
-          <h5>Agregar</h5>
+          <h5 className='TitActualizar'>Actualizar</h5>
           <label htmlFor="festimada">Fecha Estimada: </label>
           <input type="date" id="festimada" name="festimada" value={formData.festimada} onChange={cambio} style={{ marginBottom: '4px' }} />
           <p className="paviso">Mes/Dia/Año</p>

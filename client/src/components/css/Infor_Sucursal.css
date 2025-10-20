@@ -129,8 +129,8 @@
   min-height: 50vh;
   max-height: 50vh;
   overflow-y: auto;
-  /* min-width: 68.5vh;
-    max-width: 68.5vh; */
+  /* min-width: 57vh; */
+  max-width: 57vh;
   overflow-x: auto;
 }
 
@@ -189,9 +189,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  padding: 20px 10px;
+  padding: 2.8vh 8px 20px 8px;
   box-Sizing: border-box;
-  z-index: 1000;
   margin: 0;
 }
 
@@ -241,12 +240,39 @@
   background-color: rgb(0, 7, 22);
 }
 
+.funcionesExtras {
+  text-align: center;
+  width: 13vw;
+}
+
+.sumCaja {
+  display: flex;
+  width: 9vw;
+  justify-content: center;
+  margin-left: 2vw;
+}
+
+.sumSeccion {
+  color: rgb(175, 219, 246);
+  border-radius: 5px;
+  width: 4.5vw;
+  font-size: small;
+  padding: 0.4rem 0.8rem;
+  margin-bottom: 0.2rem;
+  box-shadow: 0px 0px 2px #0056b3 inset;
+}
+
+.sumSeccion:hover {
+  color: #ffaf90;
+  box-shadow: 0px 0px 2px #ffaf90 inset;
+}
+
 .list {
   list-style: none;
   padding: 0;
   margin: 0;
   text-align: center !important;
-  width: 12.5vw;
+  width: 13vw;
   min-height: 40vh;
   max-height: 40vh;
   overflow-y: auto;
@@ -296,6 +322,7 @@
 
 
 .listItem {
+  justify-content: center;
   margin: 0px 0px 1px 0px;
   cursor: pointer;
   display: flex;
@@ -311,10 +338,10 @@
   min-width: 9vw;
   max-width: 9vw;
   max-height: 2rem;
-  padding-bottom: 0.2rem;
+  padding-bottom: 0.6rem;
   overflow-x: auto;
   overflow-y: hidden;
-  margin-bottom: 1px;
+  margin-bottom: 0.1rem;
 }
 
 .ListItemA:hover {
@@ -347,10 +374,10 @@
   min-width: 9vw;
   max-width: 9vw;
   max-height: 2rem;
-  padding-bottom: 0.2rem;
+  padding-bottom: 0.6rem;
   overflow-x: auto;
   overflow-y: hidden;
-  margin-bottom: 1px;
+  margin-bottom: 0.1rem;
 }
 
 .seleccionado::-webkit-scrollbar {
@@ -375,8 +402,8 @@
   margin: 0;
   font-size: 1.1rem;
   color: rgb(175, 219, 246);
-  min-width: 1.5vw;
-  max-width: 1.5vw;
+  max-width: 1.4vw;
+  /* padding: 0px 3px; */
 }
 
 .pings:hover {
@@ -399,16 +426,17 @@
   color: #ffaf90;
 }
 
-.logo {
-  width: 100%;
-}
-
 .logodiv {
   width: 10vw;
   bottom: 0;
   margin: 0 0 20px 2vw;
   position: absolute;
   left: 0;
+}
+
+
+.logo {
+  width: 100%;
 }
 
 .solbiometrico {
@@ -461,6 +489,7 @@
   border-radius: 8px;
   min-height: 76vh;
   max-height: 76vh;
+  overflow: auto;
 }
 
 .informacionmedium::-webkit-scrollbar {
@@ -497,8 +526,8 @@
   margin-bottom: 1vh;
   min-height: 4vh;
   max-height: 4vh;
-  min-width: 37.1vw;
-  max-width: 37.1vw;
+  min-width: 37.3vw;
+  max-width: 37.3vw;
   overflow-y: auto;
   overflow-x: auto;
 }
@@ -532,13 +561,13 @@
 
 .logmedium {
   height: 100%;
-  max-height: 26.5vh;
+  /* max-height: 26.5vh; */
   min-height: 26.5vh;
   overflow-y: auto;
   overflow-x: auto;
   color: rgb(173, 173, 173);
-  min-width: 37.1vw;
-  max-width: 37.1vw;
+  min-width: 36.5vw;
+  max-width: 36.5vw;
   font-family: sans-serif;
   font-size: medium;
   color: rgb(210, 235, 250);
@@ -552,8 +581,8 @@
 }
 
 .logmedium::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   margin-left: 5px;
 }
 
@@ -591,7 +620,7 @@
 
 .cajaInformacionmini {
   margin: 0 0 0 40.55VW;
-  padding: 10px 20px 5px 20px;
+  padding: 15px 20px 0px 20px;
   min-height: 36vh;
   max-height: 36vh;
   max-width: 33vw;
@@ -602,7 +631,7 @@
   border-radius: 8px;
   box-shadow: 0 1px 100px rgba(0, 0, 0, 0.9);
   background-color: rgba(0, 0, 0, 0.600);
-  overflow-y: hidden;
+  overflow: hidden;
 }
 
 .informacionmini {
@@ -611,6 +640,10 @@
   border-radius: 8px;
   min-height: 32vh;
   max-height: 32vh;
+  min-width: 31.5vw;
+  max-width: 31.5vw;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .informacionmini::-webkit-scrollbar {
@@ -636,9 +669,33 @@
   font-family: serif;
   color: #ffaf90;
   margin: 0px;
+  min-width: 31vw;
+  max-width: 31vw;
+  overflow: auto;
 }
 
+.principalmini::-webkit-scrollbar {
+  height: 3px;
+  width: 3px;
+}
+
+.principalmini::-webkit-scrollbar-thumb {
+  background-color: #124885;
+  border-radius: 4px;
+}
+
+.principalmini::-webkit-scrollbar-thumb:hover {
+  background-color: #ffaf90;
+}
+
+.principalmini::-webkit-scrollbar-track {
+  background-color: rgb(0, 7, 22);
+}
+
+
 .tablainfomini {
+  min-width: 31.2vw;
+  max-width: 31.2vw;
   text-align: left;
 }
 
@@ -647,15 +704,15 @@
   margin-bottom: 1vh;
   min-height: 4vh;
   max-height: 4vh;
-  min-width: 31.2vw;
-  max-width: 31.2vw;
+  min-width: 30.7vw;
+  max-width: 30.7vw;
   overflow-y: auto;
   overflow-x: auto;
 }
 
 .descripcionmini::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   margin-left: 5px;
 }
 
@@ -681,14 +738,13 @@
 }
 
 .logmini {
-  height: 100%;
-  max-height: 10vh;
+  /* max-height: 10vh; */
   min-height: 10vh;
+  min-width: 28.9vw;
+  max-width: 28.9vw;
   overflow-y: auto;
   overflow-x: auto;
   color: rgb(173, 173, 173);
-  min-width: 30vw;
-  max-width: 30vw;
   font-family: sans-serif;
   font-size: medium;
   color: rgb(210, 235, 250);
@@ -696,14 +752,11 @@
   vertical-align: top;
   border-radius: 6px;
   margin: 0;
-  box-shadow: 0px 0px 8px 1px black;
-  border-right: 2px solid rgba(0, 0, 0, 0.100);
-  border-top: 2px solid rgba(0, 0, 0, 0.100);
 }
 
 .logmini::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 3px;
+  height: 3px;
   margin-left: 5px;
 }
 
@@ -788,7 +841,8 @@
   color: #ffaf90;
 }
 
-.contenedorConstancia {
+.contenedorConstancia,
+.contenedorAviso {
   min-height: 0vh;
   max-height: 80vh;
   min-width: 62vw;

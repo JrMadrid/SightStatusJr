@@ -7,10 +7,6 @@ const __filename = fileURLToPath(import.meta.url); // Convierte la URL del archi
 const __dirname = path.dirname(__filename); // Obtiene el directorio del archivo actual
 
 import authRou from './authRou.js'; // Rutas de autenticación de usuarios
-/* Data */
-import dataSucursalRou from './Data/dataSucursalRou.js'; // Rutas para ver los datos de las sucursales
-import dataDispositivosRou from './Data/dataDispositivosRou.js'; // Rutas para ver los datos de las dispositivos
-import dataMantenimientoRou from './Data/dataMantenimientoRou.js'; // Rutas para ver los datos de los mantenimientos
 /* Paneles de administracion */
 import panelUserRou from './Paneles/panelUsersRou.js'; // Rutas para administrar usuarios
 import panelSucursalRou from './Paneles/panelSucursalRou.js' // Rutas para administrar sucursales
@@ -28,9 +24,6 @@ import InformeInfoRou from './Informativas/InformeInfoRou.js'; // Rutas de infor
 
 export const Routes = (app) => {
   app.use('/auth', authRou); // Rutas de autenticación de usuarios
-  app.use('/api', requireUserSession, dataSucursalRou); // Rutas para ver los datos de las sucursales
-  app.use('/api', requireUserSession, dataDispositivosRou); // Rutas para ver los datos de las dispositivos
-  app.use('/api', requireUserSession, dataMantenimientoRou); // Rutas para ver los datos de los mantenimientos
   app.use('/panel', panelUserRou); // Rutas para administrar usuarios
   app.use('/panel', panelSucursalRou);  // Rutas para administrar sucursales
   app.use('/panel', panelDispositivosRou); // Rutas para administrar dispositivos

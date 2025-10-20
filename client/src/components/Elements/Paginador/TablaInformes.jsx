@@ -1,6 +1,6 @@
 /* COMPONENTE DE ELEMENTO DE PAGINACIÓN -- INFORMES */
 import { FormatearFechaTabla } from '../date.jsx';
-import { HiDocumentDownload, HiEye } from "react-icons/hi";
+import { FaCircle, FaFileDownload, FaFileAlt } from "react-icons/fa";
 
 const TablaInformes = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) => {
   return (
@@ -8,9 +8,10 @@ const TablaInformes = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) =
       <table className='tablaData'>
         <thead>
           <tr>
-            <th className='thData eject' title='Descarga directa' ><HiDocumentDownload /></th>
-            <th className='thData eject' title='Visualizar' ><HiEye /></th>
+            <th className='thData eject' title='Descarga directa' ><FaFileDownload /></th>
+            <th className='thData eject' title='Visualizar' ><FaFileAlt /></th>
             <th className='thData'>Económico</th>
+            <th className='thData'>Canal</th>
             <th className='thData'>Sucursal</th>
             <th className='thData'>Fecha Realizado</th>
             <th className='thData'>Nombre</th>
@@ -25,9 +26,10 @@ const TablaInformes = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) =
         <tbody>
           {data.map(item => (
             <tr key={item.id}>
-              <td className='tdData'><button onClick={() => { eleccion(item.id, item.nombre) }} className='circuloir' ></button></td>
-              <td className='tdData'><a href='informe' onClick={() => { ver(item.id) }} className='link select'><button className='ir'></button></a></td>
+              <td className='tdData'><FaCircle onClick={() => { eleccion(item.id, item.nombre) }} className='select ir' /></td>
+              <td className='tdData'><FaCircle onClick={() => { ver(item.id) }} className='select ir' /></td>
               <td className='tdData'>{item.economico}</td>
+              <td className='tdData long-data'>{item.canal}</td>
               <td className='tdData long-data'>{item.sucursal}</td>
               <td className='tdData'><FormatearFechaTabla fecha={item.fecharealizada} /></td>
               <td className='tdData long-data' style={{ maxWidth: '30vw' }}>{item.nombre}</td>

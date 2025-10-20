@@ -35,7 +35,7 @@ const DeleteDispositivo = () => {
   return (
     <>
       <div className='caja eliminar'>
-        <h5>Eliminar</h5>
+        <h5 className='TitEliminar'>Eliminar</h5>
         <form onSubmit={Eliminar}>
           <div className="delete">
             <label htmlFor="id"><span className='ReEliminar'>*</span>ID:</label>
