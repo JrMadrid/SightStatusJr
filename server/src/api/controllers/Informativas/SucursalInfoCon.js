@@ -1,6 +1,7 @@
 /* CONTROLADORES DE INFORMATIVA -- SUCURSAL */
 import config from '../../../configs/APP_config.js';
-import { DatosDispositivos, nombreDispositivoXIP, informationGneralDispositivo, dispositiosValidos, actualizarInformacionGeneral, actualizarInformacionDescripcion } from '../../services/Informativas/SucursalInfoSer.js';
+import { schemas as SC } from '../../validators/Informativas/SucursalInfoVal.js';
+import { services as SR } from '../../services/Informativas/SucursalInfoSer.js';
 const isMock = config.MOCKS; // Accede al valor de la variable de entorno MOCKS.
 // UPS
 const { UPSssh: RealUPSssh, UPSHardware: RealUPSHardware, UPSDescripcion: RealUPSDescripcion } = await import('../../../connection/UPSssh.js');
@@ -8,7 +9,6 @@ const { UPSssh: MockUPSssh, UPSHardware: MockUPSHardware, UPSDescripcion: MockUP
 const UPSssh = isMock ? MockUPSssh : RealUPSssh;
 const UPSHardware = isMock ? MockUPSHardware : RealUPSHardware;
 const UPSDescripcion = isMock ? MockUPSDescripcion : RealUPSDescripcion;
-// import { UPSssh, UPSHardware, UPSDescripcion } from '../../../connection/UPSssh.js';
 // ILO
 // import { ILOssh, ILOHardware, ILODescripcion } from '../../../connection/ILOssh.js';
 // Biometrico
@@ -20,13 +20,23 @@ const BiometricoHardware = isMock ? MockBiometricoHardware : RealBiometricoHardw
 const { BIOMETRICOsolicitud: RealBIOMETRICOsolicitud } = await import('../../../datos/Solicitudes/SolBiometricos.js');
 const { BIOMETRICOsolicitudMock: MockBIOMETRICOsolicitud } = await import('../../../mocks/Simular/SimBiometrico.js');
 const BIOMETRICOsolicitud = isMock ? MockBIOMETRICOsolicitud : RealBIOMETRICOsolicitud;
-// import { BIOMETRICOsolicitud } from '../../../datos/Solicitudes/SolBiometricos.js';
 
 // Consultar y retornar los dispositivos registrados por número económico
 const getSucursalDispositivos = async (req, res) => {
   try {
-    const economico = req.params.economico; // Obtiene el número económico de la URL
-    const aplicaciones = await DatosDispositivos(economico); // Ejecuta la consulta
+    if (!req.params.economico) {
+      return res.status(400).json({ message: "Económico requerido" });
+    }
+    const validar = { economico: req.params.economico };
+    const { error, value } = SC.SchemaPedirSucursal.validate(validar, { abortEarly: false });
+    if (error) {
+      const mensajes = error.details.map(err => err.message).join('\n');
+      return res.status(400).json({ message: mensajes });
+    }
+    const economico = value.economico;
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const aplicaciones = await SR.DatosDispositivos(economico, responsable, tipo); // Ejecuta la consulta
     return res.status(200).json(aplicaciones) // Retorna el resultado en formato JSON
   } catch (error) {
     console.error('Error: // Consultar y retornar los dispositivos registrados por número económico, ', error);
@@ -40,11 +50,9 @@ const info = async (req, res) => {
     let sshInfo; // Variable para almacenar la información que se obtenga vía SSH o TCP/IP
     const ip = req.params.ip; // Se obtiene la IP desde los parámetros de la URL
     req.session.aplicacionip = ip; // Guarda la IP en sesión
-
     // Consulta el tipo de dispositivo asociado a la IP
-    const dispositivo = await nombreDispositivoXIP(ip);
+    const dispositivo = await SR.nombreDispositivoXIP(ip);
     req.session.aplicacion = dispositivo; // Guarda el nombre del dispositivo en la sesión
-
     // Dependiendo del tipo de dispositivo, realiza la conexión correspondiente
     if (dispositivo === 'UPS') {
       sshInfo = await UPSssh(ip);
@@ -52,14 +60,11 @@ const info = async (req, res) => {
     if (dispositivo === 'Biometrico') {
       sshInfo = await BIOMETRICOtcpip(ip);
     }
-
     // Consultar información general y de la sucursal del dispositivo
-    const dbInfo = await informationGneralDispositivo(ip);
-
+    const dbInfo = await SR.informationGneralDispositivo(ip);
     // Se fusiona la información de la base de datos con la obtenida por SSH/TCP
     const Infos = Object.assign({}, sshInfo, dbInfo);
     const Info = [Infos];
-
     res.status(200).json(Info); // Retorna la información combinada
   } catch (error) {
     console.error('Error: // Obtener la información general de un dispositivo en específico por su IP, ', error);
@@ -70,34 +75,42 @@ const info = async (req, res) => {
 // Recorrer los dispositivos de una sucursal y actualizar la información si es necesario
 const dispositivos = async (req, res) => {
   try {
-    const economico = req.params.economico; // Obtiene el número económico de la URL
-
+    if (!req.params.economico) {
+      return res.status(400).json({ message: "Económico requerido" });
+    }
+    const validar = { economico: req.params.economico };
+    const { error, value } = SC.SchemaPedirSucursal.validate(validar, { abortEarly: false });
+    if (error) {
+      const mensajes = error.details.map(err => err.message).join('\n');
+      return res.status(400).json({ message: mensajes });
+    }
+    const economico = value.economico;
     // Consultar todos los dispositivos válidos de la sucursal
-    const dbInfo = await dispositiosValidos(economico);
-
+    const dbInfo = await SR.dispositiosválidos(economico);
     // Recorre cada dispositivo para validar y actualizar la información faltante
     for (let i = 0; i < dbInfo.length; i++) {
       let ip = dbInfo[i].ip;
-
       // Verifica que la IP sea válida
       if (!ip.startsWith('000.') || !ip.startsWith('001.')) {
-
         // Si el campo "general" está vacío o nulo, se actualiza
         if (dbInfo[i].general === null || dbInfo[i].general === '') {
           let sshInfo = '';
           let general = '';
-
-          // Solo realiza la conexión SSH si es una UPS
+          // Realiza la conexión SSH si es una UPS
           if (dbInfo[i].nombre === 'UPS') {
             sshInfo = await UPSHardware(ip);
             general = sshInfo.informaciongeneral;
           }
-          // Conexiones futuras para ILO o Biometrico están comentadas
+          // Realiza la conexión SSH si es un Biometrico 
+          else if (dbInfo[i].nombre === 'Biometrico') {
+            sshInfo = await BiometricoHardware(ip);
+            general = sshInfo.informaciongeneral;
+          }
+          // Conexiones futuras para ILO están comentadas
 
           // Actualizar el campo "general" en la base de datos
-          await actualizarInformacionGeneral(general, ip);
+          await SR.actualizarInformacionGeneral(general, ip);
         }
-
         // Si el campo "descripcion" está vacío o nulo, se actualiza
         if (dbInfo[i].descripcion === null || dbInfo[i].descripcion === '') {
           let sshInfo = '';
@@ -108,9 +121,8 @@ const dispositivos = async (req, res) => {
             sshInfo = await UPSDescripcion(ip);
             descripcion = sshInfo.descripcion;
           }
-
           // Actualizar el campo "descripcion" en la base de datos
-          await actualizarInformacionDescripcion(descripcion, ip);
+          await SR.actualizarInformacionDescripcion(descripcion, ip);
         }
       }
     }
@@ -138,4 +150,9 @@ const solicitudes = async (req, res) => {
 };
 
 // Exporta los métodos como un objeto para su uso en rutas
-export const methods = { info, getSucursalDispositivos, dispositivos, solicitudes };
+export const controllers = {
+  getSucursalDispositivos,
+  info,
+  dispositivos,
+  solicitudes
+};

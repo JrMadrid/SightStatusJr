@@ -38,6 +38,7 @@
 }
 
 .itemName {
+	font-size: large;
 	max-height: 1.8rem;
 	overflow-y: auto;
 	max-width: 100%;
@@ -129,7 +130,7 @@
 }
 
 .texto2MarcoSeleccionado {
-	box-shadow: 0px 0px 4px 1px #ffaf90;
+	box-shadow: 0px 0px 4px 1px #ffaf90 inset;
 }
 
 .texto2 {
@@ -187,7 +188,7 @@
 
 .informacion2 {
 	background-color: rgba(0, 0, 0, 0.700);
-	padding: 0px 10px 10px 10px;
+	padding: 0px 5px 5px 5px;
 	border-radius: 8px;
 	min-height: 75vh;
 	max-height: 75vh;
@@ -250,7 +251,7 @@
 }
 
 .log2 {
-	max-height: 49vh;
+	max-height: 52vh;
 	overflow-y: auto;
 	min-width: 15vw;
 	overflow-x: auto;
@@ -329,7 +330,7 @@
 }
 
 .listItem2 {
-	padding: 10px 0 0 5px;
+	padding-left: 5px;
 }
 
 .listItem2:hover {
@@ -344,9 +345,16 @@
 }
 
 .appi2Seleccionado {
-	color: #ffaf90 !important;
-	font-size: 0.75rem;
-	font-family: 'Segoe UI';
+	border-left: 1px solid #ffaf90;
+}
+
+.appi2Icon {
+	padding-right: 2px;
+	font-size: 0.6rem;
+}
+
+.appi2SeleccionadoIcon {
+	color: #ffaf90;
 }
 
 .sinip2 {

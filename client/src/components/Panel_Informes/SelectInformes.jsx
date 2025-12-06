@@ -23,16 +23,12 @@ const SelectInformes = () => {
 
   // Pedir los datos de los informes
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/informes`;
+    const url = `/panel/informes`;
     const informes = async () => {
       try {
-        const response = await fetchData(url);
-        const informes = await response.json();
-        if (!response.ok) {
-          throw new Error(informes.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setData(informes);
-        setCount(informes.length)
+        const datos = await fetchData(url);
+        setData(datos);
+        setCount(datos.length)
       } catch (error) {
         console.error('Error: // Pedir los datos de los informes, ', error);
         toast.error(error.message || 'Error con los datos')
@@ -44,12 +40,12 @@ const SelectInformes = () => {
 
   // Pedir el informe en formato PDF
   const eleccion = async (id, nombre = 'Informe') => {
-    let urle = `http://${process.env.REACT_APP_HOST}/panel/informe/${id}`;
+    let urle = `/panel/informe/${id}`;
     try {
-      const response = await fetchData(urle)
+      const response = await fetch(urle, { credentials: 'include' });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+        throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
       }
       const InformeBlob = await response.blob(); // Convertir la respuesta a un Blob
       const blob = new Blob([InformeBlob], { type: 'application/pdf' }); // Crear un nuevo Blob con el tipo de contenido PDF

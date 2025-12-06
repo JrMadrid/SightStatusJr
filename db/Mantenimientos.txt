@@ -3,14 +3,14 @@
 USE [statusAppsPro]
 GO
 
-/****** Object:  Table [dbo].[mantenimiento] ******/
+/****** Object:  Table [dbo].[mantenimientos] ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE TABLE [dbo].[mantenimiento](
+CREATE TABLE [dbo].[mantenimientos](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[fechaestimada] [date] NOT NULL,
 	[fecharealizada] [date] NULL,
@@ -24,22 +24,23 @@ PRIMARY KEY CLUSTERED
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[mantenimiento] ADD  CONSTRAINT [DF_fechaestimada]  DEFAULT ('2000-01-01') FOR [fechaestimada]
+ALTER TABLE [dbo].[mantenimientos] ADD  CONSTRAINT [DF_fechaestimada]  DEFAULT ('2000-01-01') FOR [fechaestimada]
 GO
 
-ALTER TABLE [dbo].[mantenimiento] ADD  DEFAULT ('000000') FOR [economico]
+ALTER TABLE [dbo].[mantenimientos] ADD  DEFAULT ('000000') FOR [economico]
 GO
 
-ALTER TABLE [dbo].[mantenimiento]  WITH NOCHECK ADD  CONSTRAINT [FK_mantenimiento_sucursales] FOREIGN KEY([economico])
+ALTER TABLE [dbo].[mantenimientos]  WITH NOCHECK ADD  CONSTRAINT [FK_mantenimientos_sucursales] FOREIGN KEY([economico])
 REFERENCES [dbo].[sucursales] ([economico])
 GO
 
-ALTER TABLE [dbo].[mantenimiento] CHECK CONSTRAINT [FK_mantenimiento_sucursales]
+ALTER TABLE [dbo].[mantenimientos] CHECK CONSTRAINT [FK_mantenimientos_sucursales]
 GO
 
 
 -- DATO ESPECIAL
--- Documentos de 2024 o mas antiguos son considerados historicos y no generan nuevos mantenimientos estimados.
+Documentos de 2024 o mas antiguos son considerados historicos y no generan nuevos mantenimientos estimados.
+(Opcional) Se podría dejar el primer elemento como la plantilla a utilizar para los mantenimientos
 
 -- REINICIAR EL ID
 DBCC CHECKIDENT ('mantenimientos', RESEED, 0);

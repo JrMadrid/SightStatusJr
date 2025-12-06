@@ -1,41 +1,45 @@
 /* SERVICIOS PARA VALIDAR DATOS DE DISPOSITIVOS */
-import { getDispositivos, getListaDispositivos, postDispositivo, updateDispositivo, deleteDispositivo, SucursalExiste, IpOcupada, comprobarID } from '../../models/Paneles/panelDispositivosMod.js';
+import { db as DB, verificaciones as VR } from '../../models/Paneles/panelDispositivosMod.js';
 
 // Pedir los datos de los dispositivos
-export const obtenerDatosDispositivos = async (responsable, tipo) => {
-  return await getDispositivos(responsable, tipo);
+const obtenerDatosDispositivos = async (responsable, tipo) => {
+  return await DB.getDispositivos(responsable, tipo);
 };
 
 // Pedir la lista de los dispositivos
-export const obtenerListaDispositivos = async (responsable, tipo) => {
-  return await getListaDispositivos(responsable, tipo);
+const obtenerListaDispositivos = async (responsable, tipo) => {
+  return await DB.getListaDispositivos(responsable, tipo);
 };
 
 // Agregar un nuevo dispositivo
-export async function agregarDispositivo(economico, ip, nombre, descripcion, general) {
-  await SucursalExiste(economico);
-  if (!(await SucursalExiste(economico))) throw { code: 404, message: 'Sucursal no válida' };
-  if (await IpOcupada(ip)) throw { code: 406, message: 'IP ocupada' };
-
-  await postDispositivo(economico, ip, nombre, descripcion, general);
+const agregarDispositivo = async ({ economico, ip, nombre, descripcion, general }) => {
+  if (!(await VR.SucursalExiste(economico))) throw { code: 404, message: 'Sucursal no válida' };
+  if (await VR.IpOcupada(ip)) throw { code: 406, message: 'IP ocupada' };
+  await DB.postDispositivo({ economico, ip, nombre, descripcion, general });
 };
 
 // Actualizar un dispositivo
-export async function actualizarDispositivo(economico, ip, nombre, id, descripcion, general, reiniciar) {
-  if (!(await comprobarID(id))) throw { code: 404, message: 'ID no válido' };
-  if (economico?.length) {
-    if (!(await SucursalExiste(economico))) throw { code: 404, message: 'Sucursal no válida' };
-  }
-  if (ip?.length) {
-    if (await IpOcupada(ip)) throw { code: 409, message: 'IP ocupada' };
-  }
-
-  await updateDispositivo(economico, ip, nombre, id, descripcion, general, reiniciar);
+const actualizarDispositivo = async ({ id, economico, ip, nombre, descripcion, general, reiniciar }) => {
+  if (!(await VR.comprobarID(id))) throw { code: 404, message: 'ID no válido' };
+  if (economico) {
+    if (!(await VR.SucursalExiste(economico))) throw { code: 404, message: 'Sucursal no válida' };
+  };
+  if (ip) {
+    if (await VR.IpOcupada(ip)) throw { code: 409, message: 'IP ocupada' };
+  };
+  await DB.updateDispositivo({ id, economico, ip, nombre, descripcion, general, reiniciar });
 };
 
 // Eliminar un dispositivo
-export async function eliminarDispositivo(id) {
-  if (!(await comprobarID(id))) throw { code: 404, message: 'ID no válido' };
+const eliminarDispositivo = async ({ id }) => {
+  if (!(await VR.comprobarID(id))) throw { code: 404, message: 'ID no válido' };
+  await DB.deleteDispositivo({ id });
+};
 
-  await deleteDispositivo(id);
+export const services = {
+  obtenerDatosDispositivos,
+  obtenerListaDispositivos,
+  agregarDispositivo,
+  actualizarDispositivo,
+  eliminarDispositivo
 };

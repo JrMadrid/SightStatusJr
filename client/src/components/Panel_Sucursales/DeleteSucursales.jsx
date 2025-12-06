@@ -1,17 +1,11 @@
 /* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- ELIMINAR */
 import { useState } from 'react';
 import axios from '../../api/axiosConfig';
-const DeleteSucursales = () => {
-  const [formData, setFormData] = useState({
-    id: ''
-  });
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
-  const cambio = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+const DeleteSucursales = () => {
+  const [loading, setLoading] = useState(false);
+  const [id, setId] = useState('');
+  const [message, setMessage] = useState('');
 
   // Eliminar una sucursal
   const eliminar = async (e) => {
@@ -20,7 +14,7 @@ const DeleteSucursales = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/sucursales/eliminar`, formData);
+      const response = await axios.delete(`/panel/sucursales/eliminar/${id}`);
       setMessage(response.data.message || 'Sucursal eliminada exitosamente');
       window.location.reload();
     } catch (error) {
@@ -39,8 +33,8 @@ const DeleteSucursales = () => {
           <div className="delete">
             <label htmlFor="id"><span className='ReEliminar'>*</span>ID: </label>
             <p className='paviso'>Dejará sin sucursal a los dispositivos asociados.</p>
-            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que eliminará' title='ID' min='2' pattern='\d{1,5}' value={formData.id} onChange={cambio} required />
-            <button type="submit" disabled={loading}>Eliminar</button>
+            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que eliminará' title='ID' pattern='\d{1,5}' value={id} onChange={(e) => { setId(e.target.value) }} required />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Eliminando...' : 'Eliminar'}</button>
           </div>
         </form>
         <div className='avisos'>

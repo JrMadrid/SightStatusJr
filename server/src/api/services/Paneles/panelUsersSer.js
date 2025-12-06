@@ -1,58 +1,73 @@
 /* SERVICIOS PARA VALIDAR DATOS DE USUARIOS */
 import bcrypt from 'bcryptjs'; // bcrypt para encriptar la contraseña
-import { IDdelAdmin, NicknameOcupado, comprobarID, nombreResponsable, getUsers, postUser, updateUser, deleteUser, logoutaAllUsers, deactivateAllUsers, activateAllUsers } from '../../models/Paneles/panelUsersMod.js';
+import { db as DB, verificaciones as VR } from '../../models/Paneles/panelUsersMod.js';
 
 // Pedir los datos de los usuarios
-export const obtenerUsers = async () => {
-  return await getUsers();
+const obtenerUsers = async () => {
+  return await DB.getUsers();
 };
 
 // Agregar un nuevo usuario
-export const agregarUser = async (nickname, psw, tipo) => {
-  psw = psw.trim(); // Eliminar espacios en blanco al inicio y al final
+const agregarUser = async ({ nickname, psw, tipo, activo }) => {
+  psw = psw.trim();
   psw = await bcrypt.hash(psw, 12); // Encriptar la contraseña, el hash funciona como un algoritmo de encriptación que genera un hash de la contraseña, el 12 indica la complejidad del algoritmo
-
   let isAdmin = 0;
-  if (tipo === 'Administrador') {
-    isAdmin = 1;
-  };
-  if (await NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
-
-  await postUser(nickname, psw, tipo, isAdmin);
+  if (tipo === 'Administrador') { isAdmin = 1; };
+  let isActivo = 0;
+  if (activo === 'si') { isActivo = 1; };
+  if (await VR.NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
+  await DB.postUser({ nickname, psw, tipo, isAdmin, isActivo });
 };
 
 // Actualizar un usuario
-export const actualizarUser = async (nickname, psw, id, tipo) => {
-  if (psw.length !== 0) {
-    psw = await bcrypt.hash(psw, 12); // Encriptar la contraseña 
+const actualizarUser = async ({ nickname, psw, id, tipo, activo }) => {
+  const SuperID = await VR.IDdelAdmin(id);
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (psw) {
+    psw = psw.trim();
+    psw = await bcrypt.hash(psw, 12); // Encriptar la contraseña
+  };
+  if (nickname) {
+    if (await VR.NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
+  };
+  if (tipo && SuperID) { throw { code: 403, message: 'No se puede modificar super administrador' }; };
+  let isActivo;
+  if (activo) {
+    if (activo === 'no' && SuperID) { throw { code: 403, message: 'No se puede desactivar al super administrador' }; };
+    isActivo = activo === 'si' ? 1 : 0;
   }
-  if (!(await comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; }
-  if (await NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
-
-  await updateUser(nickname, psw, id, tipo);
+  await DB.updateUser({ nickname, psw, id, tipo, isActivo });
 };
 
 // Eliminar un usuario
-export const eliminarUser = async (id, Super) => {
-  if (!(await comprobarID(id))) { throw { code: 404, message: 'No se encontro el ID' }; }
-  if (await IDdelAdmin(id)) { throw { code: 403, message: 'No se puede eliminar al super administrador' }; }
-
-  const ingResponsable = await nombreResponsable(id);
-
-  await deleteUser(id, ingResponsable, Super);
+const eliminarUser = async ({ id }, Super) => {
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (await VR.IDdelAdmin(id)) { throw { code: 403, message: 'No se puede eliminar al super administrador' }; };
+  const ingResponsable = await VR.nombreResponsable(id);
+  await DB.deleteUser({ id }, ingResponsable, Super);
 };
 
 // Cerrar la sesión de todos los usuarios
-export const sacarAllUsers = async () => {
-  await logoutaAllUsers();
+const sacarAllUsers = async () => {
+  await DB.logoutaAllUsers();
 };
 
 // Desactivar el acceso de todos los usuarios
-export const desactivarAllUsers = async () => {
-  await deactivateAllUsers();
+const desactivarAllUsers = async () => {
+  await DB.deactivateAllUsers();
 };
 
 // Activar el acceso de todos los usuarios
-export const activarAllUsers = async () => {
-  await activateAllUsers();
+const activarAllUsers = async () => {
+  await DB.activateAllUsers();
+};
+
+export const services = {
+  obtenerUsers,
+  agregarUser,
+  actualizarUser,
+  eliminarUser,
+  sacarAllUsers,
+  desactivarAllUsers,
+  activarAllUsers
 };

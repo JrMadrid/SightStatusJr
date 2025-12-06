@@ -3,16 +3,16 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const UpdateSucursales = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
     canal: '',
     nombre: '',
     economico: '',
     ingresponsable: '',
     rellenar: ''
   });
+  const [id, setId] = useState('');
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
@@ -27,7 +27,19 @@ const UpdateSucursales = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/sucursales/actualizar`, formData);
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.put(`/panel/sucursales/actualizar/${id}`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       setMessage(response.data.message || 'Sucursal actualizada exitosamente');
       window.location.reload();
     } catch (error) {
@@ -66,8 +78,8 @@ const UpdateSucursales = () => {
           <p className='paviso'>"Sin inventario"</p>
           <div className="update">
             <label htmlFor="id"><span className='ReActualizar'>*</span>ID:</label>
-            <input type="text" id="id" name="id" maxLength="5" required placeholder='Elemento que actualizara' title='ID' min='1' pattern='\d{1,5}' value={formData.id} onChange={cambio} />
-            <button type="submit" disabled={loading}>Actualizar</button>
+            <input type="text" id="id" name="id" maxLength="5" required placeholder='Elemento que actualizara' title='ID' min='1' pattern='\d{1,5}' value={id} onChange={(e) => { setId(e.target.value) }} />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Actualizando...' : 'Actualizar'}</button>
           </div>
         </form>
         <div className='avisos'>

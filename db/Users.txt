@@ -16,6 +16,7 @@ CREATE TABLE [dbo].[users](
 	[psw] [nvarchar](100) NOT NULL,
 	[isAdmin] [bit] NOT NULL,
 	[tipo] [nchar](20) NOT NULL,
+	[activo] [bit] NOT NULL,
  CONSTRAINT [PK__users__3213E83F430FB1A4] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

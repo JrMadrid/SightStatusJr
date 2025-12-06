@@ -1,9 +1,9 @@
 /* RUTAS DE INFORMATIVA -- DISPOSITIVOS */
 import express from 'express';
-import { methods as DispositivosInfoControllers } from '../../controllers/Informativas/DispositivosInfoCon.js';
-const DeviceInfoRou = express.Router(); // Crea un nuevo objeto Router que se puede usar para definir rutas
+import { controllers as CN } from '../../controllers/Informativas/DispositivosInfoCon.js';
+const DeviceInfoRou = express.Router();
 
-DeviceInfoRou.get('/devices/dispositivos/:nombre', DispositivosInfoControllers.getDispositivosNombre); // Mandar los dispositivos con ese nombre -- /informe/devices/dispositivos
-DeviceInfoRou.get('/devices/device/:dispo', DispositivosInfoControllers.getInfoDispositivos); // Pedir los datos de los dispositivos -- /informe/devices/device/:dispo
+DeviceInfoRou.get('/devices/dispositivos/:nombre', CN.getDispositivosNombre); // Mandar los dispositivos con ese nombre -- /informe/devices/dispositivos/:nombre
+DeviceInfoRou.get('/devices/device/:nombre', CN.getInfoDispositivos); // Pedir los datos de los dispositivos -- /informe/devices/device/:nombre
 
 export default DeviceInfoRou;

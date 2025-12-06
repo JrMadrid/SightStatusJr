@@ -10,7 +10,6 @@ export default function InfoManual() {
   const location = useLocation();
   const [manualInfo, setManualInfo] = useState({});
   const [manualBlob, setManualBlob] = useState(null);
-
   const id = location.state?.id;
 
   // Nombre de la Pestaña
@@ -28,13 +27,9 @@ export default function InfoManual() {
   useEffect(() => {
     const manualinfo = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/info/${id}`;
-        const response = await fetchData(url);
-        const manualinfo = await response.json();
-        if (!response.ok) {
-          throw new Error(manualinfo.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setManualInfo(manualinfo);
+        const url = `/informe/manuales/info/${id}`;
+        const datos = await fetchData(url);
+        setManualInfo(datos);
       } catch (error) {
         console.error('Error: // Mandar los datos del manual, ', error);
         toast.error(error.message || 'Error con los datos');
@@ -48,16 +43,13 @@ export default function InfoManual() {
   useEffect(() => {
     const manualar = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/manuales/manual/${id}`;
-        const response = await fetchData(url);
-        if (!response) throw new Error('Sin documento');
+        const url = `/informe/manuales/manual/${id}`;
+        const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+          throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
         }
-
         const manualBlob = await response.blob();
-
         if (manualBlob.size === 0) {
           setManualBlob(null);
           throw new Error('La respuesta no entrega un documento');

@@ -1,12 +1,17 @@
 /* SERVICIOS DE INFORMATIVA -- MANUAL */
-import { getDatosManual, getManualArchivo } from "../../models/Informativas/ManualInfoMod.js";
+import { db as DB } from "../../models/Informativas/ManualInfoMod.js";
 
 // Mandar los datos del manual
-export const obtenerDatosManual = async (manualid) => {
-  return await getDatosManual(manualid);
+const obtenerDatosManual = async (manualid) => {
+  return await DB.getDatosManual(manualid);
 };
 
 // Mandar el manual
-export const obtenerArchivoManual = async (manualid) => {
-  return await getManualArchivo(manualid);
+const obtenerArchivoManual = async (manualid) => {
+  return await DB.getManualArchivo(manualid);
+};
+
+export const services = {
+  obtenerDatosManual,
+  obtenerArchivoManual
 };

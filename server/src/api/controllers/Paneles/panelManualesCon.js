@@ -1,11 +1,11 @@
 /* CONTROLADORES DE PANEL DE MANUALES */
-import { obtenerManuales, publicarManual, eliminarManual, actualizarManual, manualArchivo } from '../../services/Paneles/panelManualSer.js';
-import { SchemaAgregarManual, schemaActualizarManual, SchemaEliminarManual } from '../../validators/Paneles/panelManualesVal.js';
+import { schemas as SC } from '../../validators/Paneles/panelManualesVal.js';
+import { services as SR } from '../../services/Paneles/panelManualSer.js';
 
 // Pedir los datos de los manuales
 const getManuales = async (req, res) => {
   try {
-    const manuales = await obtenerManuales();
+    const manuales = await SR.obtenerManuales();
     res.status(200).json(manuales);
   } catch (error) {
     console.error('Error: // Pedir los datos de los manuales, ', error);
@@ -16,18 +16,14 @@ const getManuales = async (req, res) => {
 // Agregar un nuevo manual
 const postManual = async (req, res) => {
   try {
-    const { descripcion = '', nombre = '', documento } = req.body;
     const manual = req.file.buffer;
-
-    const { error } = SchemaAgregarManual.validate(req.body, { abortEarly: false })
+    const { error, value } = SC.SchemaAgregarManual.validate(req.body, { abortEarly: false })
     if (error) {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-
-    await publicarManual(descripcion, nombre, documento, manual);
+    await SR.publicarManual(value, manual);
     res.status(200).json({ message: 'Manual agregado exitosamente' });
-
   } catch (error) {
     console.error('Error: // Agregar un nuevo manual, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error agregando nuevos manual' }); // Responder con falla
@@ -37,15 +33,15 @@ const postManual = async (req, res) => {
 // Actualizar un manual
 const updateManual = async (req, res) => {
   try {
-    const { nombre, descripcion, id } = req.body;
-
-    const { error } = schemaActualizarManual.validate(req.body, { abortEarly: false })
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const { error, value } = SC.schemaActualizarManual.validate({ id: req.params.id, ...req.body }, { abortEarly: false });
     if (error) {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-
-    await actualizarManual(nombre, descripcion, id);
+    await SR.actualizarManual(value);
     res.status(200).json({ message: 'Manual actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un manual, ', error);
@@ -56,13 +52,16 @@ const updateManual = async (req, res) => {
 // Eliminar un manual
 const deleteManual = async (req, res) => {
   try {
-    const { id } = req.body;
-    const { error } = SchemaEliminarManual.validate(req.body, { abortEarly: false })
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const id = req.params.id;
+    const { error, value } = SC.SchemaEliminarManual.validate({ id }, { abortEarly: false })
     if (error) {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-    await eliminarManual(id);
+    await SR.eliminarManual(value);
     res.status(200).json({ message: 'Manual eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un manual, ', error);
@@ -73,19 +72,25 @@ const deleteManual = async (req, res) => {
 // Pedir el manual en formato PDF
 const Manual = async (req, res) => {
   try {
+    if (!req.params.id) { return; }
     const id = req.params.id;
-    const documento = await manualArchivo(id);
+    const documento = await SR.manualArchivo(id);
     if (!documento.manual) {
       return res.sendStatus(404);
     }
     res.set('Content-Type', 'application/pdf'); // Cambia el tipo de contenido a PDF
     res.set('Content-Disposition', `inline; filename="manual.pdf"`); // Cambia el nombre del archivo si es necesario
     res.status(200).send(documento.manual);
-
   } catch (error) {
     console.error('Error: // Pedir el manual en formato PDF, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error con el manual' });
   }
 };
 
-export const methods = { getManuales, postManual, updateManual, deleteManual, Manual };
+export const controllers = {
+  getManuales,
+  postManual,
+  updateManual,
+  deleteManual,
+  Manual
+};

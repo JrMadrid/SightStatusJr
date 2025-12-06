@@ -1,26 +1,34 @@
-/* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- VISUALIZAR */
+/* TABLA DE SUCURSALES Y PANEL DE ADMINISTRACIÓN DE SUCURSALES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import fetchData from '../../api/fetchConfig.js';
 import { Paginador } from '../Elements/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectSucursales = () => {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
+  // Nombre de la Pestaña
+  useEffect(() => {
+    // Cambia el nombre de la pestaña
+    document.title = "Sucursales";
+
+    // Vuelve al título original
+    return () => {
+      document.title = "StatusAppJR";
+    };
+  }, []);
+
   // Pedir los datos de las sucursales
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/sucursales`;
+    const url = `/panel/sucursales`;
     const sucursales = async () => {
       try {
-        const response = await fetchData(url);
-        const sucursales = await response.json();
-        if (!response.ok) {
-          throw new Error(sucursales.message || 'Lo sentimos, ocurrió un problema');
-        }
-
-        setData(sucursales);
-        setCount(sucursales.length);
+        const datos = await fetchData(url);
+        setData(datos);
+        setCount(datos.length);
       } catch (error) {
         console.error('Error // Pedir los datos de las sucursales, ', error);
         toast.error(error.message || 'Error al cargar las sucursales');
@@ -31,39 +39,23 @@ const SelectSucursales = () => {
   }, []);
 
   // Pedir el número economico
-  const eleccion = async (economico) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/status/numero/${economico}`;
-    try {
-      const response = await fetchData(url);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-    } catch (error) {
-      console.error('Error // Pedir el número economico, ', error);
-      toast.error(error.message || 'Error al mandar el economico');
-    }
+  const eleccion = async (economico, nombre, ingresponsable) => {
+    navigate(`/informativa/sucursal/${economico}`, { state: { nombre, ingresponsable } });
+  };
+
+  // Pedir el número economico
+  const eleccionUbica = async (economico, nombre, ingresponsable) => {
+    navigate(`/informativa/ubicacion/${economico}`, { state: { nombre, ingresponsable } });
   };
 
   // Pedir el número económico -- Mantenimiento
-  const seleccion = async (economico, id) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/mantes/numero/${economico}/${id}`;
-    localStorage.setItem('idMantenimiento', id); // guarda el ID
-    try {
-      const response = await fetchData(url);
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-    } catch (error) {
-      console.error('Error // Pedir el número economico, ', error);
-      toast.error(error.message || 'Error al mandar el economico');
-    }
+  const eleccionMante = async (economico, ingresponsable) => {
+    navigate(`/informativa/mantenimiento/${economico}`, { state: { id: '0', ingresponsable } });
   };
 
   return (
     <>
-      <Paginador tipo='sucursales' titulo='SUCURSALES' placeholder='Buscar por Número económico, Canal,  Nombre o ing.Responsable' data={data} eleccion={eleccion} seleccion={seleccion} excel='si' save='Sucursales' cantidad={count} />
+      <Paginador tipo='sucursales' data={data} eleccion={eleccion} eleccionUbica={eleccionUbica} eleccionMante={eleccionMante} excel='si' cantidad={count} />
     </>
   );
 };

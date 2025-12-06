@@ -3,16 +3,9 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const DeleteDispositivo = () => {
-  const [formData, setFormData] = useState({
-    id: ''
-  });
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const cambio = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [id, setId] = useState('');
+  const [message, setMessage] = useState('');
 
   // Eliminar un dispositivo
   const Eliminar = async (e) => {
@@ -21,14 +14,14 @@ const DeleteDispositivo = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/dispositivos/eliminar`, formData);
+      const response = await axios.delete(`/panel/dispositivos/eliminar/${id}`);
       setMessage(response.data.message || 'Dispositivo eliminado exitosamente');
       window.location.reload();
     } catch (error) {
       console.error(' Error: // Eliminar un dispositivo, ', error);
       setMessage(error.response?.data?.message || 'Error al eliminar el dispositivo');
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   };
 
@@ -39,8 +32,8 @@ const DeleteDispositivo = () => {
         <form onSubmit={Eliminar}>
           <div className="delete">
             <label htmlFor="id"><span className='ReEliminar'>*</span>ID:</label>
-            <input type="number" id="id" name="id" maxLength="5" placeholder='Elemento que eliminara' title='ID' min='1' pattern='\d{1,5}' required onChange={cambio} value={formData.id} />
-            <button type="submit" disabled={loading}>Eliminar</button>
+            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que eliminara' title='ID' pattern='\d{1,5}' required value={id} onChange={(e) => setId(e.target.value)} />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Eliminando...' : 'Eliminar'}</button>
           </div>
         </form>
         <div className='avisos'>

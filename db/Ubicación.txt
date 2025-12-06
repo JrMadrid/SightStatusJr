@@ -1,0 +1,58 @@
+-- CREAR TABLA DE UBICACIÓN
+
+USE [statusAppsPro]
+GO
+
+/****** Object:  Table [dbo].[ubicacion]   
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[ubicacion](
+	[id] [int] IDENTITY(1,1) NOT NULL,
+	[economico] [varchar](6) NOT NULL,
+	[latitud] [decimal](10, 8) NULL,
+	[longitud] [decimal](11, 8) NULL,
+	[direccion] [nvarchar](255) NULL,
+	[actualizado] [datetime] NULL,
+	[imagen] [varbinary](max) NULL,
+	[descripcion] [nvarchar](max) NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[ubicacion] ADD  DEFAULT (getdate()) FOR [actualizado]
+GO
+
+ALTER TABLE [dbo].[ubicacion]  WITH NOCHECK ADD  CONSTRAINT [FK_ubicacion_sucursal] FOREIGN KEY([economico])
+REFERENCES [dbo].[sucursales] ([economico])
+ON UPDATE CASCADE
+ON DELETE CASCADE
+GO
+
+ALTER TABLE [dbo].[ubicacion] CHECK CONSTRAINT [FK_ubicacion_sucursal]
+GO
+
+-- DATO ESPECIAL
+-- La primera sucursal se usa para representar que no se ha establecido una sucursal 
+
+USE [statusAppsPro]
+GO
+
+INSERT INTO [dbo].[ubicacion]
+           ([economico]
+           ,[descripcion])
+     VALUES
+           ('000000'
+           ,'Sucursal especial, toma los dispositivos que se han quedado sin sucursal al ser eliminada la sucursal que los poseía')
+GO
+
+-- REINICIAR EL ID
+DBCC CHECKIDENT ('ubicacion', RESEED, 1);
+
+

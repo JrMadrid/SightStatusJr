@@ -1,13 +1,13 @@
 /* COMPONENTE QUE GUARDA EN PDF LA INFORMACION SELECCIONADA */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../../context/UserContext.jsx';
 import jsPDF from 'jspdf';
 import { Toaster, toast } from 'react-hot-toast';
-import date from '../../utils/date.js';
-import imgBase64 from '../../utils/imgBase64.js';
-import '../css/PDF.css';
-import logo from '../../imgs/LogoSoporteBN.png';
-import hn from '../../imgs/hnBN.png';
+import date from '../../../utils/date.js';
+import imgBase64 from '../../../utils/imgBase64.js';
+import '../../css/PDF.css';
+import logo from '../../../imgs/LogoSoporteBN.png';
+import hn from '../../../imgs/hnBN.png';
 
 export default function PDF(props) {
   const user = useContext(UserContext);

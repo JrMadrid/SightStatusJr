@@ -1,31 +1,42 @@
 /* SERVICIOS DE INFORMATIVA -- USUARIO */
-import { getListaUsuarios, getDatosSeleccionado, editDataPersonal, editFotoPersonal, getFotoSeleccionado, desactivarSuper } from "../../models/Informativas/UsuarioInfoMod.js";
+import { db as DB, verificaciones as VR } from "../../models/Informativas/UsuarioInfoMod.js";
 
 // Pedir la lista de usuarios
-export const obtenerListaUsuarios = async () => {
-  return await getListaUsuarios();
+const obtenerListaUsuarios = async () => {
+  return await DB.getListaUsuarios();
 };
 
-// Pedir los datos del personal seleccionado
-export const obtenerDatosSeleccionado = async (seleccionado) => {
-  return await getDatosSeleccionado(seleccionado);
+// Pedir los datos del personal
+const obtenerDatosSeleccionado = async (seleccionado) => {
+  const existe = await VR.UsuarioExiste(seleccionado);
+  if (!(existe)) { throw { code: 404, message: 'No se encontró el usuario' }; };
+  return await DB.getDatosSeleccionado(seleccionado, existe);
 };
 
-// Pedir la foto del personal seleccionado
-export const obtenerFotoSeleccionado = async (seleccionado) => {
-  return await getFotoSeleccionado(seleccionado);
+// Pedir la foto del personal
+const obtenerFotoSeleccionado = async (seleccionado) => {
+  if (!(await VR.UsuarioExiste(seleccionado))) { throw { code: 404, message: 'No se encontró el usuario' }; };
+  return await DB.getFotoSeleccionado(seleccionado);
 };
 
 // Editar los datos del personal
-export const editarDatosPersonal = async (propiedadEditar, propiedadEditada, id) => {
-  if (propiedadEditar === 'activo') {
-    if (await desactivarSuper(id)) { throw { code: 403, message: 'No se puede desactivar al super administrador' }; }
-  }
-
-  await editDataPersonal(propiedadEditar, propiedadEditada, id);
+const editarDatosPersonal = async (value) => {
+  const data = { ...value };
+  const id = data.id;
+  delete data.id;
+  const [propiedadEditar, valor] = Object.entries(data)[0];
+  await DB.editDataPersonal(propiedadEditar, valor, id);
 };
 
 // Editar la foto del personal
-export const editarFotoPersonal = async (foto, id) => {
-  await editFotoPersonal(foto, id);
+const editarFotoPersonal = async (foto, id) => {
+  await DB.editFotoPersonal(foto, id);
+};
+
+export const services = {
+  obtenerListaUsuarios,
+  obtenerDatosSeleccionado,
+  obtenerFotoSeleccionado,
+  editarDatosPersonal,
+  editarFotoPersonal
 };

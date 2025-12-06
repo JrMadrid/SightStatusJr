@@ -7,7 +7,7 @@
 	display: flex;
 	justify-content: center;
 	list-style-type: none;
-	background-color: rgb(11, 23, 50);
+	background-color: rgb(0, 7, 22);
 	padding: 0;
 	width: 100%;
 	font-size: 1rem;
@@ -15,6 +15,7 @@
 
 .navbar li {
 	padding: 0.2rem 1rem;
+	text-align: center;
 }
 
 .navbar li a {
@@ -51,7 +52,7 @@
 	font-family: 'Franklin Gothic';
 	font-size: 1rem;
 	position: fixed;
-	right: 8vw;
+	right: 9vw;
 }
 
 .close {
@@ -68,4 +69,14 @@
 .close:hover {
 	background-color: black;
 	color: #c59e75;
+}
+
+.iconoConexion {
+	font-size: 1.2rem;
+	padding: 0 0.5rem;
+	width: 1vw;
+	min-width: 1vw;
+	right: 8vw;
+	position: fixed;
+	text-align: center;
 }

@@ -1,13 +1,14 @@
 /* CONTROLADORES DE INFORMATIVA -- USUARIO */
-import { obtenerListaUsuarios, obtenerDatosSeleccionado, editarDatosPersonal, editarFotoPersonal, obtenerFotoSeleccionado } from "../../services/Informativas/UsuarioInfoSer.js";
-import { userSchema } from "../../validators/Informativas/UsuarioInfoVal.js";
+import { fileTypeFromBuffer } from "file-type";
+import { schemas as SC } from "../../validators/Informativas/UsuarioInfoVal.js";
+import { services as SR } from "../../services/Informativas/UsuarioInfoSer.js";
 
 // Pedir la lista de usuarios
-const getlistaUsuarios = async (req, res) => {
+const getListaUsuarios = async (req, res) => {
   const tipo = req.session.tipo;
   if (tipo === "Super Administrador") {
     try {
-      const lista = await obtenerListaUsuarios();
+      const lista = await SR.obtenerListaUsuarios();
       return res.status(200).json(lista)
     } catch (error) {
       console.error('Error: // Pedir la lista de usuarios, ', error);
@@ -19,83 +20,59 @@ const getlistaUsuarios = async (req, res) => {
   }
 };
 
-// Pedir los datos del personal seleccionado
+// Pedir los datos del personal
 const getDatosSeleccionado = async (req, res) => {
   try {
     let seleccionado;
     const tipo = req.session.tipo;
-    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickGuardado;
-    const datos = await obtenerDatosSeleccionado(seleccionado);
+    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickname;
+    const datos = await SR.obtenerDatosSeleccionado(seleccionado);
     return res.status(200).json(datos);
   } catch (error) {
-    console.error('Error: // Pedir los datos del personal seleccionado, ', error);
+    console.error('Error: // Pedir los datos del personal, ', error);
     res.status(error?.code || 500).json({ message: error?.message || "Error al obtener los datos del personal" });
   }
 };
 
-// Pedir la foto del personal seleccionado
+// Pedir la foto del personal
 const getFotoSeleccionado = async (req, res) => {
   try {
     let seleccionado;
     const tipo = req.session.tipo;
-    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickGuardado;
-    const archivo = await obtenerFotoSeleccionado(seleccionado);
+    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickname;
+    const archivo = await SR.obtenerFotoSeleccionado(seleccionado);
     if (!archivo.foto) {
-      return res.sendStatus(404);
+      return res.status(404).json({ code: 404, message: 'Sin foto' });
     }
-    res.set('Content-Type', 'image/jpeg'); // Cambia el tipo de contenido a JPEG
-    res.set('Content-Disposition', `inline; filename="foto.jpg"`); // Cambia el nombre del archivo a descargar
+    // Detectar MIME real desde el buffer
+    const tipoDetectado = await fileTypeFromBuffer(archivo.foto);
+    // Si no detecta, usa JPEG como fallback
+    const mime = tipoDetectado?.mime || "image/jpeg";
+    const extension = tipoDetectado?.ext || "jpg";
+    // Enviar con el tipo correcto
+    res.set("Content-Type", mime); // Cambia el tipo de contenido a JPEG
+    res.set("Content-Disposition", `inline; filename="foto.${extension}"`); // Cambia el nombre del archivo a descargar
     res.status(200).send(archivo.foto);
   } catch (error) {
-    console.error('Error: // Pedir la foto del personal seleccionado, ', error);
+    console.error('Error: // Pedir la foto del personal, ', error);
     res.status(error?.code || 500).json({ message: error?.message || "Error al obtener la foto del personal" });
   }
 };
 
-// Pedir los datos del personal seleccionado en seleccion
-const getDatosSeleccion = async (req, res) => {
-  try {
-    const seleccionado = req.params.nickname;
-    const datos = await obtenerDatosSeleccionado(seleccionado);
-
-    return res.status(200).json(datos);
-  } catch (error) {
-    console.error('Error: // Pedir los datos del personal seleccionado en seleccion, ', error);
-    res.status(error?.code || 500).json({ message: error?.message || "Error al obtener los datos del personal seleccionado" });
-  }
-};
-
-// Pedir la foto del personal seleccionado en seleccion
-const getFotoSeleccion = async (req, res) => {
-  try {
-    const seleccionado = req.params.nickname;
-    const archivo = await obtenerFotoSeleccionado(seleccionado);
-    if (!archivo.foto) {
-      return res.sendStatus(404);
-    }
-    res.set('Content-Type', 'image/jpeg'); // Cambia el tipo de contenido a JPEG
-    res.set('Content-Disposition', `inline; filename="foto.jpg"`); // Cambia el nombre del archivo a descargar
-    res.status(200).send(archivo.foto);
-
-  } catch (error) {
-    console.error('Error: // Pedir la foto del personal seleccionado en seleccion, ', error);
-    res.status(error?.code || 500).json({ message: error?.message || "Error al obtener la foto del personal seleccionado" });
-  }
-};
-
 // Editar los datos del personal
-const updateDatos = async (req, res) => {
+const editDataPersonal = async (req, res) => {
   try {
-    const propiedadEditar = req.params.editar;
-    const { valor: propiedadEditada, id } = req.body;
-
-    const validar = { [propiedadEditar]: propiedadEditada, id };
-    const { error } = userSchema.validate(validar, { abortEarly: false });
+    let { propiedadEditar, valor, id } = req.body;
+    if (typeof valor === 'string') {
+      valor = valor.trim();
+    }
+    const validar = { [propiedadEditar]: valor, id };
+    const { error, value } = SC.SchemaActualizarUsuario.validate(validar, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await editarDatosPersonal(propiedadEditar, propiedadEditada, id);
+    await SR.editarDatosPersonal(value);
     return res.status(200).json({ ok: true, message: `Cambio correcto de ${propiedadEditar}` });
   } catch (error) {
     console.error('Error: // Editar los datos del personal, ', error);
@@ -104,16 +81,22 @@ const updateDatos = async (req, res) => {
 };
 
 // Editar la foto del personal
-const updateFoto = async (req, res) => {
+const editFotoPersonal = async (req, res) => {
   try {
     const foto = req.file.buffer; // Obtiene el archivo como un buffer
     const id = req.body.id;
-    await editarFotoPersonal(foto, id);
+    await SR.editarFotoPersonal(foto, id);
     return res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Editar la foto del personal, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error editando foto' });
   }
-}
+};
 
-export const methods = { getlistaUsuarios, getDatosSeleccionado, getFotoSeleccionado, getDatosSeleccion, getFotoSeleccion, updateDatos, updateFoto };
+export const controllers = {
+  getListaUsuarios,
+  getDatosSeleccionado,
+  getFotoSeleccionado,
+  editDataPersonal,
+  editFotoPersonal,
+};

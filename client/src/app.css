@@ -56,6 +56,7 @@ a {
 
 .noti {
   border: 1px solid black;
+  word-wrap: break-word;
 }
 
 button {

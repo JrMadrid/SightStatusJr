@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import fetchData from '../../api/fetchConfig.js';
 import Pingdispo from '../Elements/ping.jsx';
-import ALLPDF from '../PDF/AllPDF.jsx'
+import ALLPDF from '../Elements/PDF/AllPDF.jsx'
 import { ListExcel } from '../Listas/Lista_Excel.jsx';
 import '../css/Infor_Dispositivo.css';
 import logoSoporte from '../../imgs/LogoSoporte.png';
@@ -15,7 +15,6 @@ export default function InfoDispositivo() {
   const [dispositivoId, setDispositivoId] = useState('');
   const [content, setContent] = useState([]);
   const [data, setData] = useState([]);
-
   const { nombre } = useParams();
 
   // Nombre de la Pestaña
@@ -42,15 +41,11 @@ export default function InfoDispositivo() {
   useEffect(() => {
     const dispositivos = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/devices/dispositivos/${nombre}`;
-        const response = await fetchData(url);
-        const lista = await response.json();
-        if (!response.ok) {
-          throw new Error(lista.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setAppslist(lista);
-        if (lista.length > 0) {
-          appData(lista[0].nombre);
+        const url = `/informe/devices/dispositivos/${nombre}`;
+        const dispositivos = await fetchData(url);
+        setAppslist(dispositivos);
+        if (dispositivos.length > 0) {
+          appData(dispositivos[0].nombre);
         }
       } catch (error) {
         console.error('Error // Mandar los dispositivos con ese nombre, ', error);
@@ -62,15 +57,11 @@ export default function InfoDispositivo() {
   }, [nombre]);
 
   // Pedir los datos de los dispositivos
-  const appData = async (dispo) => {
+  const appData = async (nombre) => {
     try {
-      const response = await fetchData(`http://${process.env.REACT_APP_HOST}/informe/devices/device/${dispo}`);
-      const info = await response.json();
-      if (!response.ok) {
-        throw new Error(info.message || 'Lo sentimos, ocurrió un problema');
-      }
-      setData(info);
-      setContent(info);
+      const datos = await fetchData(`/informe/devices/device/${nombre}`);
+      setData(datos);
+      setContent(datos);
     } catch (error) {
       console.error('Error: // Pedir los datos de los dispositivos, ', error);
       toast.error(error.message || 'Error al cargar los dispositivos');
@@ -85,7 +76,8 @@ export default function InfoDispositivo() {
         <ul className='list2'>
           {appslist.map((dispositivo, index) => (
             <li className='listaElement2' key={index} >
-              <a href={`#${dispositivo.id}`} onClick={() => setDispositivoId(dispositivo.id?.toString())} className={`listItem2 appi2 ${dispositivo?.ip.startsWith('000.') || dispositivo?.ip.startsWith('001.') ? 'sinip2' : ''} ${dispositivo.id?.toString() !== dispositivoId ? '' : 'appi2Seleccionado'}`} >
+              <a href={`#${dispositivo.id}`} className={`listItem2 appi2 ${dispositivo?.ip.startsWith('000.') || dispositivo?.ip.startsWith('001.') ? 'sinip2' : ''} ${dispositivo.id?.toString() !== dispositivoId ? '' : 'appi2Seleccionado'}`}
+                onClick={() => setDispositivoId(dispositivo.id?.toString())} >
                 <HiFastForward className={`appi2Icon ${dispositivo.id?.toString() !== dispositivoId ? '' : 'appi2SeleccionadoIcon'}`} />
                 {dispositivo.economico}-{dispositivo.sucursal}
               </a>

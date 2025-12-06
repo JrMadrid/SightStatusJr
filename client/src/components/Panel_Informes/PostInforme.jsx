@@ -3,15 +3,15 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostInforme = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    archivo: null,
     nombre: '',
     economico: '',
     frealizada: '',
-    archivo: null,
     descripcion: '',
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [documento, setDocumento] = useState('Sin documento');
 
   const cambio = (e) => {
@@ -42,39 +42,42 @@ const PostInforme = () => {
     setLoading(true);
     setMessage('');
 
-    if (!formData.archivo) {
-      setMessage('Por favor, suba un archivo válido (.pdf).');
-      setLoading(false);
-      return;
-    }
-
-    if (formData.descripcion.length > 100) {
-      setMessage('La descripción debe tener máximo 100 caracteres.');
-      setLoading(false);
-      return;
-    }
-
-    const DatosParaEnviar = new FormData(); // Crear un nuevo objeto FormData
-    DatosParaEnviar.append('informe', formData.archivo); // Agregar el archivo al FormData
-    DatosParaEnviar.append('economico', formData.economico);
-    DatosParaEnviar.append('frealizada', formData.frealizada);
-    DatosParaEnviar.append('nombre', formData.nombre);
-    DatosParaEnviar.append('descripcion', formData.descripcion);
-    DatosParaEnviar.append('documento', documento);
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/informes/agregar`, DatosParaEnviar, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Asegúrate de que el tipo de contenido sea correcto -- multipart/form-data es para archivos
-        },
-      });
+      if (!formData.archivo) {
+        setMessage('Por favor, suba un archivo válido (.pdf).');
+        setLoading(false);
+        return;
+      };
+      if (formData.descripcion.length > 100) {
+        setMessage('La descripción debe tener máximo 100 caracteres.');
+        setLoading(false);
+        return;
+      };
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        cleanedData[key] = value;
+      };
+      const DatosParaEnviar = new FormData();
+      DatosParaEnviar.append('informe', formData.archivo); // Agregar el archivo al FormData
+      DatosParaEnviar.append('nombre', cleanedData.nombre);
+      DatosParaEnviar.append('economico', cleanedData.economico);
+      DatosParaEnviar.append('frealizada', cleanedData.frealizada);
+      DatosParaEnviar.append('descripcion', cleanedData.descripcion);
+      DatosParaEnviar.append('documento', documento);
+      const response = await axios.post(`/panel/informes/agregar`,
+        DatosParaEnviar,
+        { headers: { 'Content-Type': 'multipart/form-data' } });
       setMessage(response.data.message || 'Informe agregado exitosamente');
-      window.location.reload(); // Recargar la página para ver el nuevo informe
+      window.location.reload();
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error al agregar el informe');
       console.error('Error: // Agregar un nuevo informe, ', error);
-
     } finally {
-      setLoading(false); // Desactivar el estado de carga después de la solicitud
+      setLoading(false);
     }
   };
 
@@ -103,7 +106,7 @@ const PostInforme = () => {
           <label htmlFor="descripcion" style={{ marginTop: '5px' }}>Descripción:</label>
           <textarea className='textarea' style={{ marginTop: '5px' }} id="descripcion" name="descripcion" maxLength="100" placeholder="Descripción del informe (Opcional)" title="100 Caracteres máximos" value={formData.descripcion} onChange={cambio} rows={4} />
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

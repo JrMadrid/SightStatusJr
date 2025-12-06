@@ -1,69 +1,72 @@
 /* VALIDACIONES DE PANEL DE USUARIOS */
 import Joi from 'joi';
 
-// Campo común para ID
+// RegEx
+const IDRegex = /^\d{1,5}$/
+
 const id = Joi.string()
-  .pattern(/^\d{1,5}$/)
+  .pattern(IDRegex)
+  .max(5)
   .required()
   .messages({
     'string.empty': 'El ID es obligatorio.',
     'string.pattern.base': 'El ID debe contener solo números.',
-    'string.max': 'El ID debe tener como máximo 5 caracteres.',
+    'string.max': 'El ID debe tener como máximo 5 caracteres.'
   });
 
-// --- Crear Usuario ---
-export const SchemaCrearUsuario = Joi.object({
-  nickname: Joi.string()
-    .max(50)
-    .required()
-    .messages({
-      'string.empty': 'El nombre del usuario es obligatorio.',
-      'string.max': 'El nombre no debe tener más de 50 caracteres.',
-    }),
+const nickname = Joi.string()
+  .max(50)
+  .messages({
+    'string.max': 'El nombre no debe tener más de 50 caracteres.'
+  });
 
-  psw: Joi.string()
-    .max(50)
-    .required()
-    .messages({
-      'string.empty': 'La contraseña es obligatoria.',
-      'string.max': 'La contraseña no debe tener más de 50 caracteres.',
-    }),
+const psw = Joi.string()
+  .max(50)
+  .messages({
+    'string.max': 'La contraseña no debe tener más de 50 caracteres.'
+  });
 
-  tipo: Joi.string()
-    .valid('Geografia', 'Aplicativo', 'Administrador')
-    .required()
-    .messages({
-      'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo o Administrador.',
-      'string.empty': 'El tipo de usuario es obligatorio.',
-    }),
+const tipo = Joi.string()
+  .valid('Geografia', 'Aplicativo', 'Administrador')
+  .messages({
+    'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo o Administrador.'
+  });
+
+const activo = Joi.string()
+  .valid('si', 'no')
+  .messages({
+    'any.only': 'El campo activo debe ser Sí o No.'
+  });
+
+// Crear Usuario
+const SchemaCrearUsuario = Joi.object({
+  nickname: nickname.required()
+    .messages({ 'string.empty': 'El nombre del usuario es obligatorio.' }),
+  psw: psw.required()
+    .messages({ 'string.empty': 'La contraseña es obligatoria.' }),
+  tipo: tipo.required()
+    .messages({ 'string.empty': 'El tipo de usuario es obligatorio.' }),
+  activo: activo.required()
+    .messages({ 'any.required': '"El campo activo es obligatorio.' })
 });
 
-// --- Actualizar Usuario ---
-export const SchemaActualizarUsuario = Joi.object({
-  id, // requerido
-
-  nickname: Joi.string()
-    .max(50)
-    .allow('')
-    .messages({
-      'string.max': 'El nombre no debe tener más de 50 caracteres.',
-    }),
-
-  psw: Joi.string()
-    .max(50)
-    .allow('')
-    .messages({
-      'string.max': 'La contraseña no debe tener más de 50 caracteres.',
-    }),
-
-  tipo: Joi.string()
-    .valid('Geografia', 'Aplicativo', 'Administrador', '')
-    .messages({
-      'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo, Administrador o estar vacío.',
-    }),
+// Actualizar Usuario
+const SchemaActualizarUsuario = Joi.object({
+  id,
+  nickname: Joi.string().allow(''),
+  psw: psw.allow(''),
+  tipo: tipo.valid('Geografia', 'Aplicativo', 'Administrador', '')
+    .messages({ 'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo, Administrador o estar vacío.' }),
+  activo: activo.allow('')
 });
 
-// --- Eliminar Usuario ---
-export const SchemaEliminarUsuario = Joi.object({
-  id, // requerido
+// Eliminar Usuario
+const SchemaEliminarUsuario = Joi.object({
+  id
 });
+
+export const schemas = {
+  SchemaCrearUsuario,
+  SchemaActualizarUsuario,
+  SchemaEliminarUsuario
+};

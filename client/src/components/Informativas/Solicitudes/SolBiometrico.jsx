@@ -6,7 +6,7 @@ import '../../css/Infor_Sucursal.css';
 const PanelBiometrico = (acceso) => {
   const comando = async (commandId) => {
     toast.promise(
-      axios.post(`http://${process.env.REACT_APP_HOST}/informe/status/aplicacion/solicitud`, { id: commandId })
+      axios.post(`/informe/status/aplicacion/solicitud`, { id: commandId })
         .then(response => {
           if (response.status !== 200) {
             throw new Error('Sin respuesta');

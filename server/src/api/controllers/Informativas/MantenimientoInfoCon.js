@@ -1,11 +1,23 @@
 /* CONTROLADORES DE INFORMATIVA -- MANTENIMIENTO */
-import { fechaMantenimientoSeleccionado, fechasMantenimientosRealizados, obtenerArchivoMantenimiento, obtenerArchivosMantenimientos } from '../../services/Informativas/ManteInfoSer.js';
+import { schemas as SC } from '../../validators/Informativas/MantenimientoInfoVal.js';
+import { services as SR } from '../../services/Informativas/MantenimientoInfoSer.js';
 
-// Mandar las fechas vinculadas al economico
-const fechasr = async (req, res) => {
+const getFechasRealizadas = async (req, res) => {
+  // Mandar las fechas vinculadas al economico
   try {
-    const economico = req.params.economico; // Obtiene el número económico de la URL    
-    const fechasr = await fechasMantenimientosRealizados(economico)
+    if (!req.params.economico) {
+      return res.status(400).json({ message: "Económico requerido" });
+    }
+    const validar = { economico: req.params.economico };
+    const { error, value } = SC.SchemaPedirMantenimiento.validate(validar, { abortEarly: false });
+    if (error) {
+      const mensajes = error.details.map(err => err.message).join('\n');
+      return res.status(400).json({ message: mensajes });
+    }
+    const economico = value.economico;
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    const fechasr = await SR.PedirFechasRealizadas(economico, responsable, tipo);
     return res.status(200).json(fechasr);
   } catch (error) {
     console.error('Error: // Manda las fechas vinculadas al economico, ', error);
@@ -14,19 +26,20 @@ const fechasr = async (req, res) => {
 };
 
 // Mandar el documento del mantemiento seleccionado
-const mantenimientoSeleccionado = async (req, res) => {
+const getFechaSeleccionada = async (req, res) => {
   try {
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
     const id = req.params.id;
-    if (id === '0') throw { code: 404, message: 'Mantenimiento no valido' };
-
-    const mantenimiento = await fechaMantenimientoSeleccionado(id);
+    if (id === '0') throw { code: 404, message: 'Mantenimiento no válido' };
+    const mantenimiento = await SR.PedirFechaSeleccionada(id);
     if (!mantenimiento.constancia) {
       return res.sendStatus(404);
     }
     res.set('Content-Type', 'image/jpeg'); // Cambia el tipo de contenido a JPEG
     res.set('Content-Disposition', `inline; filename="constancia.jpg"`); // Cambia el nombre del archivo a descargar
     res.status(200).send(mantenimiento.constancia);
-
   } catch (error) {
     console.error('Error: // Mandar el documento del mantemiento seleccionado, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Constancia no encontrado' });
@@ -34,12 +47,14 @@ const mantenimientoSeleccionado = async (req, res) => {
 };
 
 // Mandar el archivo de la constancia de la fecha seleccionada
-const info = async (req, res) => {
+const getMantenimientoArchivo = async (req, res) => {
   try {
+    if (!req.params.fechasr) {
+      return res.status(400).json({ message: "Fecha requerida" });
+    }
     const fechasr = req.params.fechasr;
-
     if (fechasr && fechasr !== null && fechasr !== 'null') {
-      const constanciaArchivo = await obtenerArchivoMantenimiento(fechasr);
+      const constanciaArchivo = await SR.obtenerArchivoMantenimiento(fechasr);
       if (!constanciaArchivo.constancia) {
         return res.sendStatus(404);
       }
@@ -56,10 +71,13 @@ const info = async (req, res) => {
 };
 
 // Mandar todas las constancias
-const infos = async (req, res) => {
+const getMantenimientosArchivos = async (req, res) => {
   try {
+    if (!req.params.economico) {
+      return res.status(400).json({ message: "Económico requerido" });
+    }
     const economico = req.params.economico;
-    const constancias = await obtenerArchivosMantenimientos(economico);
+    const constancias = await SR.obtenerArchivosMantenimientos(economico);
     res.status(200).json(constancias);
   } catch (error) {
     console.error('Error: // Mandar todas las constancias, ', error);
@@ -67,4 +85,9 @@ const infos = async (req, res) => {
   }
 };
 
-export default { mantenimientoSeleccionado, fechasr, info, infos };
+export const controllers = {
+  getFechasRealizadas,
+  getFechaSeleccionada,
+  getMantenimientoArchivo,
+  getMantenimientosArchivos
+};

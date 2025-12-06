@@ -12,11 +12,11 @@ GO
 
 CREATE TABLE [dbo].[dispositivos](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[ip] [varchar](15) NOT NULL,
+	[fechaestimada] [date] NOT NULL,
+	[fecharealizada] [date] NULL,
 	[economico] [varchar](6) NOT NULL,
-	[nombre] [varchar](75) NOT NULL,
-	[descripcion] [varchar](100) NULL,
-	[general] [varchar](max) NULL,
+	[constancia] [varbinary](max) NULL,
+	[descripcion] [nvarchar](max) NULL,
  CONSTRAINT [PK__disposit__3213E83F68BC0466] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

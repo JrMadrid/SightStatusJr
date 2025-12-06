@@ -3,16 +3,9 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const DeleteUsers = () => {
-  const [formData, setFormData] = useState({
-    id: ''
-  });
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
-
-  const cambio = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
+  const [id, setId] = useState('');
+  const [message, setMessage] = useState('');
 
   // Eliminar un usuario
   const eliminar = async (e) => {
@@ -21,7 +14,7 @@ const DeleteUsers = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/users/eliminar`, formData);
+      const response = await axios.delete(`/panel/users/eliminar/${id}`);
       setMessage(response.data.message || 'Usuario eliminado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -38,8 +31,8 @@ const DeleteUsers = () => {
       <form onSubmit={eliminar}>
         <div className="delete">
           <label htmlFor="id"><span className='ReEliminar'>*</span>ID: </label>
-          <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que eliminará' title='ID' min='2' pattern='\d{1,5}' value={formData.id} onChange={cambio} required />
-          <button type="submit" disabled={loading}>Eliminar</button>
+          <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que eliminará' title='ID' pattern='\d{1,5}' value={id} onChange={(e) => { setId(e.target.value) }} required />
+          <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Eliminando...' : 'Eliminar'}</button>
         </div>
       </form>
       <div className='avisos'>

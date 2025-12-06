@@ -25,7 +25,6 @@ async function dbConnection() {
     debugDb('Reutilizando conexión existente.');
     return pool;
   }
-
   try {
     debugDb('Conectando a la base de datos...');
     pool = await sql.connect(dbConfig);
@@ -35,7 +34,7 @@ async function dbConnection() {
     debugDb('Error al conectar a la base de datos:', err);
     throw err;
   }
-}
+};
 
 // Opción para cerrar el pool manualmente si lo necesitas
 // async function closeConnection() {
@@ -44,7 +43,7 @@ async function dbConnection() {
 // 		debugDb('Conexión cerrada.');
 // 		pool = null;
 // 	}
-// }
+// };
 
 export default dbConnection;
 // export { dbConnection, closeConnection };

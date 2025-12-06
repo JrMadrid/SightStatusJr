@@ -113,7 +113,7 @@
 
 .informaciones {
   display: flex;
-  box-shadow: 0px 0px 5px 1px black;
+  box-shadow: 0px 0px 5px 0px black;
   padding-top: 10px;
 }
 
@@ -129,8 +129,8 @@
   min-height: 50vh;
   max-height: 50vh;
   overflow-y: auto;
-  /* min-width: 57vh; */
-  max-width: 57vh;
+  min-width: 37.7vw;
+  max-width: 37.7vw;
   overflow-x: auto;
 }
 
@@ -902,8 +902,8 @@
 .desccaja {
   font-family: 'Segoe UI';
   text-overflow: ellipsis;
-  min-height: 20vh;
-  max-height: 42vh;
+  min-height: 40vh;
+  max-height: 40vh;
   box-shadow: 0px 0px 2px #0056b3 inset;
 }
 
@@ -990,13 +990,13 @@
 }
 
 .informacioncajasuper {
-  min-height: 34vw;
-  max-height: 34vw;
+  min-height: 74vh;
+  max-height: 74vh;
 }
 
 .informacioncajano {
-  min-height: 44vw;
-  max-height: 44vw;
+  min-height: 77vh;
+  max-height: 77vh;
 }
 
 .informacionesUsuario {
@@ -1007,7 +1007,7 @@
   flex: 1;
   color: whitesmoke;
   font-family: sans-serif;
-  max-height: 17vw;
+  height: 25vh;
   width: 19vw;
   overflow-x: auto;
   overflow-y: auto;
@@ -1017,7 +1017,7 @@
   flex: 1;
   color: whitesmoke;
   font-family: sans-serif;
-  max-height: 19vw;
+  height: 25vh;
   width: 19vw;
   overflow-x: auto;
   overflow-y: auto;
@@ -1053,7 +1053,7 @@
 }
 
 .perfilFoto {
-  width: 13vw;
+  width: 15vw;
   /* padding: 0.9vw 0vw; */
   border-radius: 5%;
 }
@@ -1079,14 +1079,12 @@
 }
 
 .inforDescripcion {
-  height: 17vw;
-  max-height: 17vw;
+  height: 49vh;
   overflow: auto;
 }
 
 .inforDescripcionno {
-  height: 25vw;
-  max-height: 25vw;
+  height: 52vh;
   overflow: auto;
 }
 
@@ -1112,43 +1110,13 @@
   background-color: rgb(0, 7, 22);
 }
 
-.btnConfirmar {
-  background-color: #4CAF50;
-  border: none;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  border-radius: 5px;
-  margin-bottom: 0.5rem;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.btnConfirmar:hover {
-  background-color: #45a049;
-}
-
-.btnCancelar {
-  background-color: #e74c3c;
-  border: none;
-  color: white;
-  padding: 0.25rem 0.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 0.8rem;
-}
-
-.btnCancelar:hover {
-  background-color: #c0392b;
-}
-
 .subirFotoPerfil {
   margin-bottom: 0.5rem;
   text-align: center;
   width: 95%;
   color: black;
   font-weight: lighter;
-  padding: 0.2rem 1rem;
+  padding: 0.1rem 1rem;
   background-color: rgb(197, 229, 249);
   border: 1px solid black;
   border-radius: 5px;
@@ -1169,4 +1137,55 @@
   color: rgb(108, 255, 108);
   font-size: 0.9rem;
   padding: 0.3rem;
+}
+
+.btnU {
+  margin: 0px 5px;
+
+}
+
+.btnConfirmar {
+  background-color: #4CAF50;
+  border: none;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btnConfirmar:hover {
+  background-color: #45a049;
+
+}
+
+.btnCancelar {
+  background-color: #e74c3c;
+  border: none;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btnCancelar:hover {
+  background-color: #c0392b;
+}
+
+.btnEliminar {
+  background-color: rgb(132, 132, 66);
+  border: none;
+  color: white;
+  padding: 0.25rem 0.5rem;
+  border-radius: 5px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.btnEliminar:hover {
+  background-color: rgb(125, 125, 55);
 }

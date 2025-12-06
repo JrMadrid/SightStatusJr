@@ -23,16 +23,12 @@ const SelectManuales = () => {
 
   // Pedir los datos de los manuales
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/manuales`;
+    const url = `/panel/manuales`;
     const manuales = async () => {
       try {
-        const response = await fetchData(url);
-        const manuales = await response.json();
-        if (!response.ok) {
-          throw new Error(manuales.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setData(manuales);
-        setCount(manuales.length)
+        const datos = await fetchData(url);
+        setData(datos);
+        setCount(datos.length);
       } catch (error) {
         console.error('Error: // Pedir los datos de los manuales, ', error);
         toast.error(error.message || 'Error con los datos');
@@ -44,14 +40,13 @@ const SelectManuales = () => {
 
   // Pedir el manual en formato PDF
   const eleccion = async (id, nombre = 'Manual') => {
-    let urle = `http://${process.env.REACT_APP_HOST}/panel/manual/${id}`;
+    let urle = `/panel/manual/${id}`;
     try {
-      const response = await fetchData(urle) // Llamar a la función fetchData para obtener los datos
+      const response = await fetch(urle, { credentials: 'include' });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+        throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
       }
-
       const ManualBlob = await response.blob(); // Convertir la respuesta a un Blob
       const blob = new Blob([ManualBlob], { type: 'application/pdf' }); // Crear un nuevo Blob con el tipo de contenido PDF
       const url = window.URL.createObjectURL(blob); // Crear una URL para el Blob

@@ -5,11 +5,7 @@ import { toast } from 'react-hot-toast';
 // Hacer ping a la ip
 const ping = async (ip) => {
   toast.promise(
-    fetchData(`http://${process.env.REACT_APP_HOST}/panel/ping/${ip}`).then(async (response) => {
-      const silbato = await response.json();
-      if (!response.ok) {
-        throw new Error(silbato.message || 'Lo sentimos, ocurrió un problema');
-      }
+    fetchData(`/panel/ping/${ip}`).then(async (silbato) => {
       return silbato.silbido;
     }),
     {

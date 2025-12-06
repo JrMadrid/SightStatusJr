@@ -14,8 +14,8 @@ CREATE TABLE [dbo].[informes](
 	[id] [int] IDENTITY(1,1) NOT NULL,
 	[economico] [varchar](6) NOT NULL,
 	[fecharealizada] [date] NOT NULL,
-	[nombre] [varchar](100) NOT NULL,
-	[descripcion] [varchar](100) NULL,
+	[nombre] [nvarchar](100) NULL,
+	[descripcion] [nvarchar](100) NULL,
 	[informe] [varbinary](max) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const UpdateDispositivo = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     ip: '',
@@ -10,10 +11,9 @@ const UpdateDispositivo = () => {
     reiniciar: '',
     descripcion: '',
     general: '',
-    id: '',
   });
+  const [id, setId] = useState("");
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
@@ -27,13 +27,25 @@ const UpdateDispositivo = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/dispositivos/actualizar`, formData);
+      // Crear objeto limpio sin mutar el estado
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.put(`/panel/dispositivos/actualizar/${id}`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       window.location.reload();
       setMessage(response.data.message || 'Dispositivo actualizado exitosamente');
     } catch (error) {
       console.error(' Error: // Actualizar un dispositivo, ', error);
       setMessage(error.response?.data?.message || 'Error al actualizar el dispositivo');
-
     } finally {
       setLoading(false);
     }
@@ -70,8 +82,8 @@ const UpdateDispositivo = () => {
           <p className='paviso'>Reiniciará los datos alojados en la base de datos (Descripción y General)</p>
           <div className="update">
             <label htmlFor="id"><span className='ReActualizar'>*</span>ID:</label>
-            <input type="number" id="id" name="id" maxLength="5" placeholder='Elemento que actualizara' title='Elemento que actualizara' min='1' pattern='\d{1,5}' required onChange={cambio} value={formData.id} />
-            <button type="submit" disabled={loading}>Actualizar</button>
+            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que actualizara' title='Elemento que actualizara' pattern='\d{1,5}' required value={id} onChange={(e) => setId(e.target.value)} />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Actualizando...' : 'Actualizar'}</button>
           </div>
         </form>
         <div className='avisos'>

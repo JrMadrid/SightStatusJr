@@ -12,9 +12,9 @@ GO
 
 CREATE TABLE [dbo].[manuales](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[nombre] [varchar](100) NOT NULL,
+	[nombre] [nvarchar](100) NULL,
 	[manual] [varbinary](max) NOT NULL,
-	[descripcion] [varchar](100) NULL,
+	[descripcion] [nvarchar](100) NULL,
  CONSTRAINT [PK__manuales__3214EC074171D077] PRIMARY KEY CLUSTERED 
 (
 	[id] ASC

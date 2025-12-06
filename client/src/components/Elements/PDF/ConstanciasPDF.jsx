@@ -1,18 +1,15 @@
 /* COMPONENTE QUE GUARDA EN PDF TODAS LAS CONSTANCIAS */
-import fetchData from '../../api/fetchConfig';
+import fetchData from '../../../api/fetchConfig';
 import pdfMake from 'pdfmake/build/pdfmake';
 import { toast } from 'react-hot-toast';
-import '../css/PDF.css';
+import '../../css/PDF.css';
 
 const PDFConstancias = async (eco) => {
   try {
     // Pedir todas las constancias a la API
-    const url = `http://${process.env.REACT_APP_HOST}/informe/mantes/constancias/${eco}`;
-    const response = await fetchData(url);
-    if (!response.ok) throw new Error('Error al pedir constancias');
-
-    const archivos = await response.json();
-    if (!archivos || archivos.length === 0) throw new Error('No hay constancias disponibles');
+    const url = `/informe/mantes/constancias/${eco}`;
+    const constancias = await fetchData(url);
+    if (!constancias || constancias.length === 0) throw new Error('No hay constancias disponibles');
 
     toast('Procesando constancias...', { position: 'bottom-right' });
 
@@ -68,7 +65,7 @@ const PDFConstancias = async (eco) => {
 
     // Convertir todas las imágenes en paralelo
     const base64Images = await Promise.all(
-      archivos.map((img) => convertBufferToGrayscale(img))
+      constancias.map((img) => convertBufferToGrayscale(img))
     );
 
     // Crear PDF con todas las imágenes

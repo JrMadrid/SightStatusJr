@@ -1,0 +1,41 @@
+/* SERVICIOS DE INFORMATIVA -- UBICACIÓN */
+import { db as DB, verificaciones as VR } from "../../models/Informativas/UbicacionInfoMod.js";
+
+// Pedir los datos de la ubicación de la sucursal
+const pedirUbicacionDatos = async (economico, responsable, tipo) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  const existe = await VR.UbicacionExiste(economico);
+  return await DB.getUbicacionDatos(economico, existe, responsable, tipo);
+};
+
+// Pedir la imagen de la ubicación de la sucursal
+const pedirUbicacionFoto = async (economico, responsable, tipo) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
+  return await DB.getUbicacionFoto(economico, responsable, tipo);
+};
+
+// Editar los datos de la ubicación
+const editarDatosUbicacion = async (value) => {
+  const data = { ...value };
+  const economico = data.economico;
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
+  delete data.economico;
+  const [propiedadEditar, valor] = Object.entries(data)[0];
+  return await DB.updateDatosUbicacion(propiedadEditar, valor, economico);
+};
+
+// Editar la imagen de la ubicación
+const editarImagenUbicacion = async (imagen, economico) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
+  return await DB.updateImagenUbicacion(imagen, economico);
+};
+
+export const services = {
+  pedirUbicacionDatos,
+  pedirUbicacionFoto,
+  editarDatosUbicacion,
+  editarImagenUbicacion
+};

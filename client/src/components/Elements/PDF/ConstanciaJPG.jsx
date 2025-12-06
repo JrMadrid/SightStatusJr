@@ -1,7 +1,7 @@
 /* DESCARGAR IMAGEN DE LA CONSTANCIA */
 import { Toaster, toast } from 'react-hot-toast';
-import { FormatearFecha } from '../Elements/date';
-import '../css/PDF.css';
+import { FormatearFecha } from '../date';
+import '../../css/PDF.css';
 
 const JPGConstancia = ({ imageBlob, eco, fechaco }) => {
   const fechacons = FormatearFecha(fechaco);

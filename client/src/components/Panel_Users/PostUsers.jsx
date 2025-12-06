@@ -1,15 +1,17 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- CREAR */
 import { useState } from 'react';
+import { FaUser } from 'react-icons/fa';
 import axios from '../../api/axiosConfig';
 
 const PostUsers = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nickname: '',
     psw: '',
-    tipo: 'Geografia'
+    tipo: 'Geografia',
+    activo: 'si'
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value, type, checked } = e.target;
@@ -32,8 +34,21 @@ const PostUsers = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/users/agregar`, formData);
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.post(`/panel/users/agregar`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       setMessage(response.data.message || 'Usuario agregado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -59,8 +74,15 @@ const PostUsers = () => {
             <option value="Aplicativo" >Aplicativo</option>
             <option value="Administrador" >Administrador</option>
           </select>
+          <div className='re-options'>
+            <label><span className='ReAgregar'>*</span><FaUser style={{ fontSize: '0.7rem' }} />  Activo:</label>
+            <input id='siActivo' type="radio" name="activo" value="si" checked={formData.activo === 'si'} onChange={cambio} required/>
+            <label className='re-boolean' htmlFor='siActivo'>Sí</label>
+            <input id='noActivo' type="radio" name="activo" value="no" checked={formData.activo === 'no'} onChange={cambio} />
+            <label className='re-boolean' htmlFor='noActivo'>No</label>
+          </div>
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

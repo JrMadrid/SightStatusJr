@@ -9,7 +9,7 @@ import fechaFomatoSQL from '../../utils/formatoFecha.js';
 import calcularEdad from '../../utils/edad.js';
 import Whatsapp from '../../utils/wspNumber.jsx';
 import '../css/Infor_Sucursal.css';
-import { FaRegEdit, FaCheck, FaTimes, FaUserCheck, FaUserTimes } from 'react-icons/fa';
+import { FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
 import logoSoporte from '../../imgs/LogoSoporte.png';
 import profile from '../../imgs/profile.png';
 
@@ -21,6 +21,8 @@ export default function InfoUsuario() {
   const [userDatosSeleccionado, setUserDatosSeleccionado] = useState({});
   const [userFotoSeleccionado, setUserFotoSeleccionado] = useState(null);
   const [imagenPerfil, setImagenPerfil] = useState(profile);
+  const [nombreFoto, setNombreFoto] = useState('');
+  const [borrarFoto, setBorrarFoto] = useState(false);
   const [edad, setEdad] = useState(0);
   const [editar, setEditar] = useState(null);
   const [valorTemporal, setValorTemporal] = useState('');
@@ -42,12 +44,8 @@ export default function InfoUsuario() {
     if (user.id === 1) {
       const listaUsuarios = async () => {
         try {
-          const url = `http://${process.env.REACT_APP_HOST}/informe/users/lista/nombres`;
-          const response = await fetchData(url);
-          const lista = await response.json();
-          if (!response.ok) {
-            throw new Error(lista.message || 'Lo sentimos, ocurrió un problema');
-          }
+          const url = `/informe/personal/lista/nombres`;
+          const lista = await fetchData(url);
           setUserslist(lista);
         } catch (error) {
           console.error(' Error: // Pedir la lista de usuarios, ', error);
@@ -59,135 +57,122 @@ export default function InfoUsuario() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Pedir los datos del personal
+  const PedirDatosPersonal = async (nickname) => {
+    try {
+      if (!nickname) {
+        toast.error("No ha seleccionado un nombre");
+        return;
+      };
+      const url = `/informe/personal/datos/${nickname}`;
+      const datos = await fetchData(url);
+      setEdad(calcularEdad(datos?.fecha_nacimiento));
+      setUserDatosSeleccionado(datos);
+    } catch (error) {
+      console.error('Error: // Pedir los datos del personal, ', error);
+      toast.dismiss();
+      toast.error(error.message || 'Error con los datos del personal');
+    }
+  };
+
+  // Pedir la foto del personal
+  const PedirFotoPersonal = async (nickname) => {
+    try {
+      if (!nickname) {
+        return;
+      }
+      const url = `/informe/personal/foto/${nickname}`;
+      const response = await fetch(url, { credentials: 'include' });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
+      }
+      const imageBlob = await response.blob();
+      if (imageBlob.size === 0) throw new Error("La respuesta no entrega una imagen");
+      if (!imageBlob.type.startsWith("image/"))
+        throw new Error("La respuesta no es una imagen válida");
+      const imageUrl = window.URL.createObjectURL(imageBlob);
+      setImagenPerfil((prev) => {
+        if (prev) window.URL.revokeObjectURL(prev); // liberar URL anterior
+        return imageUrl;
+      });
+    } catch (error) {
+      console.error('Error: // Pedir la foto del personal, ', error);
+      toast.dismiss();
+      toast.error(error.message || "Error con la foto del personal");
+    }
+  };
+
   // Pedir los datos del personal seleccionado
   useEffect(() => {
     setNicknameGuardado(nickGuardado);
-    const DatosSeleccionado = async () => {
-      try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/users/datos/usuario/${nickGuardado}`;
-        const response = await fetchData(url);
-        const seleccionado = await response.json();
-        if (!response.ok) {
-          throw new Error(seleccionado.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setUserDatosSeleccionado(seleccionado);
-        setEdad(calcularEdad(seleccionado?.fecha_nacimiento));
-      
-      } catch (error) {
-        console.error('Error: // Pedir los datos del personal seleccionado, ', error);
-        toast.error(error.message || 'Error con los datos del personal');
-      }
-    };
-    DatosSeleccionado();
+    const nickname = nickGuardado;
+    PedirDatosPersonal(nickname);
   }, [nickGuardado]);
 
   // Pedir la foto del personal seleccionado
   useEffect(() => {
-    const FotoSeleccionado = async () => {
-      try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/users/foto/usuario/${nickGuardado}`;
-        const response = await fetchData(url);
-        if (!response) throw new Error('Sin foto');
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-        }
-
-        const imageBlob = await response.blob();
-        if (imageBlob.size === 0) throw new Error('La respuesta no entrega una imagen');
-        if (!imageBlob.type.startsWith('image/')) throw new Error('La respuesta no es una imagen válida');
-
-        const imageUrl = window.URL.createObjectURL(imageBlob);
-        setImagenPerfil(imageUrl)
-      
-      } catch (error) {
-        console.error('Error: // Pedir la foto del personal seleccionado, ', error);
-        toast.error(error.message || 'Error la foto del personal');
-      }
-    };
-
-    FotoSeleccionado();
-
-    // Opcional: limpieza del URL creado para liberar memoria cuando el componente se desmonte o imagenPerfil cambie
-    // return () => {
-    //     if (imagenPerfil) {
-    //         window.URL.revokeObjectURL(imagenPerfil);
-    //     }
-    // };
+    const nickname = nickGuardado;
+    PedirFotoPersonal(nickname)
   }, [nickGuardado]);
 
   // Pedir los datos del personal seleccionado en seleccion
   const seleccion = async (nickname) => {
     setEditar(null);
-    let url = `http://${process.env.REACT_APP_HOST}/informe/users/datos/seleccion/${nickname}`;
-    try {
-      const response = await fetchData(url);
-      const seleccionado = await response.json();
-      if (!response.ok) {
-        throw new Error(seleccionado.message || 'Lo sentimos, ocurrió un problema');
-      }
-      setEdad(calcularEdad(seleccionado?.fecha_nacimiento))
-      setUserDatosSeleccionado(seleccionado);
-    } catch (error) {
-      console.error('Error: // Pedir los datos del personal seleccionado en seleccion, ', error);
-      toast.error(error.message || 'Error con los datos del personal');
-    }
+    PedirDatosPersonal(nickname);
   };
 
   // Pedir la foto del personal seleccionado en seleccion
   const seleccionFoto = async (nickname) => {
     setUserFotoSeleccionado(null);
     setImagenPerfil(profile);
-    try {
-      const url = `http://${process.env.REACT_APP_HOST}/informe/users/foto/seleccion/${nickname}`;
-      const response = await fetchData(url);
-      if (!response) throw new Error('Sin foto');
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
-      }
-
-      const imageBlob = await response.blob();
-
-      if (imageBlob.size === 0) throw new Error('La respuesta no entrega una imagen');
-      if (!imageBlob.type.startsWith('image/')) throw new Error('La respuesta no es una imagen válida');
-
-      const imageUrl = window.URL.createObjectURL(imageBlob);
-      setImagenPerfil(imageUrl)
-    } catch (error) {
-      console.error('Error: // Pedir la foto del personal seleccionado en seleccion, ', error);
-      toast.error(error.message || 'Error con la foto del personal');
-    }
+    PedirFotoPersonal(nickname);
   };
 
+  // Editar
   const ediccion = (propiedad) => {
     if (!propiedad) return;
     setEditar(propiedad);
     setValorTemporal(userDatosSeleccionado?.[propiedad] || '');
+    if (propiedad !== 'foto') {
+      setBorrarFoto(false);
+      setNombreFoto('');
+    }
   };
 
+  // Cancelar el editar
   const cancelarEdicion = () => {
     setEditar(null);
+    setNombreFoto('');
     setValorTemporal('');
+    setBorrarFoto(false);
   };
 
   // Editar los datos del personal
   const guardarCambio = async () => {
     if (!editar) return;
-    const campo = editar;
+    let campo = editar;
+    let valor = valorTemporal;
+    const id = userDatosSeleccionado.id;
     setEditar(null);
-
     if (campo === 'foto') {
-      await subirFoto(valorTemporal); // función separada solo para foto
-      return;
+      if (!borrarFoto) {
+        await subirFoto(valorTemporal); // función separada solo para foto
+        return;
+      } else {
+        campo = 'BorrarFoto';
+        valor = borrarFoto;
+      }
+    } else {
+      if (typeof valor === 'string') {
+        valor = valor.trim();
+      }
+      setBorrarFoto(false);
     }
-
-    const url = `http://${process.env.REACT_APP_HOST}/informe/users/datos/guardar/${campo}`;
+    const url = `/informe/personal/editar/datos`;
     try {
-      const response = await axios.post(url, {
-        valor: valorTemporal,
-        id: userDatosSeleccionado.id
-      });
+      const payload = { propiedadEditar: campo, valor, id };
+      const response = await axios.put(url, payload);
       if (campo === 'fecha_nacimiento') {
         setEdad(calcularEdad(valorTemporal));
       }
@@ -195,11 +180,13 @@ export default function InfoUsuario() {
         ...prev,
         [campo]: valorTemporal,
       }));
-
       toast.success(response?.data?.message || 'Cambio guardado');
+      if (campo === 'BorrarFoto') { setImagenPerfil(profile); }
+      setNombreFoto('');
     } catch (error) {
       console.error('Error: // Editar los datos del personal, ', error);
       toast.error(error.response?.data?.message || 'Error al guardar el cambio');
+      setNombreFoto('');
     }
   };
 
@@ -209,39 +196,34 @@ export default function InfoUsuario() {
       toast.error("Ningún archivo seleccionado.");
       return;
     }
-
-    const tiposPermitidos = ["image/png", "image/jpeg"];
-    const maxSizeMB = 2;
-
+    const tiposPermitidos = ["image/png", "image/jpg", "image/jpeg", "image/webp", "image/avif"];
+    const maxSizeMB = 5;
     if (!tiposPermitidos.includes(archivo.type)) {
-      toast.error("Solo se permiten imágenes PNG o JPG.");
+      toast.error("Solo se permiten imágenes.");
       return;
     }
-
-    if (archivo.size > maxSizeMB * 3000 * 3000) {
+    if (archivo.size > maxSizeMB * 1024 * 1024) {
       toast.error(`La imagen no debe pesar más de ${maxSizeMB}MB.`);
       return;
     }
-
     const formData = new FormData();
     formData.append("foto", archivo);
     formData.append("id", userDatosSeleccionado.id);
-
-    // Actualizar solo la imagen mostrada
-    setUserFotoSeleccionado(prev => ({
-      ...prev,
-      foto: URL.createObjectURL(archivo),
-    }));
-
     try {
-      await axios.post(`http://${process.env.REACT_APP_HOST}/informe/users/guardar/foto`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      await axios.put(`/informe/personal/editar/foto`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } });
+      // Actualizar solo la imagen mostrada
+      setUserFotoSeleccionado(prev => ({
+        ...prev,
+        foto: URL.createObjectURL(archivo),
+      }));
       toast.success("Foto actualizada correctamente");
+      setNombreFoto('');
     } catch (error) {
       console.error('Error: // Editar la foto del personal, ', error);
       toast.error(error.response?.data?.message || "Error al subir la foto");
+      setNombreFoto('');
     }
   };
 
@@ -250,9 +232,7 @@ export default function InfoUsuario() {
     const valorActual = userDatosSeleccionado?.[campo];
 
     let contenido = valorActual;
-    if (campo === 'activo') {
-      contenido = valorActual ? <><FaUserCheck className='activoono' style={{ color: 'green' }} /> </> : <><FaUserTimes className='activoono' style={{ color: 'red' }} /> </>;
-    } else if (campo.includes('fecha') && valorActual) {
+    if (campo.includes('fecha') && valorActual) {
       contenido = fechaFomatoSQL(valorActual);
     }
     else if (valorActual && campo === 'sexo') {
@@ -264,7 +244,9 @@ export default function InfoUsuario() {
     return (
       <h5 className={`datosPersonal campo-${campo}`}>
         <span className='datosTipo'>
-          <FaRegEdit className='editIcon' onClick={() => ediccion(campo)} />
+          {(nickGuardado || nicknameGuardado) && (
+            <FaRegEdit className='editIcon' onClick={() => ediccion(campo)} />
+          )}
           {campo !== 'foto' && ` ${label}: `}
         </span>
 
@@ -327,18 +309,13 @@ export default function InfoUsuario() {
             <option value="F">Femenino</option>
           </select>
         );
-      case 'activo':
-        return (
-          <select value={valorTemporal ? 'true' : 'false'} onChange={(e) => setValorTemporal(e.target.value === 'true')} autoFocus                  >
-            <option value="true">Activo</option>
-            <option value="false">Inactivo</option>
-          </select>
-        );
       case 'foto':
         return (
           <>
+            <button onClick={() => { setBorrarFoto(true); setNombreFoto('Se eliminará la foto') }} className='btnU btnEliminar' style={{ marginRight: '0px' }} ><FaRegTrashAlt /></button>
             <label htmlFor="fotoperfil" className='subirFotoPerfil'>Subir Foto</label>
-            <input id="fotoperfil" type="file" accept=".png, .jpg, .jpeg" onChange={(e) => setValorTemporal(e.target.files[0])} autoFocus style={{ display: 'none' }} />
+            <input id="fotoperfil" type="file" accept=".jpg,.jpeg,.png,.webp,.avif" autoFocus style={{ display: 'none' }}
+              onChange={(e) => { setValorTemporal(e.target.files[0] || ''); setNombreFoto(e.target.files[0]?.name || ''); setBorrarFoto(false); }} />
           </>
         );
       default:
@@ -384,6 +361,7 @@ export default function InfoUsuario() {
             <div className='informacionesUsuario'>
               <div className={user.id === 1 ? 'inforPerfil' : 'inforPerfilno'}>
                 {renderCampo('foto', 'Foto')}
+                {nombreFoto && <p style={{ paddingBottom: '0.2rem', textAlign: 'center' }}>{nombreFoto}</p>}
                 <div className='fotoPerfil'>
                   {imagenPerfil && (
                     <img src={userFotoSeleccionado?.foto || imagenPerfil} className='perfilFoto' alt="Foto de perfil" />
@@ -405,11 +383,7 @@ export default function InfoUsuario() {
               <div className={user.id === 1 ? 'inforPerfil' : 'inforPerfilno'}>
                 {renderCampo('fecha_contratacion', 'Contratación')}
                 {renderCampo('puesto', 'Puesto')}
-                {user && (user.id === 1 && userDatosSeleccionado?.id !== 1) && (
-                  <>
-                    {renderCampo('activo', 'Activo')}
-                  </>
-                )}
+
               </div>
             </div >
             <div className={user.id === 1 ? 'inforDescripcion' : 'inforDescripcionno'}>
@@ -418,7 +392,7 @@ export default function InfoUsuario() {
           </div >
         </div >
       </div >
-      <Toaster toastOptions={{ className: 'noti', duration: 750 }} />
+      <Toaster toastOptions={{ className: 'noti', duration: 7500 }} />
     </>
   );
 };

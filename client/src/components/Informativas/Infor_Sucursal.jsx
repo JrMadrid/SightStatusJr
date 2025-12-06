@@ -4,8 +4,8 @@ import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Toaster, toast } from 'react-hot-toast';
 import Pingdispo from '../Elements/ping.jsx';
 import fetchData from '../../api/fetchConfig.js';
-import SelectedPDF from '../PDF/SelectedPDF.jsx';
-import ALLPDF from '../PDF/AllPDF.jsx';
+import SelectedPDF from '../Elements/PDF/SelectedPDF.jsx';
+import ALLPDF from '../Elements/PDF/AllPDF.jsx';
 import { ListExcel } from '../Listas/Lista_Excel.jsx';
 import InfoAppBIG from './screens/BIGscreen.jsx';
 import InfoAppMEDIUM from './screens/MEDIUMscreen.jsx';
@@ -51,15 +51,12 @@ export default function InfoSucursal() {
     // Consultar y retornar los dispositivos registrados por número económico
     const dispositivos = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/status/numero/${economico}`;
-        const response = await fetchData(url);
-        const lista = await response.json();
-        if (!response.ok) { throw new Error(lista.message || 'Lo sentimos, ocurrió un problema'); }
+        const url = `/informe/status/numero/${economico}`;
+        const lista = await fetchData(url);
         if (!lista.length) {
           setAviso("Sin dispositivos asignados");
           throw new Error("Sin dispositivos asignados");
         }
-
         // Función para contar dispositivos válidos
         const contarDispositivosValidos = (lista) => {
           return lista.filter(
@@ -85,9 +82,9 @@ export default function InfoSucursal() {
     dispositivos();
   }, [economico]);
 
-  /* Navegacion entre paginas informativas de la sucursal */
+  // Navegacion entre paginas informativas de la sucursal
   const sumGo = async (tipo, economico) => {
-    navigate(`/informativa/${tipo}/${economico}`, { state: { id: '0', ingresponsable } });
+    navigate(`/informativa/${tipo}/${economico}`, { state: { id: '0', nombre, ingresponsable } });
   };
 
   // Verificar si es una impresa para elistar
@@ -112,18 +109,13 @@ export default function InfoSucursal() {
   const appData = async (ip) => {
     SetDispositivoIp(ip);
     return toast.promise(
-      fetchData(`http://${process.env.REACT_APP_HOST}/informe/status/aplicacion/${ip}`).then(response => {
-        const Data = response.json();
-        if (!response.ok) {
-          throw new Error(Data.message || 'Lo sentimos, ocurrió un problema');
-        }
-        return Data;
+      fetchData(`/informe/status/aplicacion/${ip}`).then(datos => {
+        return datos;
       }),
       {
         loading: 'Cargando datos',
         success: (datos) => {
           setContent(datos[0]);
-
           return <b>¡Datos cargados!</b>;
         },
         error: (error) => {
@@ -143,13 +135,9 @@ export default function InfoSucursal() {
 
     const dispositivos = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/status/dispositivos/${economico}`;
-        const response = await fetchData(url);
-        const todos = await response.json();
-        if (!response.ok) {
-          throw new Error(todos.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setData(todos)
+        const url = `/informe/status/dispositivos/${economico}`;
+        const dispositivos = await fetchData(url);
+        setData(dispositivos)
       } catch (error) {
         console.error('Error // Recorrer los dispositivos de una sucursal y actualizar la información si es necesario, ', error);
         toast.error(error.message || 'Error al cargar los datos');

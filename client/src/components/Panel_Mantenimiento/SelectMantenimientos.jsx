@@ -24,14 +24,12 @@ const SelectMantenimientos = () => {
 
   // Pedir los datos de los mantenimientos
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/mantenimientos`;
+    const url = `/panel/mantenimientos`;
     const mantenimientos = async () => {
       try {
-        const response = await fetchData(url);
-        const mantenimientos = await response.json();
-        if (!response.ok) { throw new Error(mantenimientos.message || 'Lo sentimos, ocurrió un problema'); }
-        setData(mantenimientos);
-        setCount(mantenimientos.length)
+        const datos = await fetchData(url);
+        setData(datos);
+        setCount(datos.length)
       } catch (error) {
         console.error('Error: // Pedir los datos de los mantenimientos, ', error);
         toast.error(error.message || 'Error con los dataos')
@@ -43,13 +41,12 @@ const SelectMantenimientos = () => {
 
   // Mandar el documento del mantenimiento seleccionado
   const eleccion = async (id, eco, fechacons) => {
-    let url = `http://${process.env.REACT_APP_HOST}/informe/mantes/tabla/seleccionado/${id}`;
+    let urle = `/informe/mantes/tabla/seleccionado/${id}`;
     try {
-      const response = await fetchData(url);
-      if (!response) throw new Error('Sin constancia');
+      const response = await fetch(urle, { credentials: 'include' });
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+        throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
       }
       // Obtener el blob (imagen escaneada)
       const imageBlob = await response.blob();
@@ -85,8 +82,8 @@ const SelectMantenimientos = () => {
   };
 
   // Pedir el número económico -- Mantenimiento
-  const ver = async (economico, id, fechaconstancia, ingresponsable) => {
-    navigate(`/informativa/mantenimiento/${economico}`, { state: { id, fechaconstancia, ingresponsable } });
+  const ver = async (economico, id, fechaconstancia, nombre, ingresponsable) => {
+    navigate(`/informativa/mantenimiento/${economico}`, { state: { id, fechaconstancia, nombre, ingresponsable } });
   };
 
   return (

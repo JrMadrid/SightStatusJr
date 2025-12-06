@@ -2,12 +2,12 @@
 import sql from 'mssql';
 
 // Pedir los datos de los informes
-export const getInformes = async (tipo, responsable) => {
+const getInformes = async (tipo, responsable) => {
   let query;
   let request = new sql.Request();
   request.input('responsable', sql.VarChar, responsable);
   if (tipo === 'Geografia') {
-    query = `SELECT infor.id AS id, infor.economico AS economico, sucu.canal as canal, sucu.nombre as sucursal,
+    query = `SELECT infor.id AS id, infor.economico AS economico, sucu.canal AS canal, sucu.nombre AS sucursal,
                         infor.fecharealizada AS fecharealizada, infor.nombre AS nombre, infor.descripcion AS descripcion 
                 FROM informes infor 
                 INNER JOIN sucursales sucu ON sucu.economico = infor.economico 
@@ -15,8 +15,8 @@ export const getInformes = async (tipo, responsable) => {
                 ORDER BY fecharealizada DESC`;
   }
   else {
-    query = `SELECT infor.id AS id, infor.economico AS economico, sucu.canal as canal, sucu.nombre as sucursal,
-                        infor.fecharealizada AS fecharealizada, infor.nombre AS nombre, infor.descripcion AS descripcion, sucu.ingresponsable as ingresponsable 
+    query = `SELECT infor.id AS id, infor.economico AS economico, sucu.canal AS canal, sucu.nombre AS sucursal,
+                        infor.fecharealizada AS fecharealizada, infor.nombre AS nombre, infor.descripcion AS descripcion, sucu.ingresponsable AS ingresponsable 
                 FROM informes infor 
                 INNER JOIN sucursales sucu ON sucu.economico = infor.economico 
                 ORDER BY infor.fecharealizada DESC`;
@@ -26,24 +26,23 @@ export const getInformes = async (tipo, responsable) => {
 };
 
 // Agregar un nuevo informe
-export const postInforme = async (descripcion, nombre, documento, frealizada, economico, informe) => {
+const postInforme = async ({ descripcion, nombre, documento, frealizada, economico }, informe) => {
   const request = new sql.Request();
   const query = 'INSERT INTO informes(nombre, descripcion, informe, fecharealizada, economico) VALUES (@nombre, @descripcion, CONVERT(VARBINARY(MAX), @informe), @fecharealizada, @economico)';
-
-  request.input('informe', sql.VarBinary(sql.MAX), informe); // sql.VarBinary(sql.MAX) para el tamaño máximo de VARBINARY -- varbinary(max) sirve para almacenar archivos grandes
-  if (nombre.length === 0) {
-    request.input('nombre', sql.VarChar, documento.toString());
+  request.input('informe', sql.VarBinary(sql.MAX), informe); 
+  if (!nombre) {
+    request.input('nombre', sql.NVarChar, documento.toString());
   } else {
-    request.input('nombre', sql.VarChar, nombre);
+    request.input('nombre', sql.NVarChar, nombre);
   }
-  request.input('descripcion', sql.VarChar, descripcion);
+  request.input('descripcion', sql.NVarChar, descripcion);
   request.input('fecharealizada', sql.Date, frealizada);
   request.input('economico', sql.VarChar, economico);
   await request.query(query);
 };
 
 // Eliminar un informe
-export const deleteInforme = async (id) => {
+const deleteInforme = async ({ id }) => {
   const request = new sql.Request();
   request.input('id', sql.Numeric, id);
   const query = 'DELETE FROM informes WHERE id = @id';
@@ -51,7 +50,7 @@ export const deleteInforme = async (id) => {
 };
 
 // Pedir el informe en formato PDF
-export const informeArchivo = async (id) => {
+const informeArchivo = async (id) => {
   const request = new sql.Request();
   request.input('id', sql.VarChar, id);
   const query = 'SELECT informe FROM informes WHERE id = @id';
@@ -59,13 +58,13 @@ export const informeArchivo = async (id) => {
   return resultado.recordset[0];
 };
 
-/* Validaciones */
+/* Verificaciones */
 /* Comprobar que existe la sucursal antes de cualquier operación con los informes */
-async function SucursalExiste(economico) {
+const SucursalExiste = async (economico) => {
   try {
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico';
     const request = new sql.Request();
-    request.input('economico', sql.VarChar, economico)
+    request.input('economico', sql.VarChar, economico);
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
@@ -74,12 +73,12 @@ async function SucursalExiste(economico) {
 };
 
 /* Comprobar que existe la sucursal le pertenezca a ese usuario */
-async function SucursalPerteneciente(economico, ingeniero) {
+const SucursalPerteneciente = async (economico, ingeniero) => {
   try {
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico AND ingresponsable = @usuario';
     const request = new sql.Request();
-    request.input('economico', sql.VarChar, economico)
-    request.input('usuario', sql.VarChar, ingeniero)
+    request.input('economico', sql.VarChar, economico);
+    request.input('usuario', sql.NVarChar, ingeniero);
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
@@ -88,11 +87,11 @@ async function SucursalPerteneciente(economico, ingeniero) {
 };
 
 /* Comprobar que ID del informe existe para corrobar ejecución */
-async function comprobarID(id) {
+const comprobarID = async (id) => {
   try {
     const query = 'SELECT id FROM informes WHERE id = @id';
     const request = new sql.Request();
-    request.input('id', sql.VarChar, id)
+    request.input('id', sql.VarChar, id);
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
@@ -100,4 +99,15 @@ async function comprobarID(id) {
   }
 };
 
-export { SucursalExiste, comprobarID, SucursalPerteneciente };
+export const db = {
+  getInformes,
+  postInforme,
+  deleteInforme,
+  informeArchivo,
+};
+
+export const verificaciones = {
+  SucursalExiste,
+  SucursalPerteneciente,
+  comprobarID
+};

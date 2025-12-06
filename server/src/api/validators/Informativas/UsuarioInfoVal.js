@@ -1,8 +1,8 @@
-/* VALIDACIONES DE PAGINA INFORMATIVA DE USUARIOS */
+/* VALIDACIONES DE INFORMATIVA -- USUARIOS */
 import Joi from "joi";
 
 // Esquema general para un usuario
-export const userSchema = Joi.object({
+const SchemaActualizarUsuario = Joi.object({
   id: Joi.number() // Debe ser un número
     .integer() // Solo enteros
     .min(1) // Mínimo valor permitido: 1
@@ -70,11 +70,6 @@ export const userSchema = Joi.object({
       "string.max": "El puesto no puede exceder los 100 caracteres."
     }),
 
-  activo: Joi.boolean()
-    .messages({
-      "boolean.base": "El campo activo debe ser verdadero o falso."
-    }),
-
   nombre: Joi.string()
     .max(200)
     .messages({
@@ -86,4 +81,10 @@ export const userSchema = Joi.object({
     .messages({
       "string.max": "El teléfono no puede exceder los 20 caracteres."
     }),
+
+  BorrarFoto: Joi.boolean().optional()
 });
+
+export const schemas = {
+  SchemaActualizarUsuario
+};

@@ -3,27 +3,28 @@ import { useContext } from 'react';
 import { UserContext } from '../../context/UserContext';
 import { NavLink } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig.js';
 import { FaAddressCard } from "react-icons/fa";
 import '../css/navbar.css';
+import ConexionIcono from './ConexionIcono.jsx';
 
-/* Definir navbar según el tipo usuario */
+// Definir navbar según el tipo usuario
 export default function Navbar() {
   const user = useContext(UserContext);
-
   function capitalizartexto(text) { // Poner en mayuscula la primera letra de cada palabra
     const capitalizado = text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     return capitalizado;
   }
 
-  /* Función para cerrar sesión */
+  // Función para cerrar sesión
   const Logout = async () => {
     return toast.promise(
-      fetchData(`http://${process.env.REACT_APP_HOST}/auth/out`).then(async (response) => {
+      fetch(`/auth/out`, { credentials: 'include' }) // usamos fetch directo
+      .then(async (response) => {
         if (!response.ok) {
-          throw new Error('Sin respuesta');
+          throw new Error('No se pudo cerrar sesión');
         }
-        return response.json();
+        // Como no hay JSON, solo se devuelve true
+        return true;
       }),
       {
         loading: 'Cerrando Sesión...',
@@ -116,6 +117,9 @@ export default function Navbar() {
             </li>
             <li className='tipo'>
               {user.tipo}
+            </li>
+            <li>
+              <ConexionIcono />
             </li>
           </>
         )}

@@ -4,9 +4,9 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
 import fetchData from '../../api/fetchConfig.js';
 import { FormatearFechaTabla } from '../Elements/date.jsx';
-import PDFConstancia from '../PDF/ConstanciaPDF.jsx';
-import PDFConstancias from '../PDF/ConstanciasPDF.jsx';
-import JPGConstancia from '../PDF/ConstanciaJPG.jsx';
+import PDFConstancias from '../Elements/PDF/ConstanciasPDF.jsx';
+import PDFConstancia from '../Elements/PDF/ConstanciaPDF.jsx';
+import JPGConstancia from '../Elements/PDF/ConstanciaJPG.jsx';
 import { ListExcel } from '../Listas/Lista_Excel.jsx';
 import '../css/Infor_Sucursal.css';
 import { FaRegListAlt } from 'react-icons/fa';
@@ -26,6 +26,7 @@ export default function InfoMante() {
   const { economico } = useParams();
   const id = location.state?.id || 0;
   const fechaconstancia = location.state?.fechaconstancia || '';
+  const nombre = location.state?.nombre || '';
   const ingresponsable = location.state?.ingresponsable || '';
 
   // Nombre de la Pestaña
@@ -46,10 +47,8 @@ export default function InfoMante() {
 
     const fechasr = async () => {
       try {
-        const url = `http://${process.env.REACT_APP_HOST}/informe/mantes/fechas/${economico}`;
-        const response = await fetchData(url);
-        const lista = await response.json();
-        if (!response.ok) { throw new Error(lista.message || 'Lo sentimos, ocurrió un problema'); }
+        const url = `/informe/mantes/fechas/${economico}`;
+        const lista = await fetchData(url);
         if (!lista.length) {
           setAviso('No hay mantenimientos realizados');
           throw new Error("Sin mantenimientos realizados");
@@ -69,7 +68,7 @@ export default function InfoMante() {
 
   /* Navegacion entre paginas informativas de la sucursal */
   const sumGo = async (tipo, economico) => {
-    navigate(`/informativa/${tipo}/${economico}`, { state: { ingresponsable } });
+    navigate(`/informativa/${tipo}/${economico}`, { state: { nombre, ingresponsable } });
   };
 
   // Mandar el documento del mantenimiento seleccionado
@@ -81,12 +80,11 @@ export default function InfoMante() {
       try {
         const imageConstancia = document.getElementById('imageConstancia');
         imageConstancia.innerHTML = '';
-        let url = `http://${process.env.REACT_APP_HOST}/informe/mantes/tabla/seleccionado/${id}`;
-        const response = await fetchData(url);
-        if (!response) throw new Error('Sin constancia');
+        let url = `/informe/mantes/tabla/seleccionado/${id}`;
+        const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+          throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
         }
         const imageBlob = await response.blob();
         if (imageBlob.size === 0) {
@@ -98,7 +96,6 @@ export default function InfoMante() {
         if (!imageBlob.type.startsWith('image/')) {
           throw new Error('La respuesta no es una imagen válida');
         }
-
         const imageUrl = window.URL.createObjectURL(imageBlob);
         const img = document.createElement('img');
         img.src = imageUrl;
@@ -124,16 +121,13 @@ export default function InfoMante() {
       try {
         const imageConstancia = document.getElementById('imageConstancia');
         imageConstancia.innerHTML = '';
-        const url = `http://${process.env.REACT_APP_HOST}/informe/mantes/informativa/${fechasr}`;
-        const response = await fetchData(url);
-        if (!response) throw new Error('Sin constancia');
+        const url = `/informe/mantes/informativa/${fechasr}`;
+        const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();
-          throw new Error(errorData.message || 'Lo sentimos, ocurrió un problema');
+          throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
         }
-
         const imageBlob = await response.blob();
-
         if (imageBlob.size === 0) {
           setImageBlob(null);
           setConsFecha('');
@@ -145,14 +139,11 @@ export default function InfoMante() {
         if (!imageBlob.type.startsWith('image/')) {
           throw new Error('La respuesta no es una imagen válida');
         }
-
         const imageUrl = window.URL.createObjectURL(imageBlob);
-
         const img = document.createElement('img');
         img.src = imageUrl;
         img.alt = 'Imagen asociada al mantenimiento';
         img.style.maxWidth = '100%';
-
         if (imageConstancia) {
           imageConstancia.appendChild(img);
         } else {
@@ -172,15 +163,17 @@ export default function InfoMante() {
     <>
       <div className='sidebar'>
         <h3 className='heading'>{ingresponsable}</h3>
+        <h3 className='heading'>{nombre}</h3>
         <h3 className='heading'>{economico}</h3>
-        <h3 className='principal'>Mantenimientos Realizados</h3>
-        <ul className='list' style={{ minHeight: '42vh', maxHeight: '42vh' }}>
+        <h3 className='principal'>Realizados</h3>
+        <ul className='list'>
           {appslist.map((fecha, index) => (
             <>
               {(fecha.realizado && fecha.realizado !== null && fecha.realizado !== 'null') && (
                 <>
                   <li key={index} className='listItem'>
-                    <div className={fecha.id !== idSeleccionado ? 'ListItemA' : 'seleccionado'} style={{ minWidth: '12vw', maxWidth: '12vw' }} onClick={(e) => { e.preventDefault(); setIdSeleccionado(fecha.id); archivoSel(`${fecha.realizado}`); }}>
+                    <div className={fecha.id !== idSeleccionado ? 'ListItemA' : 'seleccionado'} style={{ minWidth: '12vw', maxWidth: '12vw' }}
+                      onClick={(e) => { e.preventDefault(); setIdSeleccionado(fecha.id); archivoSel(`${fecha.realizado}`); }}>
                       <a href={`#${index}`} className={fecha.id !== idSeleccionado ? 'appi' : 'appiSeleccionado'}><FormatearFechaTabla fecha={fecha.realizado} /></a>
                     </div>
                   </li>
@@ -192,12 +185,12 @@ export default function InfoMante() {
         <br />
         <div className='funcionesExtras'>
           <div className='sumCaja'>
-            <FaMapLocationDot title='Ubicación' className='sumSeccion' onClick={() => { sumGo('ubicacion', economico) }} />
             <FaRegListAlt title='Dispositivos de la Sucursal' className='sumSeccion' onClick={() => { sumGo('sucursal', economico) }} />
+            <FaMapLocationDot title='Ubicación' className='sumSeccion' onClick={() => { sumGo('ubicacion', economico) }} />
           </div>
           {hay === true && (
             <>
-              <button className="pdfAll pdf" onClick={() => PDFConstancias(economico)}>Descargar constancias</button>
+              <button className="pdfAll pdf" onClick={() => { PDFConstancias(economico) }}>Descargar constancias</button>
               <ListExcel data={appslist} tipo="inforMante" titulo='Lista Excel' />
             </>
           )}

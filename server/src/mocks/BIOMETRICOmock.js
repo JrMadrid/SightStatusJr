@@ -10,6 +10,6 @@ export const BiometricoData = async () => {
 
 export const Biometricohardware = async () => {
   return {
-    informaciongeneral: 'Firmware: ZKMock 1.0.0'
+    informaciongeneral: 'Firmware: ZKMock 1.0.1'
   };
 };

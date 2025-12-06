@@ -19,11 +19,10 @@ CREATE TABLE [dbo].[personal](
 	[fecha_nacimiento] [date] NULL,
 	[sexo] [char](1) NULL,
 	[fecha_contratacion] [date] NOT NULL,
-	[descripcion] [text] NULL,
+	[descripcion] [nvarchar](max) NULL,
 	[grado_academico] [nvarchar](100) NULL,
 	[puesto] [nvarchar](100) NOT NULL,
-	[activo] [bit] NOT NULL,
-	[nombre] [nchar](200) NULL,
+	[nombre] [nvarchar](200) NULL,
 	[telefono] [varchar](20) NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -58,6 +57,7 @@ GO
 
 
 -- DATO ESPECIAL
+-- El primer elemento sera el único Super Administrador
 USE [statusAppsPro]
 GO
 

@@ -24,17 +24,12 @@ const SelectDispositivos = () => {
 
   // Pedir los datos de los dispositivo
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/dispositivos`;
+    const url = `/panel/dispositivos`;
     const dispositivos = async () => {
       try {
-        const response = await fetchData(url);
-        const dispositivos = await response.json();
-        if (!response.ok) {
-          throw new Error(dispositivos.message || 'Lo sentimos, ocurrió un problema');
-        }
-
-        setCount(dispositivos.length)
-        setData(dispositivos);
+        const datos = await fetchData(url);
+        setCount(datos.length)
+        setData(datos);
       } catch (error) {
         console.error('Error: // Pedir los datos de los dispositivos , ', error);
         toast.error(error.message || 'Error al cargar los dispositivos');
@@ -46,16 +41,11 @@ const SelectDispositivos = () => {
 
   // Pedir la lista de los dispositivos
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/dispositivos/lista`;
+    const url = `/panel/dispositivos/lista`;
     const dispositivoslista = async () => {
       try {
-        const response = await fetchData(url);
-        const listadispositivos = await response.json();
-        if (!response.ok) {
-          throw new Error(listadispositivos.message || 'Lo sentimos, ocurrió un problema');
-        }
-
-        setDispolist(listadispositivos);
+        const lista = await fetchData(url);
+        setDispolist(lista);
       } catch (error) {
         console.error('Error: // Pedir la lista de los dispositivos, ', error);
         toast.error(error.message || 'Error al cargar los dispositivos');

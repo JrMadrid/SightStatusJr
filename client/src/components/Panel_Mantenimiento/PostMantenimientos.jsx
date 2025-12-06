@@ -3,12 +3,12 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostMantenimientos = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     festimada: '',
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
@@ -20,8 +20,21 @@ const PostMantenimientos = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/mantenimientos/agregar`, formData);
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.post(`/panel/mantenimientos/agregar`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       setMessage(response.data.message || 'Mantenimiento agregado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -43,7 +56,7 @@ const PostMantenimientos = () => {
           <label htmlFor="economico"><span className='ReAgregar'>*</span>Económico:</label>
           <input type="text" id="economico" name="economico" maxLength="6" minLength="6" required placeholder='Número económico' title="6 caracteres numéricos" value={formData.economico} onChange={cambio} />
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

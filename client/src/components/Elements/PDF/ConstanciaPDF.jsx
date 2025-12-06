@@ -1,10 +1,10 @@
 /* COMPONENTE QUE GUARDA EN PDF LA CONSTANCIA SELECCIONADA */
 import jsPDF from 'jspdf';
 import { Toaster, toast } from 'react-hot-toast';
-import { FormatearFecha } from '../Elements/date';
-import '../css/PDF.css';
+import { FormatearFecha } from '../../Elements/date';
+import '../../css/PDF.css';
 
-export default function PDFConstancia({ imageBlob, eco, title, fechaco }) {
+const PDFConstancia = ({ imageBlob, eco, title, fechaco }) => {
   const fechacons = FormatearFecha(fechaco);
 
   // Función para generar el PDF a partir del blob (sin filtros ni conversiones)
@@ -61,3 +61,5 @@ export default function PDFConstancia({ imageBlob, eco, title, fechaco }) {
     </>
   );
 };
+
+export default PDFConstancia;

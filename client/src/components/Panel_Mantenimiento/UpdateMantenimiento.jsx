@@ -3,26 +3,39 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const UpdateMantenimientos = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     festimada: '',
-    id: ''
   });
+  const [id, setId] = useState('');
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
-  // Agregar un mantenimiento
+  // Actualizar un mantenimiento
   const Actualizar = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/mantenimientos/actualizar`, formData);
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.put(`/panel/mantenimientos/actualizar/${id}`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       setMessage(response.data.message || 'Mantenimiento actualizado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -45,8 +58,8 @@ const UpdateMantenimientos = () => {
           <input type="text" id="economico" name="economico" maxLength="6" minLength="6" placeholder='Número económico' title="6 caracteres numéricos" value={formData.economico} onChange={cambio} />
           <div className="update">
             <label htmlFor="id"><span className='ReActualizar'>*</span>ID: </label>
-            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que actualizara' title='ID' min='2' pattern='\d{1,5}' value={formData.id} onChange={cambio} required />
-            <button type="submit" disabled={loading}>Actualizar</button>
+            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que actualizara' title='ID' pattern='\d{1,5}' value={id} onChange={(e) => setId(e.target.value)} required />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Actualizando...' : 'Actualizar'}</button>
           </div>
         </form>
         <div className='avisos'>

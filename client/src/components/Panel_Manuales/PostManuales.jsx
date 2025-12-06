@@ -3,13 +3,13 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostManual = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     archivo: null,
     descripcion: '',
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [documento, setDocumento] = useState('Sin documento');
 
   const cambio = (e) => {
@@ -40,30 +40,33 @@ const PostManual = () => {
     setLoading(true);
     setMessage('');
 
-    if (!formData.archivo) {
-      setMessage('Por favor, suba un archivo válido (.pdf).');
-      setLoading(false);
-      return;
-    }
-
-    if (formData.descripcion.length > 100) {
-      setMessage('La descripción debe tener máximo 100 caracteres.');
-      setLoading(false);
-      return;
-    }
-
-    const DatosParaEnviar = new FormData(); // Crear un nuevo objeto FormData
-    DatosParaEnviar.append('nombre', formData.nombre); // Agregar el nombre al FormData
-    DatosParaEnviar.append('manual', formData.archivo);
-    DatosParaEnviar.append('descripcion', formData.descripcion);
-    DatosParaEnviar.append('documento', documento);
-
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/manuales/agregar`, DatosParaEnviar, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Asegúrate de que el tipo de contenido sea correcto -- multipart/form-data es para archivos
-        },
-      });
+      if (!formData.archivo) {
+        setMessage('Por favor, suba un archivo válido (.pdf).');
+        setLoading(false);
+        return;
+      };
+      if (formData.descripcion.length > 100) {
+        setMessage('La descripción debe tener máximo 100 caracteres.');
+        setLoading(false);
+        return;
+      };
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        cleanedData[key] = value;
+      };
+      const DatosParaEnviar = new FormData();
+      DatosParaEnviar.append('manual', formData.archivo); // Agregar el archivo al FormData
+      DatosParaEnviar.append('nombre', cleanedData.nombre);
+      DatosParaEnviar.append('descripcion', cleanedData.descripcion);
+      DatosParaEnviar.append('documento', documento);
+      const response = await axios.post(`/panel/manuales/agregar`,
+        DatosParaEnviar,
+        { headers: { 'Content-Type': 'multipart/form-data' } });
       setMessage(response.data.message || 'Manual agregado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -94,7 +97,7 @@ const PostManual = () => {
           <label htmlFor="descripcion" style={{ marginTop: '5px' }}>Descripción:</label>
           <textarea className='textarea' style={{ marginTop: '5px' }} id="descripcion" name="descripcion" maxLength="100" placeholder="Descripción del manual (Opcional)" title="100 Caracteres máximos" value={formData.descripcion} onChange={cambio} rows={4} />
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

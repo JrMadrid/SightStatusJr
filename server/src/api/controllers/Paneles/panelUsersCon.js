@@ -1,11 +1,11 @@
 /* CONTROLADORES DE PANEL DE USUARIOS */
-import { obtenerUsers, agregarUser, actualizarUser, eliminarUser, sacarAllUsers, desactivarAllUsers, activarAllUsers } from '../../services/Paneles/panelUsersSer.js';
-import { SchemaCrearUsuario, SchemaActualizarUsuario, SchemaEliminarUsuario } from '../../validators/Paneles/PanelUsersVal.js';
+import { schemas as SC } from '../../validators/Paneles/PanelUsersVal.js';
+import { services as SR } from '../../services/Paneles/panelUsersSer.js';
 
 // Pedir los datos de los usuarios
 const getUsers = async (req, res) => {
   try {
-    let usuarios = await obtenerUsers();
+    let usuarios = await SR.obtenerUsers();
     res.status(200).json(usuarios);
   } catch (error) {
     console.error('Error: // Pedir los datos de los usuarios, ', error);
@@ -16,15 +16,13 @@ const getUsers = async (req, res) => {
 // Agregar un nuevo usuario
 const postUser = async (req, res) => {
   try {
-    let { nickname, psw, tipo } = req.body;
-    const { error } = SchemaCrearUsuario.validate(req.body, { abortEarly: false });
+    const { error, value } = SC.SchemaCrearUsuario.validate(req.body, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
-    }
-
-    await agregarUser(nickname, psw, tipo);
-    res.status(200).json({ message: 'Usuario agregado exitosamente' })
+    };
+    await SR.agregarUser(value);
+    res.status(200).json({ message: 'Usuario agregado exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar un nuevo usuario, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error agregando usuario' });
@@ -34,15 +32,16 @@ const postUser = async (req, res) => {
 // Actualizar un usuario
 const updateUser = async (req, res) => {
   try {
-    let { nickname, psw, id, tipo } = req.body;
-    const { error } = SchemaActualizarUsuario.validate(req.body, { abortEarly: false });
-
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const validar = { id: req.params.id, ...req.body };
+    const { error, value } = SC.SchemaActualizarUsuario.validate(validar, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
-    }
-
-    await actualizarUser(nickname, psw, id, tipo);
+    }; 
+    await SR.actualizarUser(value);
     res.status(200).json({ message: 'Usuario actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un usuario, ', error);
@@ -53,27 +52,28 @@ const updateUser = async (req, res) => {
 // Eliminar un usuario
 const deleteUser = async (req, res) => {
   try {
-    const { id } = req.body;
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const id = req.params.id;
     const Super = req.session.user; // Nickname del Super Administrador para las sucursales del ing.Responsable eliminado
-    const { error } = SchemaEliminarUsuario.validate(req.body, { abortEarly: false });
-
+    const { error, value } = SC.SchemaEliminarUsuario.validate({ id }, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-
-    await eliminarUser(id, Super);
+    await SR.eliminarUser(value, Super);
     res.status(200).json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un usuario, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Error eliminando usuario' });
   }
-}
+};
 
 // Cerrar la sesión de todos los usuarios
 const logoutaAllUsers = async (req, res) => {
   try {
-    await sacarAllUsers();
+    await SR.sacarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Cerrar la sesión de todos los usuarios, ', error);
@@ -84,7 +84,7 @@ const logoutaAllUsers = async (req, res) => {
 // Desactivar el acceso de todos los usuarios
 const deactivateAllUsers = async (req, res) => {
   try {
-    await desactivarAllUsers();
+    await SR.desactivarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Desactivar el acceso de todos los usuarios, ', error);
@@ -95,7 +95,7 @@ const deactivateAllUsers = async (req, res) => {
 // Activar el acceso de todos los usuarios
 const activateAllUsers = async (req, res) => {
   try {
-    await activarAllUsers();
+    await SR.activarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Activar el acceso de todos los usuarios, ', error);
@@ -103,4 +103,12 @@ const activateAllUsers = async (req, res) => {
   }
 };
 
-export const methods = { postUser, getUsers, updateUser, deleteUser, logoutaAllUsers, deactivateAllUsers, activateAllUsers };
+export const controllers = {
+  postUser,
+  getUsers,
+  updateUser,
+  deleteUser,
+  logoutaAllUsers,
+  deactivateAllUsers,
+  activateAllUsers
+};

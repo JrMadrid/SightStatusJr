@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostConstancia = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     imagen: null,
     frealizada: '',
@@ -10,7 +11,6 @@ const PostConstancia = () => {
     id: ''
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
   const [constancia, setConstancia] = useState('Sin constancia');
 
   const cambio = (e) => {
@@ -35,34 +35,39 @@ const PostConstancia = () => {
     }
   };
 
-  // Agregar un nuevo mantenimiento
+  // Agregar constancia de mantenimiento
   const Agregar = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
 
-    if (!formData.imagen) {
-      setMessage('Por favor, suba una imagen válida (.jpg o .jpeg).');
-      setLoading(false);
-      return;
-    }
-
-    const DatosParaEnviar = new FormData(); // Crear un nuevo objeto FormData
-    DatosParaEnviar.append('imagen', formData.imagen); // Agregar la imagen al FormData
-    DatosParaEnviar.append('frealizada', formData.frealizada);
-    DatosParaEnviar.append('descripcion', formData.descripcion);
-    DatosParaEnviar.append('id', formData.id);
-
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/mantenimientos/constancia/agregar`, DatosParaEnviar, {
-        headers: {
-          'Content-Type': 'multipart/form-data', // Asegúrate de que el tipo de contenido sea correcto -- multipart/form-data es para archivos
-        },
-      });
+      if (!formData.imagen) {
+        setMessage('Por favor, suba una imagen válida (.jpg o .jpeg).');
+        setLoading(false);
+        return;
+      }
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        cleanedData[key] = value;
+      };
+      const DatosParaEnviar = new FormData(); // Crear un nuevo objeto FormData
+      DatosParaEnviar.append('imagen', cleanedData.imagen); // Agregar la imagen al FormData
+      DatosParaEnviar.append('frealizada', cleanedData.frealizada);
+      DatosParaEnviar.append('descripcion', cleanedData.descripcion);
+      DatosParaEnviar.append('id', cleanedData.id);
+      const response = await axios.post(`/panel/mantenimientos/constancia/agregar`,
+        DatosParaEnviar,
+        { headers: { 'Content-Type': 'multipart/form-data' } });
       setMessage(response.data.message || 'Mantenimiento agregado exitosamente');
       window.location.reload(); // Recargar la página para ver el nuevo mantenimiento
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error al agregar el mantenimiento');
+      console.error("Error: // Agregar constancia de mantenimiento, ");
     } finally {
       setLoading(false);
     }
@@ -89,8 +94,8 @@ const PostConstancia = () => {
           <textarea className='textarea' style={{ marginTop: '5px' }} id="descripcion" name="descripcion" maxLength={8000} placeholder='Descripción general del mantenimiento (Opcional)' title="8000 Caracteres máximos" value={formData.descripcion} onChange={cambio} rows={4} />
           <div className="add">
             <label htmlFor="id"><span className='ReAgregar'>*</span>ID: </label>
-            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que agregará' title='ID' min='2' pattern='\d{1,5}' value={formData.id} onChange={cambio} required />
-            <button type="submit" disabled={loading}>Agregar</button>
+            <input type="text" id="id" name="id" maxLength="5" placeholder='Elemento que agregará' title='ID' pattern='\d{1,5}' value={formData.id} onChange={cambio} required />
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

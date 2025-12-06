@@ -166,6 +166,12 @@
 	border: 2px solid #c59e75;
 }
 
+.activouser {
+	border-radius: 100%;
+	font-size: 0.7rem;
+	border: 2px solid rgb(0, 0, 0);
+}
+
 .ping {
 	border-radius: 100%;
 	padding: 0;

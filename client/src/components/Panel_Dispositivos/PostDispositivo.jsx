@@ -3,6 +3,7 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostDispositivo = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     ip: '',
     economico: '',
@@ -10,7 +11,6 @@ const PostDispositivo = () => {
     descripcion: ''
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
@@ -22,8 +22,22 @@ const PostDispositivo = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/dispositivos/agregar`, formData);
+      // Crear objeto limpio sin mutar el estado
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if ((key === 'descripcion' || key === 'general') && typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.post(`/panel/dispositivos/agregar`,
+        cleanedData,
+        { headers: { 'Content-Type': 'application/json' } });
       setMessage(response.data.message || 'Dispositivo agregado exitosamente');
       window.location.reload();
     } catch (error) {
@@ -53,7 +67,7 @@ const PostDispositivo = () => {
           <label htmlFor="general">General:</label>
           <textarea className='textarea' id="general" name="general" maxLength={8000} placeholder='Información general del dispositivo (Opcional)' title="8000 Caracteres máximos" value={formData.general} onChange={cambio} rows={4} />
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>

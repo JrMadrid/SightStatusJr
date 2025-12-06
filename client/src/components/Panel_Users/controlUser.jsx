@@ -6,7 +6,7 @@ const ControlUsers = () => {
 
   // Cerrar la sesión de todos los usuarios
   const desconectar = async () => {
-    let url = `http://${process.env.REACT_APP_HOST}/panel/users/logoutall`;
+    let url = `/panel/users/logoutall`;
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
@@ -20,12 +20,13 @@ const ControlUsers = () => {
 
   // Desactivar el acceso de todos los usuarios
   const desactivar = async () => {
-    let url = `http://${process.env.REACT_APP_HOST}/panel/users/deactivateall`;
+    let url = `/panel/users/deactivateall`;
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
         toast.success("Se desactivaron todos los usuarios");
       }
+      window.location.reload();
     } catch (error) {
       console.error('Error: // Desactivar el acceso de todos los usuarios, ', error);
       toast.error(error.mesage || 'Error al desactivar accesos');
@@ -34,12 +35,13 @@ const ControlUsers = () => {
 
   // Activar el acceso de todos los usuarios
   const activar = async () => {
-    let url = `http://${process.env.REACT_APP_HOST}/panel/users/activateall`;
+    let url = `/panel/users/activateall`;
     try {
       const response = await axios.get(url);
       if (response.status === 200) {
         toast.success("Se activaron todos los usuarios");
       }
+      window.location.reload();
     } catch (error) {
       console.error('Error: // Activar el acceso de todos los usuarios, ', error);
       toast.error(error.mesage || 'Error al activar accesos');

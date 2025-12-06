@@ -11,6 +11,7 @@ const TablaMantenimientos = ({ user, data, eleccion, ver, cantidad, cantidadTota
             <th className='thData eject' title='Descarga directa' ><FaFileDownload /></th>
             <th className='thData eject' title='Mantenimiento' ><FaTools /></th>
             <th className='thData'>Económico</th>
+            <th className='thData'>Sucursal</th>
             {user && user.id !== 4 && (
               <th className='thData'>Ing. Responsable</th>
             )}
@@ -31,10 +32,11 @@ const TablaMantenimientos = ({ user, data, eleccion, ver, cantidad, cantidadTota
                 </td>
                 <td className='tdData'>
                   {(item.frealizada && item.frealizada !== null && item.frealizada !== 'null' && item.frealizada !== 'Pendiente') && (
-                    <FaCircle onClick={() => { ver(item.economico, item.id, item.frealizada, item.ingresponsable) }} className='select ir' />
+                    <FaCircle onClick={() => { ver(item.economico, item.id, item.frealizada, item.sucursal, item.ingresponsable) }} className='select ir' />
                   )}
                 </td>
                 <td className='tdData'>{item.economico}</td>
+                <td className='tdData long-data'>{item.sucursal}</td>
                 {user && user.id !== 4 && (
                   <td className='tdData long-data'>{item.ingresponsable}</td>
                 )}

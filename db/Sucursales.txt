@@ -12,8 +12,8 @@ GO
 
 CREATE TABLE [dbo].[sucursales](
 	[id] [int] IDENTITY(1,1) NOT NULL,
-	[canal] [varchar](30) NOT NULL,
-	[nombre] [varchar](50) NOT NULL,
+	[canal] [nvarchar](50) NULL,
+	[nombre] [nvarchar](50) NULL,
 	[economico] [varchar](6) NOT NULL,
 	[ingresponsable] [nvarchar](50) NOT NULL,
  CONSTRAINT [PK__sucursal__3213E83FBCDF8441] PRIMARY KEY CLUSTERED 
@@ -36,6 +36,8 @@ GO
 
 
 -- DATO ESPECIAL
+-- La primera sucursal se usa para representar que no se ha establecido una sucursal 
+
 USE [statusAppsPro]
 GO
 

@@ -1,17 +1,13 @@
 /* RUTAS DE INFORMATIVA -- USUARIO */
 import express from 'express';
-import multer from 'multer'; // Middleware para manejar multipart/form-data
-import { methods as UsuarioInfoControllers } from '../../controllers/Informativas/UsuarioInfoCon.js';
-import { requireAdminSession, requireUserSession } from '../../../middlewares/controllersmid.js';
-const UsuarioInfoRou = express.Router(); // Crea un nuevo objeto Router que se puede usar para definir rutas
-const upload = multer(); // Almacena los archivos en memoria
+import { requireAdminSession as ADMIN, subir } from '../../../middlewares/controllersMid.js';
+import { controllers as CN } from '../../controllers/Informativas/UsuarioInfoCon.js';
+const UsuarioInfoRou = express.Router();  
 
-UsuarioInfoRou.get('/users/lista/nombres', requireAdminSession, UsuarioInfoControllers.getlistaUsuarios); // Pedir la lista de usuarios -- /informe/users/lista/nombres
-UsuarioInfoRou.get('/users/datos/usuario/:nickGuardado', requireUserSession, UsuarioInfoControllers.getDatosSeleccionado); // Pedir los datos del personal seleccionado -- /informe/users/datos/usuario/:nickGuardado
-UsuarioInfoRou.get('/users/foto/usuario/:nickGuardado', requireUserSession, UsuarioInfoControllers.getFotoSeleccionado); // Pedir la foto del personal seleccionado -- /informe/users/foto/usuario/:nickGuardado
-UsuarioInfoRou.get('/users/datos/seleccion/:nickname', requireAdminSession, UsuarioInfoControllers.getDatosSeleccion); // Pedir los datos del personal seleccionado en seleccion -- /informe/users/datos/seleccion/:nickname
-UsuarioInfoRou.get('/users/foto/seleccion/:nickname', requireAdminSession, UsuarioInfoControllers.getFotoSeleccion); // Pedir la foto del personal seleccionado en seleccion -- /informe/users/foto/seleccion/:nickname
-UsuarioInfoRou.post('/users/datos/guardar/:editar', requireUserSession, UsuarioInfoControllers.updateDatos); // Editar los datos del personal -- /informe/users/datos/guardar/:editar
-UsuarioInfoRou.post('/users/guardar/foto', requireUserSession, upload.single('foto'), UsuarioInfoControllers.updateFoto); // Editar la foto del personal -- /informe/users/guardar/foto
+UsuarioInfoRou.get('/personal/lista/nombres', ADMIN, CN.getListaUsuarios); // Pedir la lista de usuarios -- /informe/personal/lista/nombres
+UsuarioInfoRou.get('/personal/datos/:nickname', CN.getDatosSeleccionado); // Pedir los datos del personal -- /informe/personal/datos/:nickname
+UsuarioInfoRou.get('/personal/foto/:nickname', CN.getFotoSeleccionado); // Pedir la foto del personal -- /informe/personal/foto/:nickname
+UsuarioInfoRou.put('/personal/editar/datos', CN.editDataPersonal); // Editar los datos del personal -- /informe/personal/editar/datos
+UsuarioInfoRou.put('/personal/editar/foto', subir.Foto.single('foto'), CN.editFotoPersonal); // Editar la foto del personal -- /informe/personal/editar/foto
 
 export default UsuarioInfoRou;

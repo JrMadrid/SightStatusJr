@@ -1,13 +1,13 @@
 /* CONTROLADORES DE PANEL DE SUCURSALES */
-import { obtenerSucursales, agregarSucursal, actualizarSucursal, eliminarSucursal } from '../../services/Paneles/panelSucursalSer.js';
-import { SchemaCrearSucursal, SchemaActualizarSucursal, SchemaEliminarSucursal } from '../../validators/Paneles/panelSucursalVar.js';
+import { schemas as SC } from '../../validators/Paneles/panelSucursalVar.js';
+import { services as SR } from '../../services/Paneles/panelSucursalSer.js';
 
 // Pedir los datos de las sucursales
 const getSucursales = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const sucursales = await obtenerSucursales(responsable, tipo);
+    const sucursales = await SR.obtenerSucursales(responsable, tipo);
     res.status(200).json(sucursales);
   } catch (error) {
     console.error('Error: // Pedir los datos de las sucursales, ', error);
@@ -18,13 +18,12 @@ const getSucursales = async (req, res) => {
 // Agregar una nueva sucursal
 const postSucursal = async (req, res) => {
   try {
-    const { economico, canal, nombre, ingresponsable, rellenar } = req.body;
-    const { error/* , value */ } = SchemaCrearSucursal.validate(req.body, { abortEarly: false });
+    const { error, value } = SC.SchemaCrearSucursal.validate(req.body, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await agregarSucursal(economico, canal, nombre, ingresponsable, rellenar);
+    await SR.agregarSucursal(value);
     res.status(200).json({ message: 'Sucursal agregada exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar una nueva sucursal, ', error);
@@ -35,13 +34,16 @@ const postSucursal = async (req, res) => {
 // Actualizar una sucursal
 const updateSucursal = async (req, res) => {
   try {
-    const { economico, canal, nombre, id, ingresponsable, rellenar } = req.body;
-    const { error } = SchemaActualizarSucursal.validate(req.body, { abortEarly: false });
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const validar = { id: req.params.id, ...req.body };
+    const { error, value } = SC.SchemaActualizarSucursal.validate(validar, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await actualizarSucursal(economico, canal, nombre, id, ingresponsable, rellenar);
+    await SR.actualizarSucursal(value);
     res.status(200).json({ message: 'Sucursal actualizada exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar una sucursal, ', error);
@@ -52,13 +54,16 @@ const updateSucursal = async (req, res) => {
 // Eliminar una sucursal
 const deleteSucursal = async (req, res) => {
   try {
-    const { id } = req.body;
-    const { error } = SchemaEliminarSucursal.validate(req.body, { abortEarly: false });
+    if (!req.params.id) {
+      return res.status(400).json({ message: "ID requerido" });
+    }
+    const id = req.params.id;
+    const { error, value } = SC.SchemaEliminarSucursal.validate({ id }, { abortEarly: false });
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await eliminarSucursal(id);
+    await SR.eliminarSucursal(value);
     res.status(200).json({ message: 'Sucursal eliminada exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar una sucursal, ', error);
@@ -66,4 +71,9 @@ const deleteSucursal = async (req, res) => {
   }
 };
 
-export const methods = { getSucursales, postSucursal, updateSucursal, deleteSucursal };
+export const controllers = {
+  getSucursales,
+  postSucursal,
+  updateSucursal,
+  deleteSucursal
+};

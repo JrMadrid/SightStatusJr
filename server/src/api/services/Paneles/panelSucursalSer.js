@@ -1,35 +1,41 @@
 /* SERVICIOS PARA VALIDAR DATOS DE SUCURSALES */
-import { EconomicoOcupado, comprobarID, IngResponsable, getSucursales, postSucursal, updateSucursal, deleteSucursal } from '../../models/Paneles/panelSucursalMod.js';
+import { db as DB, verificaciones as VR } from '../../models/Paneles/panelSucursalMod.js';
 
 // Pedir los datos de las sucursales
-export const obtenerSucursales = async (responsable, tipo) => {
-  return await getSucursales(responsable, tipo);
+const obtenerSucursales = async (responsable, tipo) => {
+  return await DB.getSucursales(responsable, tipo);
 };
 
 // Agregar una nueva sucursal
-export const agregarSucursal = async (economico, canal, nombre, ingresponsable, rellena) => {
-  if (await EconomicoOcupado(economico)) { throw { code: 406, message: 'El Economico definido ya existe en la base de datos' }; }
-  if (!(await IngResponsable(ingresponsable))) { throw { code: 404, message: 'No se encontro el ing. Responsable' }; }
-
-  await postSucursal(economico, canal, nombre, ingresponsable, rellena);
+const agregarSucursal = async ({ economico, canal, nombre, ingresponsable, rellenar }) => {
+  if (await VR.EconomicoOcupado(economico)) { throw { code: 406, message: 'El Economico definido ya existe en la base de datos' }; };
+  if (!(await VR.IngResponsable(ingresponsable))) { throw { code: 404, message: 'No se encontró el ing. Responsable' }; };
+  await DB.postSucursal({ economico, canal, nombre, ingresponsable, rellenar });
 };
 
 // Actualizar una sucursal
-export const actualizarSucursal = async (economico, canal, nombre, id, ingresponsable, rellenar) => {
-  if (!(await comprobarID(id))) { throw { code: 404, message: 'No se encontro el ID' }; }
-
-  if (await EconomicoOcupado(economico)) { throw { code: 406, message: 'El Economico definido ya existe en la base de datos' }; }
-
-  if (ingresponsable.length !== 0) {
-    if (!(await IngResponsable(ingresponsable))) { throw { code: 404, message: 'No se encontro el ing. Responsable' }; }
-  }
-
-  await updateSucursal(economico, canal, nombre, id, ingresponsable, rellenar);
+const actualizarSucursal = async ({ economico, canal, nombre, id, ingresponsable, rellenar }) => {
+  if (await VR.IDdelSinEstablecer(id)) { throw { code: 403, message: 'No se puede modificar la sucursal "Sin establecer"' }; };
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (economico) {
+    if (await VR.EconomicoOcupado(economico)) { throw { code: 406, message: 'El Economico definido ya existe en la base de datos' }; };
+  };
+  if (ingresponsable) {
+    if (!(await VR.IngResponsable(ingresponsable))) { throw { code: 404, message: 'No se encontró el ing. Responsable' }; };
+  };
+  await DB.updateSucursal({ economico, canal, nombre, id, ingresponsable, rellenar });
 };
 
 // Eliminar una sucursal
-export const eliminarSucursal = async (id) => {
-  if (!(await comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; }
+const eliminarSucursal = async ({ id }) => {
+  if (await VR.IDdelSinEstablecer(id)) { throw { code: 403, message: 'No se puede eliminar la sucursal "Sin establecer"' }; };
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  await DB.deleteSucursal({ id });
+};
 
-  await deleteSucursal(id);
+export const services = {
+  obtenerSucursales,
+  agregarSucursal,
+  actualizarSucursal,
+  eliminarSucursal
 };

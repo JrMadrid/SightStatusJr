@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'development') {
 };
 
 // Función con reintentos
-const intentos = async (fn, retries, delay = 3000, name = 'operación') => {
+const intentos = async (fn, retries, delay = 10000, name = 'operación') => {
   let attempt = 0;
   while (attempt < retries) {
     try {
@@ -36,14 +36,12 @@ const intentos = async (fn, retries, delay = 3000, name = 'operación') => {
 /* INICIAR EL SERVIDOR */
 const startServer = async () => { // Iniciamos el servidor
   try {
-    await intentos(dbConnection, 3, 3000, 'Conexión a la BD principal'); // Conectamos a la base de datos principal
-    await intentos(connectToDatabase, 3, 3000, 'Conexión a la BD de sesiones'); // Conectamos a la base de datos de sesiones
+    await intentos(dbConnection, 5, 10000, 'Conexión a la BD principal'); // Conectamos a la base de datos principal
+    await intentos(connectToDatabase, 5, 10000, 'Conexión a la BD de sesiones'); // Conectamos a la base de datos de sesiones
     await intentos(syncStore, 3, 3000, 'Sincronización de sesiones'); // Sincronizamos la tienda de sesiones
-    server = app.listen(port, () => { // Iniciamos el servidor en el puerto definido
+    server = app.listen(port,'0.0.0.0', () => { // Iniciamos el servidor en el puerto definido
       console.log(`Servidor backend escuchando en ${host}:${port}`);
     });
-
-
   } catch (err) {
     console.error('Error al iniciar el servidor: ', err);
     process.exit(1); // Salimos del proceso con un código de error 1

@@ -2,7 +2,7 @@
 import sql from 'mssql';
 
 // Mandar los dispositivos con ese nombre
-export const obtenerDispositivosNombre = async (dispositivo, responsable, tipo) => {
+const obtenerDispositivosNombre = async (dispositivo, responsable, tipo) => {
   const request = new sql.Request();
   let query;
   if (tipo === 'Geografia') {
@@ -28,7 +28,7 @@ export const obtenerDispositivosNombre = async (dispositivo, responsable, tipo) 
 };
 
 // Pedir los datos de los dispositivos
-export const obtenerInfoDispositivos = async (dispositivo, responsable, tipo) => {
+const obtenerInfoDispositivos = async (dispositivo, responsable, tipo) => {
   const request = new sql.Request();
   let query;
   if (tipo === 'Geografia') {
@@ -53,4 +53,27 @@ export const obtenerInfoDispositivos = async (dispositivo, responsable, tipo) =>
   request.input('dispositivo', sql.VarChar, dispositivo);
   request.input('responsable', sql.VarChar, responsable);
   return (await request.query(query)).recordset;
+};
+
+/* Verificaciones */
+// Comprobar que existe el dipositivo
+const dipositivoExiste = async (dispositivo) => {
+  try {
+    const query = 'SELECT nombre FROM dispositivos WHERE nombre = @dispositivo';
+    const request = new sql.Request();
+    request.input('dispositivo', sql.VarChar, dispositivo);
+    const resultado = await request.query(query);
+    return resultado.recordset.length > 0;  // El dispositivo existe
+  } catch (error) {
+    console.error('Error al comprobar el dispositivo: ', error);
+  }
+};
+
+export const db = {
+  obtenerDispositivosNombre,
+  obtenerInfoDispositivos
+};
+
+export const verificaciones = {
+  dipositivoExiste
 };

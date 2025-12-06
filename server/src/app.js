@@ -3,6 +3,7 @@ import express from 'express'; // Importa el módulo 'express' que permite crear
 import { handleUncaughtExceptions, handleUnhandledRejections } from './utils/errorHandlers.js';
 import { appMiddlewares } from './middlewares/appMid.js';
 import { Routes } from './api/routes/Routes.js';
+import { multerErrorHandler } from './middlewares/multerMid.js';
 const app = express(); // Crea una instancia de la aplicación Express para manejar las solicitudes HTTP y definir las rutas de la aplicación.
 
 /* Manejo de errores globales */
@@ -14,5 +15,8 @@ appMiddlewares(app);
 
 /* Rutas */
 Routes(app);
+
+/* Multer */
+multerErrorHandler(app);
 
 export default app;

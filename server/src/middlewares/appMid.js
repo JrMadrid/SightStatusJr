@@ -20,10 +20,9 @@ export const appMiddlewares = (app) => {
     methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos HTTP permitidos
     allowedHeaders: ['Content-Type', 'Authorization'] // Encabezados permitidos en las solicitudes
   }));
-
   app.use(morgan(isDev ? 'dev' : 'combined')); // Middleware para registrar las solicitudes HTTP en un formato combinado para modo desarrollo o de producción
-
   app.use(express.json()); // Middleware para analizar el cuerpo de las solicitudes JSON
+  app.use(express.urlencoded({ extended: true })); // Middleware para analizar application/x-www-form-urlencoded
 
   // Session
   app.use(session({
@@ -32,7 +31,7 @@ export const appMiddlewares = (app) => {
     saveUninitialized: false, // Configura si las sesiones nuevas (que aún no han sido modificadas) deben ser guardadas en el almacenamiento. Al establecerlo en true, se asegura que una sesión se guarde en el almacenamiento incluso si no ha sido modificada, lo que puede ser útil para que se genere una sesión para nuevos usuarios, pero puede aumentar el uso de almacenamiento.
     cookie: {
       secure: false, // Indica si la cookie debe ser transmitida solo a través de conexiones HTTPS. Al establecerlo en false, la cookie se puede transmitir a través de conexiones HTTP, lo que puede ser útil para entornos de desarrollo, pero no es seguro para producción.
-      maxAge: 24 * 60 * 60 * 1000, // Establece la duración máxima de la cookie en milisegundos. En este caso, se establece en 24 horas (24 horas * 60 minutos * 60 segundos * 1000 milisegundos).
+      maxAge: 3 * 24 * 60 * 60 * 1000, // Establece la duración máxima de la cookie en milisegundos. (3 dias * 24 horas * 60 minutos * 60 segundos * 1000 milisegundos).
       httpOnly: true, // Indica si la cookie debe ser accesible solo a través de HTTP(S) y no a través de JavaScript en el lado del cliente. Al establecerlo en true, se protege la cookie de ataques XSS (Cross-Site Scripting), ya que no puede ser accedida por scripts del lado del cliente.
       sameSite: isDev ? 'lax' : 'strict', // Configura la política SameSite de la cookie. Al establecerlo en 'strict', la cookie solo se enviará en solicitudes de origen cruzado si el sitio de origen es el mismo que el del servidor, lo que ayuda a prevenir ataques CSRF (Cross-Site Request Forgery).
       domain: isDev ? '' : host, // Dominio para el cual la cookie es válida. Esto puede ser útil para restringir el acceso a la cookie a un dominio específico.

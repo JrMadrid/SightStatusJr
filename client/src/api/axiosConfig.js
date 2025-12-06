@@ -1,4 +1,4 @@
-/* CONFIGURACIÓN DE AXIOS */
+/* CONFIGURACIÓN GLOBAL DE AXIOS */
 import axios from 'axios'; // Importa la librería axios para realizar solicitudes HTTP
 
 // Configura axios para enviar cookies con cada solicitud

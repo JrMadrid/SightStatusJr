@@ -23,17 +23,12 @@ const SelectUsers = () => {
 
   // Pedir los datos de los usuarios
   useEffect(() => {
-    const url = `http://${process.env.REACT_APP_HOST}/panel/users`;
+    const url = `/panel/users`;
     const usuarios = async () => {
       try {
-        const response = await fetchData(url);
-        const jsonData = await response.json();
-        if (!response.ok) {
-          throw new Error(jsonData.message || 'Lo sentimos, ocurrió un problema');
-        }
-        setData(jsonData);
-        setCount(jsonData.length);
-
+        const datos = await fetchData(url);
+        setData(datos);
+        setCount(datos.length);
       } catch (error) {
         console.error('Error: // Pedir los datos de los usuarios, ', error);
         toast.error(error.message || 'Error con los datos');

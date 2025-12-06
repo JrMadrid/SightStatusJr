@@ -3,15 +3,15 @@ import { useState } from 'react';
 import axios from '../../api/axiosConfig';
 
 const PostSucursales = () => {
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     canal: '',
     nombre: '',
     economico: '',
     ingresponsable: '',
-    rellenar: ''
+    rellenar: 'no'
   });
   const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(false);
 
   const cambio = (e) => {
     const { name, value } = e.target;
@@ -23,8 +23,21 @@ const PostSucursales = () => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
+
     try {
-      const response = await axios.post(`http://${process.env.REACT_APP_HOST}/panel/sucursales/agregar`, formData);
+      const cleanedData = {};
+      for (const key in formData) {
+        let value = formData[key];
+        if (typeof value === 'string') {
+          value = value.trim();
+        }
+        if (value !== '') {
+          cleanedData[key] = value;
+        }
+      };
+      const response = await axios.post(`/panel/sucursales/agregar`,
+        cleanedData,
+        { headers: { "Content-Type": "application/json" } });
       setMessage(response.data.message || 'Sucursal agregado exitosamente');
       window.location.reload(); // Recargar la página para ver la nueva sucursal
     } catch (error) {
@@ -61,7 +74,7 @@ const PostSucursales = () => {
           <p className='paviso'>Rellenará la sucursal con dispositivos</p>
           <p className='paviso'>"Sin inventario"</p>
           <div className="add">
-            <button type="submit" disabled={loading}>Agregar</button>
+            <button type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Agregando...' : 'Agregar'}</button>
           </div>
         </form>
         <div className='avisos'>
