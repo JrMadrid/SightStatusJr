@@ -70,20 +70,14 @@ const LoginPanel = () => {
         <form onSubmit={iniciarSesion}>
           <div className="form-group">
             <label htmlFor="nickname" className='labellogin'>Usuario</label>
-            <input
-              type="text"
-              id="nickname"
-              name="nickname"
-              maxLength="50"
-              value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
-              required
-            />
+            <input className='inputlogin' type="text" id="nickname" name="nickname" maxLength="50" placeholder='Nombre de usuario'
+              value={nickname} onChange={(e) => setNickname(e.target.value)} required />
           </div>
           <div className="form-group" style={{ position: "relative" }}>
             <label htmlFor="psw" className='labellogin'>Contraseña</label>
             <span onClick={() => setShowPassword(!showPassword)} className='ojo' >{showPassword ? <FaEyeSlash /> : <FaEye />}</span>{/* Botón para mostrar/ocultar */}
-            <input type={showPassword ? "text" : "password"} id="psw" name="psw" maxLength="50" value={psw} onChange={(e) => setPsw(e.target.value)} required />
+            <input type={showPassword ? "text" : "password"} className='inputlogin' id="psw" name="psw" maxLength="50" placeholder='Contraseña'
+              value={psw} onChange={(e) => setPsw(e.target.value)} required />
           </div>
           <button className="loginbutton" type="submit" disabled={loading} style={{ backgroundColor: loading ? 'black' : '' }}>{loading ? 'Iniciando Sesión...' : 'Iniciar Sesión'}</button>
           {error && <div className="error">{error}</div>} {/* Mostrar error si existe */}

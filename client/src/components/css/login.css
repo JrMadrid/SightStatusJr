@@ -34,6 +34,14 @@ input {
   border-radius: 2px;
 }
 
+.inputlogin{
+  border: 2px solid #67bdf2;
+}
+
+.inputlogin:placeholder-shown{
+  border: 2px solid #f58859;
+}
+
 .loginbutton {
   width: 100%;
   padding: 10px;
