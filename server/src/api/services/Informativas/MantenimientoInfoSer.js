@@ -4,6 +4,9 @@ import { db as DB, verificaciones as VR } from "../../models/Informativas/Manten
 // Mandar las fechas vinculadas al economico
 const PedirFechasRealizadas = async (economico, responsable, tipo) => {
   if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (tipo === 'Geografia') {
+    if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
+  };
   return await DB.getFechasRealizadas(economico, responsable, tipo);
 };
 

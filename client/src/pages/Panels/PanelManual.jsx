@@ -1,7 +1,7 @@
 /* PAGINA DE PANEL DE ADMINISTRACIÓN DE MANUALES */
-import SelectManuales from '../../components/Panel_Manuales/SelectManuales.jsx';
-import ManualPanel from '../../components/Panel_Manuales/ManualPanel.jsx';
-import '../css/section.css';
+import SelectManuales from '@paneles/Panel_Manuales/SelectManuales.jsx';
+import ManualPanel from '@paneles/Panel_Manuales/ManualPanel.jsx';
+import '@cssp/section.css';
 
 const PanManuales = () => {
   return (

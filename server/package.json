@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "dev": "nodemon --exec",
+    "deve": "nodemon --exec",
     "start": "pm2 start ecosystem.config.cjs --env production",
     "start:dev": "pm2 start ecosystem.config.cjs --env development",
-    "deve": "npm run start:dev",
-    "prod": "npm run start",
+    "dev": "npm run start:dev",
+    "pro": "npm run start",
     "restart": "pm2 restart back",
     "client": "cd ../client && npm start"
   },
@@ -27,6 +27,7 @@
     "file-type": "^21.0.0",
     "fs": "^0.0.1-security",
     "joi": "^17.13.3",
+    "module-alias": "^2.2.3",
     "morgan": "^1.10.0",
     "mssql": "^11.0.1",
     "multer": "^1.4.5-lts.1",

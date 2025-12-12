@@ -2,18 +2,20 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig.js';
-import { FormatearFechaTabla } from '../Elements/date.jsx';
-import PDFConstancias from '../Elements/PDF/ConstanciasPDF.jsx';
-import PDFConstancia from '../Elements/PDF/ConstanciaPDF.jsx';
-import JPGConstancia from '../Elements/PDF/ConstanciaJPG.jsx';
-import { ListExcel } from '../Listas/Lista_Excel.jsx';
-import '../css/Infor_Sucursal.css';
+import fetchData from '@api/fetchConfig.js';
+import { FormatearFechaTabla } from '@elementos/date.jsx';
+import PDFConstancias from '@elementos/PDF/ConstanciasPDF.jsx';
+import PDFConstancia from '@elementos/PDF/ConstanciaPDF.jsx';
+import JPGConstancia from '@elementos/PDF/ConstanciaJPG.jsx';
+import { ListExcel } from '@listas/Lista_Excel.jsx';
+import usePageTitle from '@hooks/documentTitle.js';
+import '@css/Infor_Sucursal.css';
 import { FaRegListAlt } from 'react-icons/fa';
 import { FaMapLocationDot } from "react-icons/fa6";
-import logoSoporte from '../../imgs/LogoSoporte.png';
+import logoSoporte from '@imgs/LogoSoporte.png';
 
 export default function InfoMante() {
+  usePageTitle("Pagina Informativa de Mantenimientos");
   const navigate = useNavigate();
   const location = useLocation();
   const [appslist, setAppslist] = useState([]);
@@ -29,17 +31,6 @@ export default function InfoMante() {
   const nombre = location.state?.nombre || '';
   const ingresponsable = location.state?.ingresponsable || '';
 
-  // Nombre de la Pestaña
-  useEffect(() => {
-    // Cambia el nombre de la pestaña
-    document.title = "Pagina Informativa de Mantenimientos";
-
-    // Vuelve al título original
-    return () => {
-      document.title = "StatusAppJR";
-    };
-  }, []);
-
   // Mandar las fechas vinculadas al economico
   useEffect(() => {
     // Evita ejecutar si aún no hay un número económico válido    
@@ -47,7 +38,7 @@ export default function InfoMante() {
 
     const fechasr = async () => {
       try {
-        const url = `/informe/mantes/fechas/${economico}`;
+        const url = `/api/informativa/mantenimientos/fechas/${economico}`;
         const lista = await fetchData(url);
         if (!lista.length) {
           setAviso('No hay mantenimientos realizados');
@@ -80,7 +71,7 @@ export default function InfoMante() {
       try {
         const imageConstancia = document.getElementById('imageConstancia');
         imageConstancia.innerHTML = '';
-        let url = `/informe/mantes/tabla/seleccionado/${id}`;
+        const url = `/api/informativa/mantenimientos/tabla/seleccionado/${id}`;
         const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();
@@ -121,7 +112,7 @@ export default function InfoMante() {
       try {
         const imageConstancia = document.getElementById('imageConstancia');
         imageConstancia.innerHTML = '';
-        const url = `/informe/mantes/informativa/${fechasr}`;
+        const url = `/api/informativa/mantenimientos/informativa/${fechasr}`;
         const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();

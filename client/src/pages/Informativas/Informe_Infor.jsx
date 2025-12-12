@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- INFORME */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoInforme from '../../components/Informativas/infor_Informe.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoInforme from '@informativas/infor_Informe.jsx';
 
 const InformeInfo = () => {
   const user = useContext(UserContext);

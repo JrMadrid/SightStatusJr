@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- SUCURSAL */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoSucursal from '../../components/Informativas/Infor_Sucursal.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoSucursal from '@informativas/Infor_Sucursal.jsx';
 
 const SucursalInfo = () => {
   const user = useContext(UserContext);

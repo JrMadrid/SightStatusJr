@@ -9,6 +9,6 @@ panelDispositivosRou.get('/dispositivos/lista', CN.getListaDispositivos); // Ped
 panelDispositivosRou.post('/dispositivos/agregar', ADMIN, CN.postDispositivo); // Agregar un nuevo dispositivo -- /panel/dispositivos/agregar
 panelDispositivosRou.put('/dispositivos/actualizar/:id', ADMIN, CN.updateDispositivo); // Actualizar un dispositivo -- /panel/dispositivos/actualizar/:id
 panelDispositivosRou.delete('/dispositivos/eliminar/:id', ADMIN, CN.deleteDispositivo); // Eliminar un dispositivo -- /panel/dispositivos/eliminar/:id
-panelDispositivosRou.get('/ping/:ip', ADMIN, CN.ping); // Hacer ping a la ip -- /panel/ping/:ip
+panelDispositivosRou.get('/dispositivos/ping/:ip', ADMIN, CN.ping); // Hacer ping a la ip -- /panel/dispositivos/ping/:ip
 
 export default panelDispositivosRou;

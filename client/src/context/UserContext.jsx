@@ -1,6 +1,6 @@
 /* CONTEXT DE USUARIO */
 import { createContext, useState, useEffect } from 'react'; // createContext: crea un contexto para compartir datos entre componentes funciona como un store global
-import fetchData from '../api/fetchConfig';
+import fetchData from '@api/fetchConfig';
 
 // Crea el context
 export const UserContext = createContext();
@@ -13,7 +13,8 @@ export const UserProvider = ({ children }) => { // children es el componente que
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const tipo = await fetchData(`/auth/api/user`);   
+        const url = `/api/auth/api/user`;
+        const tipo = await fetchData(url);
         setUser(tipo);
       } catch (error) {
         console.error('Error: // Definir el tipo de usuario, ', error);

@@ -1,16 +1,17 @@
 /* COMPONENTE DE INFORMATIVA -- UBICACIÓN */
 import { useEffect, useState, useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '@context/UserContext';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig.js';
-import axios from '../../api/axiosConfig.js';
-import EstadoConexion from '../Elements/EstadoConexion.jsx';
-import '../css/Infor_Sucursal.css';
-import '../css/infor_Ubicacion.css';
+import fetchData from '@api/fetchConfig.js';
+import axios from '@api/axiosConfig.js';
+import EstadoConexion from '@elementos/EstadoConexion.jsx';
+import usePageTitle from '@hooks/documentTitle.js';
+import '@css/Infor_Sucursal.css';
+import '@css/infor_Ubicacion.css';
 import { FaTools, FaRegListAlt, FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
-import logoSoporte from '../../imgs/LogoSoporte.png';
-import sucursal from '../../imgs/sucursal.png';
+import logoSoporte from '@imgs/LogoSoporte.png';
+import sucursal from '@imgs/sucursal.png';
 // Imports de Leaflet
 import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -24,9 +25,11 @@ const customIcon = new L.Icon({
 });
 
 export default function InfoUbicacion() {
+  usePageTitle("Pagina Informativa de Ubicación");
   const user = useContext(UserContext);
   const navigate = useNavigate();
   const location = useLocation();
+  const [economicoValido, setEconomicoValido] = useState(false);
   const [mapa, setMapa] = useState({});
   const [hay, setHay] = useState(false);
   const [aviso, setAviso] = useState('');
@@ -40,22 +43,35 @@ export default function InfoUbicacion() {
   const nombre = location.state?.nombre || '';
   const ingresponsable = location.state?.ingresponsable || '';
 
-  // Nombre de la pestaña
+  // Verificar el economico antes de cualquier consulta
   useEffect(() => {
-    document.title = "Pagina Informativa de Ubicación";
-    return () => { document.title = "StatusAppJR"; };
-  }, []);
+    const verificarEconomico = async () => {
+      try {
+        const url = `/api/informativa/ubicacion/verificar/${economico}`;
+        const response = await fetch(url, { credentials: 'include' });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
+        }
+        setEconomicoValido(true);
+      } catch (error) {
+        console.error("Error: // Verificar el economico antes de cualquier consulta, ", error);
+        toast.error(error.message || "Error al verificar económico");
+        setEconomicoValido(false);
+      }
+    };
+    if (economico) verificarEconomico();
+  }, [economico]);
+
 
   // Pedir los datos de la ubicación de la sucursal
   useEffect(() => {
+    if (!economicoValido) { return; };
     const mapasucursal = async () => {
       try {
-        const url = `/informe/ubicacion/datos/${economico}`;
+        const url = `/api/informativa/ubicacion/datos/${economico}`;
         const datos = await fetchData(url);
-        console.log('datos');
-        console.log(datos);
         setMapa(datos);
-
         if (datos.latitud == null || datos.longitud == null) {
           setAviso("Falta definir la ubicación");
           throw new Error('Falta definir la ubicación');
@@ -68,13 +84,14 @@ export default function InfoUbicacion() {
       }
     };
     mapasucursal();
-  }, [economico]);
+  }, [economico, economicoValido]);
 
   // Pedir la imagen de la ubicación de la sucursal
   useEffect(() => {
+    if (!economicoValido) { return; };
     const PedirImagenUbicacion = async () => {
       try {
-        const url = `/informe/ubicacion/imagen/${economico}`;
+        const url = `/api/informativa/ubicacion/imagen/${economico}`;
         const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();
@@ -96,7 +113,7 @@ export default function InfoUbicacion() {
       }
     };
     PedirImagenUbicacion();
-  }, [economico]);
+  }, [economico, economicoValido]);
 
   // Editar
   const ediccion = (campo) => {
@@ -136,7 +153,7 @@ export default function InfoUbicacion() {
       }
       setBorrarImagen(false);
     }
-    const url = `/informe/ubicacion/editar/datos`;
+    const url = `/api/informativa/ubicacion/editar/datos`;
     try {
       const payload = { propiedadEditar: campo, valor, economico };
       const response = await axios.put(url, payload);
@@ -173,7 +190,8 @@ export default function InfoUbicacion() {
     formData.append("imagen", archivo);
     formData.append("economico", economico);
     try {
-      await axios.put(`/informe/ubicacion/editar/imagen`,
+      const url = `/api/informativa/ubicacion/editar/imagen`;
+      await axios.put(url,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } });
       // Actualizar solo la imagen mostrada
@@ -189,6 +207,7 @@ export default function InfoUbicacion() {
 
   // Mostrar el elemento con los datos
   const renderCampo = (campo, label) => {
+    if (!economicoValido) { return; };
     const valorActual = mapa?.[campo];
     let contenido = valorActual;
 

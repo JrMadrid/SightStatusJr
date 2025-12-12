@@ -1,10 +1,10 @@
 /* PAGINA DE TABLA DE MANTENIMIENTOS Y DE PANEL DE ADMINISTRACIÓN DE MANTENIMIENTOS */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import SelectMantenimientos from '../../components/Panel_Mantenimiento/SelectMantenimientos.jsx';
-import MantenimientosPanel from '../../components/Panel_Mantenimiento/MantenimientosPanel.jsx';
-import ConstanciaPanel from '../../components/Panel_Mantenimiento/ConstanciaPanel.jsx';
-import '../css/section.css';
+import { UserContext } from '@context/UserContext.jsx';
+import SelectMantenimientos from '@paneles/Panel_Mantenimiento/SelectMantenimientos.jsx';
+import MantenimientosPanel from '@paneles/Panel_Mantenimiento/MantenimientosPanel.jsx';
+import ConstanciaPanel from '@paneles/Panel_Mantenimiento/ConstanciaPanel.jsx';
+import '@cssp/section.css';
 
 const PanMantenimientos = () => {
   const user = useContext(UserContext);

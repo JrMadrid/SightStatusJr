@@ -1,7 +1,7 @@
 /* PAGINA DE PANEL DE ADMINISTRACIÓN DE INFORMES */
-import SelectInformes from '../../components/Panel_Informes/SelectInformes.jsx';
-import InformePanel from '../../components/Panel_Informes/InformePanel.jsx';
-import '../css/section.css';
+import SelectInformes from '@paneles/Panel_Informes/SelectInformes.jsx';
+import InformePanel from '@paneles/Panel_Informes/InformePanel.jsx';
+import '@cssp/section.css';
 
 const Informes = () => {
   return (

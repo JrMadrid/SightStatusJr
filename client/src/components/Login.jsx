@@ -1,8 +1,8 @@
 /* COMPONENTE DE ELEMENTO DE INICIO DE SESIÓN */
 import { useState, useEffect } from 'react';
 import { toast, Toaster } from 'react-hot-toast';
-import axios from '../api/axiosConfig'; // Importa la configuración personalizada
-import './css/login.css';
+import axios from '@api/axiosConfig'; // Importa la configuración personalizada
+import '@css/login.css';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const LoginPanel = () => {
@@ -16,8 +16,8 @@ const LoginPanel = () => {
   useEffect(() => {
     const verificarSesion = async () => {
       try {
-        const ipCheck = `/auth/check`;
-        const response = await axios.get(ipCheck);
+        const url = `/api/auth/check`;
+        const response = await axios.get(url);
 
         // Si hay sesión activa, redirigir al inicio
         if (response.data.iniciado) {
@@ -42,8 +42,8 @@ const LoginPanel = () => {
 
     try {
       // URL del backend para hacer login
-      const ipLogin = `/auth/login/user`;
-      const response = await axios.post(ipLogin, body);
+      const url = `/api/auth/login/user`;
+      const response = await axios.post(url, body);
 
       // Si el login es exitoso, redirigir según el tipo de usuario
       if (response.data.iniciado) {

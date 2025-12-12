@@ -2,32 +2,23 @@
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig.js';
-import logoSoporte from '../../imgs/LogoSoporte.png';
-import '../css/Infor_Sucursal.css';
+import fetchData from '@api/fetchConfig.js';
+import usePageTitle from '@hooks/documentTitle.js';
+import logoSoporte from '@imgs/LogoSoporte.png';
+import '@css/Infor_Sucursal.css';
 
 export default function InfoInforme() {
+  usePageTitle("Pagina Informativa de Informe");
   const location = useLocation();
   const [informeInfo, setInformeInfo] = useState({});
   const [informeBlob, setInformeBlob] = useState(null);
   const id = location.state?.id;
 
-  // Nombre de la Pestaña
-  useEffect(() => {
-    // Cambia el nombre de la pestaña
-    document.title = "Pagina Informativa de Informe";
-
-    // Vuelve al título original
-    return () => {
-      document.title = "StatusAppJR";
-    };
-  }, []);
-
   // Mandar los datos del informe
   useEffect(() => {
     const informeInfo = async () => {
       try {
-        const url = `/informe/informes/info/${id}`;
+        const url = `/api/informativa/informes/info/${id}`;
         const datos = await fetchData(url);
         setInformeInfo(datos[0]);
       } catch (error) {
@@ -43,7 +34,7 @@ export default function InfoInforme() {
   useEffect(() => {
     const informeDoc = async () => {
       try {
-        const url = `/informe/informes/informe/${id}`;
+        const url = `/api/informativa/informes/informe/${id}`;
         const response = await fetch(url, { credentials: 'include' });
         if (!response.ok) {
           const errorData = await response.json();

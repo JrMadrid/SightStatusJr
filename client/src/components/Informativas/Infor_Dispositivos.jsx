@@ -2,31 +2,22 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig.js';
-import Pingdispo from '../Elements/ping.jsx';
-import ALLPDF from '../Elements/PDF/AllPDF.jsx'
-import { ListExcel } from '../Listas/Lista_Excel.jsx';
-import '../css/Infor_Dispositivo.css';
-import logoSoporte from '../../imgs/LogoSoporte.png';
+import fetchData from '@api/fetchConfig.js';
+import Pingdispo from '@elementos/botonPing.jsx';
+import ALLPDF from '@elementos/PDF/AllPDF.jsx'
+import { ListExcel } from '@listas/Lista_Excel.jsx';
+import usePageTitle from '@hooks/documentTitle.js';
+import '@css/Infor_Dispositivo.css';
+import logoSoporte from '@imgs/LogoSoporte.png';
 import { HiExternalLink, HiFastForward } from "react-icons/hi";
 
 export default function InfoDispositivo() {
+  usePageTitle("Pagina Informativa de Dispositivos");
   const [appslist, setAppslist] = useState([]);
   const [dispositivoId, setDispositivoId] = useState('');
   const [content, setContent] = useState([]);
   const [data, setData] = useState([]);
   const { nombre } = useParams();
-
-  // Nombre de la Pestaña
-  useEffect(() => {
-    // Cambia el nombre de la pestaña
-    document.title = "Pagina Informativa de Dispositivos";
-
-    // Vuelve al título original
-    return () => {
-      document.title = "StatusAppJR";
-    };
-  }, []);
 
   // Marcar el dispositivo seleccionado
   useEffect(() => {
@@ -41,7 +32,7 @@ export default function InfoDispositivo() {
   useEffect(() => {
     const dispositivos = async () => {
       try {
-        const url = `/informe/devices/dispositivos/${nombre}`;
+        const url = `/api/informativa/devices/dispositivos/${nombre}`;
         const dispositivos = await fetchData(url);
         setAppslist(dispositivos);
         if (dispositivos.length > 0) {
@@ -59,7 +50,8 @@ export default function InfoDispositivo() {
   // Pedir los datos de los dispositivos
   const appData = async (nombre) => {
     try {
-      const datos = await fetchData(`/informe/devices/device/${nombre}`);
+      const url = `/api/informativa/devices/device/${nombre}`;
+      const datos = await fetchData(url);
       setData(datos);
       setContent(datos);
     } catch (error) {

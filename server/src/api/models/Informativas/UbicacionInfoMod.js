@@ -1,12 +1,17 @@
 /* MODEL DE INFORMATIVA -- UBICACIÓN */
 import sql from 'mssql';
 
-// Pedir los datos de la ubicación de la sucursal
-const getUbicacionDatos = async (economico, existe, responsable, tipo) => {
+// Verificar el economico antes de cualquier consulta, se crea si no existe
+const getVerificarEconomico = async (economico) => {
   const request = new sql.Request();
-  if (!existe) {
-    await request.query(`INSERT INTO ubicacion (economico) VALUES ('${economico}')`);
-  }
+  const query = `INSERT INTO ubicacion (economico) VALUES ('${economico}')`;
+  request.input('economico', sql.VarChar, economico);
+  await request.query(query);
+};
+
+// Pedir los datos de la ubicación de la sucursal
+const getUbicacionDatos = async (economico, responsable, tipo) => {
+  const request = new sql.Request();
   let query;
   if (tipo === 'Geografia') {
     query = `
@@ -109,7 +114,7 @@ const SucursalExiste = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error al comprobar la sucursal: ', error);
   }
 };
 
@@ -126,7 +131,22 @@ const UbicacionExiste = async (economico) => {
   }
 };
 
+// Comprobar que la sucursal le pertenezca a ese usuario
+const SucursalPerteneciente = async (economico, responsable) => {
+  try {
+    const query = 'SELECT economico FROM sucursales WHERE economico = @economico AND ingresponsable = @usuario';
+    const request = new sql.Request();
+    request.input('economico', sql.VarChar, economico);
+    request.input('usuario', sql.NVarChar, responsable);
+    const resultado = await request.query(query);
+    return resultado.recordset.length > 0;
+  } catch (error) {
+    console.error('Error al comprobar la sucursal: ', error);
+  }
+};
+
 export const db = {
+  getVerificarEconomico,
   getUbicacionDatos,
   getUbicacionFoto,
   updateDatosUbicacion,
@@ -135,5 +155,6 @@ export const db = {
 
 export const verificaciones = {
   SucursalExiste,
-  UbicacionExiste
+  UbicacionExiste,
+  SucursalPerteneciente
 };

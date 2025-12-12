@@ -1,14 +1,14 @@
 /* COMPONENTE DE BOTON DESCARGAR LISTA EN PDF */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '@context/UserContext';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { Toaster, toast } from 'react-hot-toast';
-import date from '../../utils/date.js';
-import imgBase64 from '../../utils/imgBase64.js';
-import logo from '../../imgs/LogoSoporteBN.png';
-import hn from '../../imgs/hnBN.png';
-import '../css/listas.css';
+import date from '@utils/date.js';
+import imgBase64 from '@utils/imgBase64.js';
+import '@css/listas.css';
+import logo from '@imgs/LogoSoporteBN.png';
+import hn from '@imgs/hnBN.png';
 
 function ListPDF(props) {
   const user = useContext(UserContext);

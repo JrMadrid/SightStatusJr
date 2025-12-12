@@ -3,6 +3,29 @@ import { fileTypeFromBuffer } from "file-type";
 import { schemas as SC } from "../../validators/Informativas/UbicacionInfoVal.js";
 import { services as SR } from "../../services/Informativas/UbicacionInfoSer.js";
 
+// Verificar el economico antes de cualquier consulta
+const getVerificarEconomico = async (req, res) => {
+  try {
+    if (!req.params.economico) {
+      return res.status(400).json({ message: "Económico requerido" });
+    }
+    const validar = { economico: req.params.economico };
+    const { error, value } = SC.SchemaPedirUbicacion.validate(validar, { abortEarly: false });
+    if (error) {
+      const mensajes = error.details.map(err => err.message).join('\n');
+      return res.status(400).json({ message: mensajes });
+    }
+    const economico = value.economico;
+    const responsable = req.session.user;
+    const tipo = req.session.tipo;
+    await SR.pedirVerificarEconomico(economico, responsable, tipo);
+    return res.sendStatus(200);
+  } catch (error) {
+    console.error('Error: // Pedir los datos de la ubicación de la sucursal, ', error);
+    res.status(error?.code || 500).json({ message: error?.message || 'Ubicación no encontrada' });
+  }
+};
+
 // Pedir los datos de la ubicación de la sucursal
 const getUbicacionDatos = async (req, res) => {
   try {
@@ -19,9 +42,6 @@ const getUbicacionDatos = async (req, res) => {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
     const mapa = await SR.pedirUbicacionDatos(economico, responsable, tipo);
-    console.log('mapa');
-    console.log(mapa);
-    
     if (!mapa) {
       return res.sendStatus(404);
     }
@@ -98,6 +118,7 @@ const updateImagenUbicacion = async (req, res) => {
 };
 
 export const controllers = {
+  getVerificarEconomico,
   getUbicacionDatos,
   getUbicacionFoto,
   updateDatosUbicacion,

@@ -59,7 +59,7 @@ const informeArchivo = async (id) => {
 };
 
 /* Verificaciones */
-/* Comprobar que existe la sucursal antes de cualquier operación con los informes */
+// Comprobar que existe la sucursal antes de cualquier operación con los informes
 const SucursalExiste = async (economico) => {
   try {
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico';
@@ -72,7 +72,7 @@ const SucursalExiste = async (economico) => {
   }
 };
 
-/* Comprobar que existe la sucursal le pertenezca a ese usuario */
+// Comprobar que la sucursal le pertenezca a ese usuario
 const SucursalPerteneciente = async (economico, ingeniero) => {
   try {
     const query = 'SELECT economico FROM sucursales WHERE economico = @economico AND ingresponsable = @usuario';
@@ -86,7 +86,7 @@ const SucursalPerteneciente = async (economico, ingeniero) => {
   }
 };
 
-/* Comprobar que ID del informe existe para corrobar ejecución */
+// Comprobar que ID del informe existe para corrobar ejecución
 const comprobarID = async (id) => {
   try {
     const query = 'SELECT id FROM informes WHERE id = @id';

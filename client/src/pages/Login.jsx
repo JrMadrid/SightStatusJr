@@ -1,7 +1,7 @@
 /* PAGINA DE INICIO DE SESION */
-import LoginPanel from '../components/Login.jsx';
-import logo from '../imgs/LogoSoporte.png';
-import './css/login.css';
+import LoginPanel from '@components/Login.jsx';
+import logo from '@imgs/LogoSoporte.png';
+import '@cssp/login.css';
 
 const Iniciar = () => {
   return (

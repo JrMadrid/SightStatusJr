@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- USUARIO */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoUsuario from '../../components/Informativas/Infor_Usuario.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoUsuario from '@informativas/Infor_Usuario.jsx';
 
 const UsuarioInfo = () => {
   const user = useContext(UserContext);

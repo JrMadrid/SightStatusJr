@@ -1,19 +1,21 @@
 /* COMPONENTE DE INFORMATIVA -- USUARIO */
 import { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
-import { UserContext } from '../../context/UserContext';
+import { UserContext } from '@context/UserContext';
 import { Toaster, toast } from 'react-hot-toast';
-import fetchData from '../../api/fetchConfig';
-import axios from '../../api/axiosConfig';
-import fechaFomatoSQL from '../../utils/formatoFecha.js';
-import calcularEdad from '../../utils/edad.js';
-import Whatsapp from '../../utils/wspNumber.jsx';
-import '../css/Infor_Sucursal.css';
+import fetchData from '@api/fetchConfig';
+import axios from '@api/axiosConfig';
+import fechaFomatoSQL from '@utils/formatoFecha.js';
+import calcularEdad from '@utils/edad.js';
+import Whatsapp from '@elementos/wspNumber.jsx';
+import usePageTitle from '@hooks/documentTitle.js';
+import '@css/Infor_Sucursal.css';
 import { FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
-import logoSoporte from '../../imgs/LogoSoporte.png';
-import profile from '../../imgs/profile.png';
+import logoSoporte from '@imgs/LogoSoporte.png';
+import profile from '@imgs/profile.png';
 
 export default function InfoUsuario() {
+  usePageTitle("Pagina Informativa de Usuarios");
   const location = useLocation();
   const user = useContext(UserContext);
   const [userslist, setUserslist] = useState([]);
@@ -28,23 +30,12 @@ export default function InfoUsuario() {
   const [valorTemporal, setValorTemporal] = useState('');
   const nickGuardado = location.state?.nickname;
 
-  // Nombre de la Pestaña
-  useEffect(() => {
-    // Cambia el nombre de la pestaña
-    document.title = "Pagina Informativa de Usuarios";
-
-    // Vuelve al título original
-    return () => {
-      document.title = "StatusAppJR";
-    };
-  }, []);
-
   // Pedir la lista de usuarios
   useEffect(() => {
     if (user.id === 1) {
       const listaUsuarios = async () => {
         try {
-          const url = `/informe/personal/lista/nombres`;
+          const url = `/api/informativa/personal/lista/nombres`;
           const lista = await fetchData(url);
           setUserslist(lista);
         } catch (error) {
@@ -60,11 +51,11 @@ export default function InfoUsuario() {
   // Pedir los datos del personal
   const PedirDatosPersonal = async (nickname) => {
     try {
-      if (!nickname) {
+      if (!nickname && user.id === 1) {
         toast.error("No ha seleccionado un nombre");
         return;
       };
-      const url = `/informe/personal/datos/${nickname}`;
+      const url = `/api/informativa/personal/datos/${nickname}`;
       const datos = await fetchData(url);
       setEdad(calcularEdad(datos?.fecha_nacimiento));
       setUserDatosSeleccionado(datos);
@@ -81,7 +72,7 @@ export default function InfoUsuario() {
       if (!nickname) {
         return;
       }
-      const url = `/informe/personal/foto/${nickname}`;
+      const url = `/api/informativa/personal/foto/${nickname}`;
       const response = await fetch(url, { credentials: 'include' });
       if (!response.ok) {
         const errorData = await response.json();
@@ -169,7 +160,7 @@ export default function InfoUsuario() {
       }
       setBorrarFoto(false);
     }
-    const url = `/informe/personal/editar/datos`;
+    const url = `/api/informativa/personal/editar/datos`;
     try {
       const payload = { propiedadEditar: campo, valor, id };
       const response = await axios.put(url, payload);
@@ -210,7 +201,8 @@ export default function InfoUsuario() {
     formData.append("foto", archivo);
     formData.append("id", userDatosSeleccionado.id);
     try {
-      await axios.put(`/informe/personal/editar/foto`,
+      const url = `/api/informativa/personal/editar/foto`;
+      await axios.put(url,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } });
       // Actualizar solo la imagen mostrada

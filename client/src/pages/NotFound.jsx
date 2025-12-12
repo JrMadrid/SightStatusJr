@@ -1,5 +1,5 @@
 /* PAGINA PARA URL DESCONOCIDA */
-import LogoSoporte from '../imgs/LogoSoporte.png';
+import LogoSoporte from '@imgs/LogoSoporte.png';
 
 export default function NotFoundPage() {
   return (

@@ -25,7 +25,7 @@ const getDatosSeleccionado = async (req, res) => {
   try {
     let seleccionado;
     const tipo = req.session.tipo;
-    tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickname;
+    tipo === "Super Administrador" ? seleccionado = req.params.nickname : seleccionado = req.session.perfil;
     const datos = await SR.obtenerDatosSeleccionado(seleccionado);
     return res.status(200).json(datos);
   } catch (error) {

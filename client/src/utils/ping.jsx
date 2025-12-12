@@ -1,11 +1,11 @@
 /* FUNCIÓN DE PING */
-import fetchData from "../api/fetchConfig";
+import fetchData from "@api/fetchConfig";
 import { toast } from 'react-hot-toast';
 
 // Hacer ping a la ip
 const ping = async (ip) => {
   toast.promise(
-    fetchData(`/panel/ping/${ip}`).then(async (silbato) => {
+    fetchData(`/api/panel/dispositivos/ping/${ip}`).then(async (silbato) => {
       return silbato.silbido;
     }),
     {

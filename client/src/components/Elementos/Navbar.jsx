@@ -1,0 +1,141 @@
+/* COMPONENTE DE ELEMENTO DE BARRA DE NAVEGACIÓN */
+import { useContext } from 'react';
+import { UserContext } from '@context/UserContext';
+import { NavLink } from 'react-router-dom';
+import { Toaster, toast } from 'react-hot-toast';
+import { FaAddressCard } from "react-icons/fa";
+import '@css/navbar.css';
+import ConexionIcono from './ConexionIcono.jsx';
+
+// Definir navbar según el tipo usuario
+export default function Navbar() {
+  const user = useContext(UserContext);
+  function capitalizartexto(text) { // Poner en mayuscula la primera letra de cada palabra
+    const capitalizado = text.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+    return capitalizado;
+  }
+
+  // Función para cerrar sesión
+  const Logout = async () => {
+    return toast.promise(
+      fetch(`/api/auth/out`, { credentials: 'include' }) // usamos fetch directo
+      .then(async (response) => {
+        if (!response.ok) {
+          throw new Error('No se pudo cerrar sesión');
+        }
+        // Como no hay JSON, solo se devuelve true
+        return true;
+      }),
+      {
+        loading: 'Cerrando Sesión...',
+        success: (cierre) => {
+          if (cierre) {
+            window.location.href = '/'; // Redirigir a la página de inicio
+            return <b style={{ color: 'green', fontSize: '20px' }}>Sesión cerrada</b>;
+          }
+          else {
+            return <b style={{ color: 'red', fontSize: '20px' }}>Error al cerrar sesión</b>;
+          }
+        },
+        error: () => {
+        },
+      },
+      {
+        style: { Width: '250px', Height: '25px', },
+        success: { duration: 2500, icon: null, },
+      }
+    );
+  };
+
+  return (
+    <>
+      <div className='navbar'>
+        {/* SIN USUARIO - INICIO DE SESIÓN */}
+        {user && user.id === 0 && (
+          <>
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to='/'>
+                Iniciar Sesión
+              </NavLink>
+            </li>
+          </>
+        )}
+
+        {/* CON USUARIO - SESIÓN INICIADA*/}
+        {user && user.id !== 0 && (
+          <>
+            <li className='usuario'>
+              {capitalizartexto(user.username)}
+            </li>
+          </>
+        )}
+
+        {/* ADMINISTRADOR, APLICATIVO & GEOGRAFIA */}
+        {user && (user.id === 2 || user.id === 3 || user.id === 4) && (
+          <li style={{ paddingBottom: '0rem', paddingTop: '0.3rem' }} >
+            <NavLink className={({ isActive }) => (isActive ? "active" : "")} style={{ fontSize: '1rem' }} to="/informativa/usuario">
+              <FaAddressCard />
+            </NavLink>
+          </li>
+        )}
+
+        {/* TODOS */}
+        {user && (user.id === 1 || user.id === 2 || user.id === 3 || user.id === 4) && (
+          <>
+            {/* SUPER ADMINISTRADOR */}
+            {user && user.id === 1 && (
+              <li>
+                <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/usuarios">
+                  Usuarios
+                </NavLink>
+              </li>
+            )}
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/sucursales">
+                Sucursales
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/dispositivos">
+                Dispositivos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/mantenimientos">
+                Mantenimientos
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/manuales">
+                Manuales
+              </NavLink>
+            </li>
+            <li>
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/informes">
+                Informes
+              </NavLink>
+            </li>
+            <li className='tipo'>
+              {user.tipo}
+            </li>
+            <li>
+              <ConexionIcono />
+            </li>
+          </>
+        )}
+
+        {/* TODOS - FIN DE SESIÓN */}
+        {user && user.id !== 0 && (
+          <>
+            <li className='close'>
+              <NavLink onClick={Logout} style={{ color: 'whitesmoke' }}>
+                Cerrar Sesión
+              </NavLink>
+            </li>
+          </>
+        )}
+      </div>
+      <Toaster toastOptions={{ className: 'noti' }} />
+    </>
+  );
+};

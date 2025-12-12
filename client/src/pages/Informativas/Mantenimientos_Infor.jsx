@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- MANTENIMIENTOS */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoMante from "../../components/Informativas/infor_Mantenimientos.jsx";
+import { UserContext } from '@context/UserContext.jsx';
+import InfoMante from "@informativas/infor_Mantenimientos.jsx";
 
 const MantenimientosInfo = () => {
   const user = useContext(UserContext);

@@ -1,12 +1,13 @@
 /* PANEL DE SOLICITUD PARA BIOMETRICO */
 import { toast } from 'react-hot-toast';
-import axios from '../../../api/axiosConfig';
-import '../../css/Infor_Sucursal.css';
+import axios from '@api/axiosConfig';
+import '@css/Infor_Sucursal.css';
 
 const PanelBiometrico = (acceso) => {
   const comando = async (commandId) => {
+    const url = `/api/informativa/status/aplicacion/solicitud`;
     toast.promise(
-      axios.post(`/informe/status/aplicacion/solicitud`, { id: commandId })
+      axios.post(url, { id: commandId })
         .then(response => {
           if (response.status !== 200) {
             throw new Error('Sin respuesta');
@@ -44,7 +45,6 @@ const PanelBiometrico = (acceso) => {
   return (
     <>
       {acceso.acceso !== 'Sin conexión TCP' && (
-
         <div className="solbiometrico">
           <button className="solicitud" id='desbloquearPuerta' onClick={() => comando(31)}>
             {'Desbloquear Puerta'}

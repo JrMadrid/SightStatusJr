@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- MANUAL */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoManual from '../../components/Informativas/infor_Manual.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoManual from '@informativas/infor_Manual.jsx';
 
 const ManualInfo = () => {
   const user = useContext(UserContext);

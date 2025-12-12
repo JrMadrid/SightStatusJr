@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- DISPOSITIVOS */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoDispositivo from '../../components/Informativas/Infor_Dispositivos.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoDispositivo from '@informativas/Infor_Dispositivos.jsx';
 
 const DispositivosInfo = () => {
   const user = useContext(UserContext);

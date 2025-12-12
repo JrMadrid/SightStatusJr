@@ -3,27 +3,27 @@ import { BrowserRouter as Router, Route, Routes, Outlet, useLocation } from 'rea
 // import { createBrowserHistory } from 'history'; // Importar "createBrowserHistory" para crear un historial de navegación.
 import './app.css';
 /* Pages */
-import Iniciar from "./pages/Login.jsx";
-import NotFoundPage from "./pages/NotFound.jsx";
+import Iniciar from "@pages/Login.jsx";
+import NotFoundPage from "@pages/NotFound.jsx";
 // Informativas
-import UsuarioInfo from './pages/Informativas/Usuario_Infor.jsx';
-import SucursalInfo from './pages/Informativas/Sucursal_Infor.jsx';
-import UbicacionInfo from './pages/Informativas/Ubicacion_Infor.jsx';
-import DispositivosInfo from './pages/Informativas/Dispositivos_Infor.jsx'
-import MantenimientosInfo from "./pages/Informativas/Mantenimientos_Infor.jsx";
-import ManualInfo from "./pages/Informativas/Manual_Infor.jsx";
-import InformeInfo from "./pages/Informativas/Informe_Infor.jsx";
+import UsuarioInfo from '@pages/Informativas/Usuario_Infor.jsx';
+import SucursalInfo from '@pages/Informativas/Sucursal_Infor.jsx';
+import UbicacionInfo from '@pages/Informativas/Ubicacion_Infor.jsx';
+import DispositivosInfo from '@pages/Informativas/Dispositivos_Infor.jsx'
+import MantenimientosInfo from "@pages/Informativas/Mantenimientos_Infor.jsx";
+import ManualInfo from "@pages/Informativas/Manual_Infor.jsx";
+import InformeInfo from "@pages/Informativas/Informe_Infor.jsx";
 // Paneles
-import PanUsers from './pages/Panels/PanelUsers.jsx'
-import PanSucursal from './pages/Panels/PanelSucursal.jsx';
-import PanDispositivos from './pages/Panels/PanelDispositivo.jsx';
-import PanMantenimientos from "./pages/Panels/PanelMantenimiento.jsx";
-import PanManuales from "./pages/Panels/PanelManual.jsx";
-import Informes from "./pages/Panels/PanelInforme.jsx";
+import PanUsers from '@pages/Panels/PanelUsers.jsx'
+import PanSucursal from '@pages/Panels/PanelSucursal.jsx';
+import PanDispositivos from '@pages/Panels/PanelDispositivo.jsx';
+import PanMantenimientos from "@pages/Panels/PanelMantenimiento.jsx";
+import PanManuales from "@pages/Panels/PanelManual.jsx";
+import Informes from "@pages/Panels/PanelInforme.jsx";
 /* Components */
-import Navbar from './components/Elements/Navbar.jsx';
+import Navbar from '@elementos/Navbar.jsx';
 /* Context */
-import { UserProvider } from './context/UserContext.jsx';
+import { UserProvider } from '@context/UserContext.jsx';
 
 // Aplicación principal que utiliza React Router para la navegación y el enrutamiento.
 function App() {

@@ -2,22 +2,24 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { Toaster, toast } from 'react-hot-toast';
-import Pingdispo from '../Elements/ping.jsx';
-import fetchData from '../../api/fetchConfig.js';
-import SelectedPDF from '../Elements/PDF/SelectedPDF.jsx';
-import ALLPDF from '../Elements/PDF/AllPDF.jsx';
-import { ListExcel } from '../Listas/Lista_Excel.jsx';
-import InfoAppBIG from './screens/BIGscreen.jsx';
-import InfoAppMEDIUM from './screens/MEDIUMscreen.jsx';
-import InfoAppSMALL from './screens/SMALLscreen.jsx';
-import InfoAppMT from './screens/MTscreen.jsx';
-import '../css/Infor_Sucursal.css';
+import Pingdispo from '@elementos/botonPing.jsx';
+import fetchData from '@api/fetchConfig.js';
+import SelectedPDF from '@elementos/PDF/SelectedPDF.jsx';
+import ALLPDF from '@elementos/PDF/AllPDF.jsx';
+import { ListExcel } from '@listas/Lista_Excel.jsx';
+import usePageTitle from '@hooks/documentTitle.js';
+import InfoAppBIG from '@pantallas/BIGscreen.jsx';
+import InfoAppMEDIUM from '@pantallas/MEDIUMscreen.jsx';
+import InfoAppSMALL from '@pantallas/SMALLscreen.jsx';
+import InfoAppMT from '@pantallas/MTscreen.jsx';
+import '@css/Infor_Sucursal.css';
 import { FaTools } from 'react-icons/fa';
 import { FaMapLocationDot } from "react-icons/fa6";
 import { HiExternalLink } from "react-icons/hi";
-import logoSoporte from '../../imgs/LogoSoporte.png';
+import logoSoporte from '@imgs/LogoSoporte.png';
 
 export default function InfoSucursal() {
+  usePageTitle("Pagina Informativa de Sucursal");
   const navigate = useNavigate();
   const location = useLocation();
   const [impre, SetImpre] = useState(false);
@@ -32,17 +34,6 @@ export default function InfoSucursal() {
   const nombre = location.state?.nombre || '';
   const ingresponsable = location.state?.ingresponsable || '';
 
-  // Nombre de la Pestaña
-  useEffect(() => {
-    // Cambia el nombre de la pestaña
-    document.title = "Pagina Informativa de Sucursal";
-
-    // Vuelve al título original
-    return () => {
-      document.title = "StatusAppJR";
-    };
-  }, []);
-
   // Consultar y retornar los dispositivos registrados por número económico
   useEffect(() => {
     // Evita ejecutar si aún no hay un número económico válido
@@ -51,7 +42,7 @@ export default function InfoSucursal() {
     // Consultar y retornar los dispositivos registrados por número económico
     const dispositivos = async () => {
       try {
-        const url = `/informe/status/numero/${economico}`;
+        const url = `/api/informativa/status/numero/${economico}`;
         const lista = await fetchData(url);
         if (!lista.length) {
           setAviso("Sin dispositivos asignados");
@@ -67,12 +58,10 @@ export default function InfoSucursal() {
         setHay(true);
         setAviso("Elija un dispositivo");
         setAppslist(lista);
-
         if (contarDispositivosValidos(lista) === 0) {
           setAviso("Sin dispositivos validos");
           throw new Error("Sin dispositivos validos");
         }
-
       } catch (error) {
         console.error('Error // Consultar y retornar los dispositivos registrados por número económico, ', error);
         toast.error(error.message || 'Error al cargar los dispositivos');
@@ -108,8 +97,9 @@ export default function InfoSucursal() {
   // Obtener la información general de un dispositivo en específico por su IP
   const appData = async (ip) => {
     SetDispositivoIp(ip);
+    const url = `/api/informativa/status/aplicacion/${ip}`;
     return toast.promise(
-      fetchData(`/informe/status/aplicacion/${ip}`).then(datos => {
+      fetchData(url).then(datos => {
         return datos;
       }),
       {
@@ -135,7 +125,7 @@ export default function InfoSucursal() {
 
     const dispositivos = async () => {
       try {
-        const url = `/informe/status/dispositivos/${economico}`;
+        const url = `/api/informativa/status/dispositivos/${economico}`;
         const dispositivos = await fetchData(url);
         setData(dispositivos)
       } catch (error) {

@@ -1,9 +1,9 @@
 /* PAGINA DE TABLA DE SUCURSALES Y DE PANEL DE ADMINISTRACIÓN DE SUCURSALES */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import SelectSucursales from '../../components/Panel_Sucursales/SelectSucursales.jsx';
-import SucursalesPanel from '../../components/Panel_Sucursales/SucursalesPanel.jsx';
-import '../css/section.css';
+import { UserContext } from '@context/UserContext.jsx';
+import SelectSucursales from '@paneles/Panel_Sucursales/SelectSucursales.jsx';
+import SucursalesPanel from '@paneles/Panel_Sucursales/SucursalesPanel.jsx';
+import '@cssp/section.css';
 
 const PanSucursales = () => {
   const user = useContext(UserContext);

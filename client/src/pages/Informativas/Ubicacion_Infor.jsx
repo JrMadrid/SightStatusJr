@@ -1,7 +1,7 @@
 /* PAGINA DE INFORMATIVA -- UBICACION */
 import { useContext } from 'react';
-import { UserContext } from '../../context/UserContext.jsx';
-import InfoUbicacion from '../../components/Informativas/infor_Ubicacion.jsx';
+import { UserContext } from '@context/UserContext.jsx';
+import InfoUbicacion from '@informativas/infor_Ubicacion.jsx';
 
 const UbicacionInfo = () => {
   const user = useContext(UserContext);

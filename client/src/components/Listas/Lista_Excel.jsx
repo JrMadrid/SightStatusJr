@@ -1,7 +1,7 @@
 /* COMPONENTE DE BOTON DESCARGAR LISTA EN EXCEL */
 import ExcelJS from 'exceljs';
 import { Toaster, toast } from 'react-hot-toast';
-import '../css/listas.css'
+import '@css/listas.css'
 
 const ListExcel = (props) => {
   const handleGenerateExcel = async () => {
