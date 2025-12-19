@@ -14,8 +14,9 @@ const SchemaActualizarUsuario = Joi.object({
     }),
 
   cedula: Joi.string()
-    .pattern(/^\d{4}-\d{4}-\d{5}$/)
     .max(15)
+    .allow(null, '')
+    .pattern(/^\d{4}-\d{4}-\d{5}$/)
     .messages({
       "string.pattern.base": "La cédula debe tener el formato ####-####-#####.",
       "string.max": "La cédula no puede exceder los 15 caracteres."
@@ -23,6 +24,7 @@ const SchemaActualizarUsuario = Joi.object({
 
   localidad: Joi.string()
     .max(100)
+    .allow(null, '')
     .messages({
       "string.max": "La localidad no puede exceder los 100 caracteres."
     }),
@@ -30,6 +32,7 @@ const SchemaActualizarUsuario = Joi.object({
   fecha_nacimiento: Joi.date()
     .iso()
     .less("now")
+    .allow(null)
     .messages({
       "date.base": "La fecha de nacimiento debe ser válida.",
       "date.format": "La fecha de nacimiento debe estar en formato ISO (YYYY-MM-DD).",
@@ -37,7 +40,7 @@ const SchemaActualizarUsuario = Joi.object({
     }),
 
   sexo: Joi.string()
-    .valid("M", "F")
+    .valid("M", "F", "")
     .messages({
       "any.only": "El sexo debe ser 'M' (Masculino) o 'F' (Femenino)."
     }),
@@ -45,6 +48,7 @@ const SchemaActualizarUsuario = Joi.object({
   fecha_contratacion: Joi.date()
     .iso()
     .less("now")
+    .allow(null)
     .messages({
       "date.base": "La fecha de contratación debe ser válida.",
       "date.format": "La fecha de contratación debe estar en formato ISO (YYYY-MM-DD).",
@@ -53,31 +57,35 @@ const SchemaActualizarUsuario = Joi.object({
 
   descripcion: Joi.string()
     .max(3000)
+    .allow(null, '')
     .messages({
       "string.max": "La descripción no puede exceder los 3000 caracteres."
     }),
 
   grado_academico: Joi.string()
     .max(100)
-    // .allow('', null)
+    .allow('', null)
     .messages({
       "string.max": "El grado académico no puede exceder los 100 caracteres."
     }),
 
   puesto: Joi.string()
     .max(100)
+    .allow('', null)
     .messages({
       "string.max": "El puesto no puede exceder los 100 caracteres."
     }),
 
   nombre: Joi.string()
     .max(200)
+    .allow('', null)
     .messages({
       "string.max": "El nombre no puede exceder los 200 caracteres."
     }),
 
   telefono: Joi.string()
     .max(20)
+    .allow('', null)
     .messages({
       "string.max": "El teléfono no puede exceder los 20 caracteres."
     }),
