@@ -1,5 +1,5 @@
 /* INICIAR EL SERVIDOR */
-import { connectToDatabase, syncStore } from './db/session.js';
+import { connectToDatabase, syncStore } from './infra/sessionStore.js';
 import dbConnection from './db/connection.js';
 import app from "./app.js";
 import config from "./configs/APP_config.js"; // Importo la configuración con las credenciales y el puerto de la aplicación desde el archivo de configuración

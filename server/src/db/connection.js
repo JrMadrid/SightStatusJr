@@ -36,7 +36,7 @@ async function dbConnection() {
   }
 };
 
-// Opción para cerrar el pool manualmente si lo necesitas
+// Opción para cerrar el pool manualmente si se necesita
 // async function closeConnection() {
 // 	if (pool) {
 // 		await pool.close();

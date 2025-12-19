@@ -6,7 +6,7 @@ import config from '../configs/APP_config.js'; // Importa la configuración de l
 import morgan from 'morgan'; // Modulo morgan nos permite visualizar las solicitudes en la consola
 import path from 'path'; // Importa el módulo 'path', que proporciona utilidades para trabajar con rutas de archivos y directorios
 import { fileURLToPath } from 'url'; // Importa la función 'fileURLToPath' desde el módulo 'url', que convierte una URL de archivo a una ruta de archivo local
-import { store } from '.././db/session.js'; // Importa el store
+import { store } from '../infra/sessionStore.js'; // Importa el store
 
 const __filename = fileURLToPath(import.meta.url); // Convierte la URL del archivo actual a una ruta de archivo local
 const __dirname = path.dirname(__filename); // Obtiene el directorio del archivo actual

@@ -1,5 +1,6 @@
 /* SERVICIOS DE INFORMATIVA -- UBICACIÓN */
-import { db as DB, verificaciones as VR } from "../../models/Informativas/UbicacionInfoMod.js";
+import { verificaciones as VR } from "../../rules/Informativas/UbicacionInfoVer.js";
+import { operaciones as OP } from "../../repositories/Informativas/UbicacionInfoOpe.js";
 
 // Verificar el economico antes de cualquier consulta
 const pedirVerificarEconomico = async (economico, responsable, tipo) => {
@@ -9,7 +10,7 @@ const pedirVerificarEconomico = async (economico, responsable, tipo) => {
   };
   const existe = await VR.UbicacionExiste(economico);
   if (!existe) {
-    await DB.getVerificarEconomico(economico, existe);
+    await OP.getVerificarEconomico(economico, existe);
   };
 };
 
@@ -20,7 +21,7 @@ const pedirUbicacionDatos = async (economico, responsable, tipo) => {
   if (tipo === 'Geografia') {
     if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
   }
-  return await DB.getUbicacionDatos(economico, responsable, tipo);
+  return await OP.getUbicacionDatos(economico, responsable, tipo);
 };
 
 // Pedir la imagen de la ubicación de la sucursal
@@ -30,7 +31,7 @@ const pedirUbicacionFoto = async (economico, responsable, tipo) => {
   if (tipo === 'Geografia') {
     if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
   }
-  return await DB.getUbicacionFoto(economico, responsable, tipo);
+  return await OP.getUbicacionFoto(economico, responsable, tipo);
 };
 
 // Editar los datos de la ubicación
@@ -41,14 +42,14 @@ const editarDatosUbicacion = async (value) => {
   if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
   delete data.economico;
   const [propiedadEditar, valor] = Object.entries(data)[0];
-  return await DB.updateDatosUbicacion(propiedadEditar, valor, economico);
+  return await OP.updateDatosUbicacion(propiedadEditar, valor, economico);
 };
 
 // Editar la imagen de la ubicación
 const editarImagenUbicacion = async (imagen, economico) => {
   if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
   if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
-  return await DB.updateImagenUbicacion(imagen, economico);
+  return await OP.updateImagenUbicacion(imagen, economico);
 };
 
 export const services = {
