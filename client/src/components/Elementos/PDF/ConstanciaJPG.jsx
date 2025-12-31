@@ -1,5 +1,5 @@
 /* DESCARGAR IMAGEN DE LA CONSTANCIA */
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FormatearFecha } from '@elementos/date';
 import '@css/PDF.css';
 
@@ -23,10 +23,7 @@ const JPGConstancia = ({ imageBlob, eco, fechaco }) => {
       <button onClick={handleDownload} className="pdfSelected" style={{ right: '70%' }}>
         Guardar Imagen
       </button>
-
-      <Toaster />
     </div>
-
   );
 };
 

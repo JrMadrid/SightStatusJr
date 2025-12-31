@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 import { UserContext } from '@context/UserContext';
 import { NavLink } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FaAddressCard } from "react-icons/fa";
 import '@css/navbar.css';
 import ConexionIcono from './ConexionIcono.jsx';
@@ -135,7 +135,6 @@ export default function Navbar() {
           </>
         )}
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

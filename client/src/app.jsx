@@ -2,6 +2,8 @@
 import { BrowserRouter as Router, Route, Routes, Outlet, useLocation } from 'react-router-dom'; // Importar componentes y hooks de "react-router-dom" para manejar el enrutamiento de la aplicación. el browserRouter es un componente que utiliza la API de History del navegador para mantener la UI sincronizada con la URL. El Route es un componente que se utiliza para definir una ruta en la aplicación, y el Routes es un contenedor para todos los Route. El Outlet es un componente que se utiliza para renderizar los componentes hijos de una ruta anidada. useLocation es un hook que devuelve la ubicación actual de la aplicación, lo que permite acceder a la URL actual y otros detalles relacionados con la ubicación.
 // import { createBrowserHistory } from 'history'; // Importar "createBrowserHistory" para crear un historial de navegación.
 import './app.css';
+import { Toaster } from 'react-hot-toast';
+import ToastCleaner from '@elementos/ToasterCleaner';
 /* Pages */
 import Iniciar from "@pages/Login.jsx";
 import NotFoundPage from "@pages/NotFound.jsx";
@@ -32,6 +34,8 @@ function App() {
   return (
     <UserProvider> {/* Proveedor de contexto para manejar el estado del usuario */}
       <Router> {/* Configura el enrutamiento de la aplicación */}
+        <ToastCleaner />
+        <Toaster toastOptions={{ className: 'noti' }} />
         <Routes> {/* Define las rutas de la aplicación */}
           <Route path="/" element={<Layout />}> {/* Componente de diseño que incluye la barra de navegación */}
             {/* Rutas anidadas dentro del componente Layout */}

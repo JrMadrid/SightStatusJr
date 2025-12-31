@@ -1,6 +1,6 @@
 /* COMPONENTE DE BOTON DESCARGAR LISTA EN EXCEL */
 import ExcelJS from 'exceljs';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import '@css/listas.css'
 
 const ListExcel = (props) => {
@@ -93,7 +93,6 @@ const ListExcel = (props) => {
   return (
     <>
       <button className={`excel${props.tipo === 'inforApps' || props.tipo === 'inforMante' || props.tipo === 'inforDevice'  ? ' listaExcel' : ''}`} onClick={handleGenerateExcel}>{props.titulo}</button>
-      <Toaster />
     </>
   );
 };

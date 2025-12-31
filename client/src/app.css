@@ -59,9 +59,22 @@ a {
 }
 
 .noti {
-  border: 1px solid black;
+  max-width: 420px;
+  padding: 12px 16px;
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 25px;
+  line-height: 1.4;
   word-wrap: break-word;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
+
+.noti:hover {
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
 
 button {
   border: 1px solid rgba(0, 0, 0, 0.20);
@@ -85,9 +98,11 @@ h5 {
   0% {
     box-shadow: 0 0 0 0 rgba(15, 23, 42, 0.45);
   }
+
   50% {
     box-shadow: 0 0 10px 1px rgba(255, 175, 144, 0.45);
   }
+
   100% {
     box-shadow: 0 0 0 0 rgba(15, 23, 42, 0.35);
   }

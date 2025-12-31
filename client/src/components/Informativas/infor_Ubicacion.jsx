@@ -2,7 +2,7 @@
 import { useEffect, useState, useContext } from 'react';
 import { UserContext } from '@context/UserContext';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
 import axios from '@api/axiosConfig.js';
 import EstadoConexion from '@elementos/EstadoConexion.jsx';
@@ -435,7 +435,6 @@ export default function InfoUbicacion() {
           )}
         </div>
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

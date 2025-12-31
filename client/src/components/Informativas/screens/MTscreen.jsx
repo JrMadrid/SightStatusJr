@@ -1,5 +1,5 @@
 /* PANTALLA VACIA INFORMACION PARA INFORME DE SUCURSAL */
-import Pingdispo from "@elementos/botonPing";
+import Pingdispo from "@elementos/BotonPing";
 import { HiExternalLink } from "react-icons/hi";
 
 export default function InfoAppMT(data) {

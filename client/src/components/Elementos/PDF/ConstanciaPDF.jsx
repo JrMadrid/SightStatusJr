@@ -1,6 +1,6 @@
 /* COMPONENTE QUE GUARDA EN PDF LA CONSTANCIA SELECCIONADA */
 import jsPDF from 'jspdf';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { FormatearFecha } from '@elementos/date';
 import '@css/PDF.css';
 
@@ -57,7 +57,6 @@ const PDFConstancia = ({ imageBlob, eco, title, fechaco }) => {
       <button onClick={downloadPDF} className="pdfSelected">
         Guardar Documento
       </button>
-      <Toaster />
     </>
   );
 };

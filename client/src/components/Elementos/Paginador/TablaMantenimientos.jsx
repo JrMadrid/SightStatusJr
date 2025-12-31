@@ -1,5 +1,5 @@
 /* COMPONENTE DE ELEMENTO DE PAGINACIÓN -- MANTENIMIENTOS */
-import { FormatearFechaTabla } from '@elementos/date.jsx';
+import { FormatearFechaTabla } from '@elementos/Date.jsx';
 import { FaCircle, FaFileDownload, FaTools } from "react-icons/fa";
 
 const TablaMantenimientos = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) => {

@@ -1,7 +1,7 @@
 /* COMPONENTE DE INFORMATIVA -- MANUAL */
 import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
 import usePageTitle from '@hooks/documentTitle.js';
 import logoSoporte from '@imgs/LogoSoporte.png';
@@ -92,8 +92,6 @@ export default function InfoManual() {
           )}
         </div>
       </div>
-
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

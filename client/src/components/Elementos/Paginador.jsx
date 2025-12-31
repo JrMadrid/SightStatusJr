@@ -6,8 +6,7 @@ import TablaDispositivos from './Paginador/TablaDispositivos.jsx';
 import TablaMantenimientos from './Paginador/TablaMantenimientos.jsx';
 import TablaManuales from './Paginador/TablaManuales.jsx';
 import TablaInformes from './Paginador/TablaInformes.jsx';
-import { FormatearFecha, FormatearFechaBusqueda } from './date.jsx';
-import { Toaster } from 'react-hot-toast';
+import { FormatearFecha, FormatearFechaBusqueda } from '@elementos/Date.jsx';
 import { ListExcel } from '@listas/Lista_Excel.jsx';
 import { ListPDF } from '@listas/Lista_PDF.jsx';
 import { UserContext } from '@context/UserContext';
@@ -233,7 +232,6 @@ const Paginador = (props) => {
           </>
         )}
       </div >
-      <Toaster />
     </>
   );
 };

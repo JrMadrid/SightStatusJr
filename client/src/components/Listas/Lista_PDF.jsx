@@ -3,7 +3,7 @@ import { useContext } from 'react';
 import { UserContext } from '@context/UserContext';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import date from '@utils/date.js';
 import imgBase64 from '@utils/imgBase64.js';
 import '@css/listas.css';
@@ -132,7 +132,6 @@ function ListPDF(props) {
   return (
     <>
       <button className='pdf' onClick={downloadPDF}>{props.titulo}</button>
-      <Toaster />
     </>
   );
 }

@@ -1,8 +1,8 @@
 /* COMPONENTE DE INFORMATIVA -- SUCURSAL */
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { Toaster, toast } from 'react-hot-toast';
-import Pingdispo from '@elementos/botonPing.jsx';
+import { toast } from 'react-hot-toast';
+import Pingdispo from '@elementos/BotonPing.jsx';
 import fetchData from '@api/fetchConfig.js';
 import SelectedPDF from '@elementos/PDF/SelectedPDF.jsx';
 import ALLPDF from '@elementos/PDF/AllPDF.jsx';
@@ -233,7 +233,6 @@ export default function InfoSucursal() {
           </>
         )}
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

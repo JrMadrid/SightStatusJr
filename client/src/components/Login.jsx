@@ -1,6 +1,6 @@
 /* COMPONENTE DE ELEMENTO DE INICIO DE SESIÓN */
 import { useState, useEffect } from 'react';
-import { toast, Toaster } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import axios from '@api/axiosConfig'; // Importa la configuración personalizada
 import '@css/login.css';
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -83,7 +83,6 @@ const LoginPanel = () => {
           {error && <div className="error">{error}</div>} {/* Mostrar error si existe */}
         </form>
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

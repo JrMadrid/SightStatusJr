@@ -2,7 +2,7 @@
 import { useContext } from 'react';
 import { UserContext } from '@context/UserContext.jsx';
 import jsPDF from 'jspdf';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import date from '@utils/date.js';
 import imgBase64 from '@utils/imgBase64.js';
 import '@css/PDF.css';
@@ -129,7 +129,6 @@ export default function PDF(props) {
           <button className="pdfSelected" onClick={downloadPDF} type="button">
             {props.titulo}
           </button>
-          <Toaster />
         </>
       )}
     </>

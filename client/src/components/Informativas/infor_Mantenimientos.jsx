@@ -1,9 +1,9 @@
 /* COMPONENTE DE INFORMATIVA -- MANTENIMIENTOS */
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
-import { FormatearFechaTabla } from '@elementos/date.jsx';
+import { FormatearFechaTabla } from '@elementos/Date.jsx';
 import PDFConstancias from '@elementos/PDF/ConstanciasPDF.jsx';
 import PDFConstancia from '@elementos/PDF/ConstanciaPDF.jsx';
 import JPGConstancia from '@elementos/PDF/ConstanciaJPG.jsx';
@@ -206,7 +206,6 @@ export default function InfoMante() {
           </div>
         </div>
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

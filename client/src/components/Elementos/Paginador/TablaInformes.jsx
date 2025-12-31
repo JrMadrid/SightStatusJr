@@ -1,5 +1,5 @@
 /* COMPONENTE DE ELEMENTO DE PAGINACIÓN -- INFORMES */
-import { FormatearFechaTabla } from '../date.jsx';
+import { FormatearFechaTabla } from '@elementos/Date.jsx';
 import { FaCircle, FaFileDownload, FaFileAlt } from "react-icons/fa";
 
 const TablaInformes = ({ user, data, eleccion, ver, cantidad, cantidadTotal }) => {

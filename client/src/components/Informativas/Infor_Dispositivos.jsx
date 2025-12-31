@@ -1,9 +1,9 @@
 /* COMPONENTE DE INFORMATIVA -- DISPOSITIVOS */
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
-import Pingdispo from '@elementos/botonPing.jsx';
+import Pingdispo from '@elementos/BotonPing.jsx';
 import ALLPDF from '@elementos/PDF/AllPDF.jsx'
 import { ListExcel } from '@listas/Lista_Excel.jsx';
 import usePageTitle from '@hooks/documentTitle.js';
@@ -147,7 +147,6 @@ export default function InfoDispositivo() {
           </div>
         </div>
       </div>
-      <Toaster toastOptions={{ className: 'noti' }} />
     </>
   );
 };

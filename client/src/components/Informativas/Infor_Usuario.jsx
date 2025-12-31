@@ -2,12 +2,12 @@
 import { useEffect, useState, useContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { UserContext } from '@context/UserContext';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig';
 import axios from '@api/axiosConfig';
 import fechaFomatoSQL from '@utils/formatoFecha.js';
 import calcularEdad from '@utils/edad.js';
-import Whatsapp from '@elementos/wspNumber.jsx';
+import Whatsapp from '@elementos/WspNumber.jsx';
 import usePageTitle from '@hooks/documentTitle.js';
 import '@css/Infor_Sucursal.css';
 import { FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
@@ -384,7 +384,6 @@ export default function InfoUsuario() {
           </div >
         </div >
       </div >
-      <Toaster toastOptions={{ className: 'noti', duration: 7500 }} />
     </>
   );
 };
