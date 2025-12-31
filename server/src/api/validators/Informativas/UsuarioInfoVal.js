@@ -1,98 +1,43 @@
-/* VALIDACIONES DE INFORMATIVA -- USUARIOS */
-import Joi from "joi";
+/* VALIDACIONES DE INFORMATIVA -- USUARIO */
+import { verificaciones as VR } from "../../verifications/Informativas/UsuarioInfoVer.js";
+import { operaciones as OP } from "../../repositories/Informativas/UsuarioInfoOpe.js";
 
-// Esquema general para un usuario
-const SchemaActualizarUsuario = Joi.object({
-  id: Joi.number() // Debe ser un número
-    .integer() // Solo enteros
-    .min(1) // Mínimo valor permitido: 1
-    .required() // Campo obligatorio
-    .messages({
-      'any.required': 'El ID es obligatorio.',
-      'number.base': 'El ID debe ser un número.',
-      'number.min': 'El ID debe ser mayor que 0.'
-    }),
+// Pedir la lista de usuarios
+const obtenerListaUsuarios = async () => {
+  return await OP.getListaUsuarios();
+};
 
-  cedula: Joi.string()
-    .max(15)
-    .allow(null, '')
-    .pattern(/^\d{4}-\d{4}-\d{5}$/)
-    .messages({
-      "string.pattern.base": "La cédula debe tener el formato ####-####-#####.",
-      "string.max": "La cédula no puede exceder los 15 caracteres."
-    }),
+// Pedir los datos del personal
+const obtenerDatosSeleccionado = async (seleccionado) => {
+  const existe = await VR.UsuarioExiste(seleccionado);
+  if (!(existe)) { throw { code: 404, message: 'No se encontró el usuario' }; };
+  return await OP.getDatosSeleccionado(seleccionado, existe);
+};
 
-  localidad: Joi.string()
-    .max(100)
-    .allow(null, '')
-    .messages({
-      "string.max": "La localidad no puede exceder los 100 caracteres."
-    }),
+// Pedir la foto del personal
+const obtenerFotoSeleccionado = async (seleccionado) => {
+  if (!(await VR.UsuarioExiste(seleccionado))) { throw { code: 404, message: 'No se encontró el usuario' }; };
+  return await OP.getFotoSeleccionado(seleccionado);
+};
 
-  fecha_nacimiento: Joi.date()
-    .iso()
-    .less("now")
-    .allow(null)
-    .messages({
-      "date.base": "La fecha de nacimiento debe ser válida.",
-      "date.format": "La fecha de nacimiento debe estar en formato ISO (YYYY-MM-DD).",
-      "date.less": "La fecha de nacimiento no puede ser futura."
-    }),
+// Editar los datos del personal
+const editarDatosPersonal = async (value) => {
+  const data = { ...value };
+  const id = data.id;
+  delete data.id;
+  const [propiedadEditar, valor] = Object.entries(data)[0];
+  await OP.editDataPersonal(propiedadEditar, valor, id);
+};
 
-  sexo: Joi.string()
-    .valid("M", "F", "")
-    .messages({
-      "any.only": "El sexo debe ser 'M' (Masculino) o 'F' (Femenino)."
-    }),
+// Editar la foto del personal
+const editarFotoPersonal = async (foto, id) => {
+  await OP.editFotoPersonal(foto, id);
+};
 
-  fecha_contratacion: Joi.date()
-    .iso()
-    .less("now")
-    .allow(null)
-    .messages({
-      "date.base": "La fecha de contratación debe ser válida.",
-      "date.format": "La fecha de contratación debe estar en formato ISO (YYYY-MM-DD).",
-      "date.less": "La fecha de contratación no puede ser futura."
-    }),
-
-  descripcion: Joi.string()
-    .max(3000)
-    .allow(null, '')
-    .messages({
-      "string.max": "La descripción no puede exceder los 3000 caracteres."
-    }),
-
-  grado_academico: Joi.string()
-    .max(100)
-    .allow('', null)
-    .messages({
-      "string.max": "El grado académico no puede exceder los 100 caracteres."
-    }),
-
-  puesto: Joi.string()
-    .max(100)
-    .allow('', null)
-    .messages({
-      "string.max": "El puesto no puede exceder los 100 caracteres."
-    }),
-
-  nombre: Joi.string()
-    .max(200)
-    .allow('', null)
-    .messages({
-      "string.max": "El nombre no puede exceder los 200 caracteres."
-    }),
-
-  telefono: Joi.string()
-    .max(20)
-    .allow('', null)
-    .messages({
-      "string.max": "El teléfono no puede exceder los 20 caracteres."
-    }),
-
-  BorrarFoto: Joi.boolean().optional()
-});
-
-export const schemas = {
-  SchemaActualizarUsuario
+export const validators = {
+  obtenerListaUsuarios,
+  obtenerDatosSeleccionado,
+  obtenerFotoSeleccionado,
+  editarDatosPersonal,
+  editarFotoPersonal
 };

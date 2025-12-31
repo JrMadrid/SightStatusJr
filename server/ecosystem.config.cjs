@@ -11,7 +11,7 @@ module.exports = {
       DEV: true,
       MOCKS: true,
       DB_HOST: '192.168.100.17',
-      DB_DATABASE: 'statusAppsDev',
+      DB_DATABASE: 'CoreSightJrDev',
       DB_USER: 'sa',
       DB_PASSWORD: 'superadmin'
     },
@@ -24,7 +24,7 @@ module.exports = {
       DEV: false,
       MOCKS: false,
       DB_HOST: '192.168.100.17',
-      DB_DATABASE: 'statusAppsDev',
+      DB_DATABASE: 'CoreSightJrDev',
       DB_USER: 'sa',
       DB_PASSWORD: 'superadmin'
     }

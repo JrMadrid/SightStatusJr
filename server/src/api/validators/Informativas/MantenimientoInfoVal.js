@@ -1,20 +1,42 @@
 /* VALIDACIONES DE INFORMATIVA -- MANTENIMIENTO */
-import Joi from "joi";
+import { verificaciones as VR } from "../../verifications/Informativas/MantenimientoInfoVer.js";
+import { operaciones as OP } from "../../repositories/Informativas/MantenimientoInfoOpe.js";
 
-// RegEx
-const ecoRegex = /^\d{6}$/
+// Mandar las fechas vinculadas al economico
+const PedirFechasRealizadas = async (economico, responsable, tipo) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (tipo === 'Geografia') {
+    if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
+  };
+  return await OP.getFechasRealizadas(economico, responsable, tipo);
+};
 
-const economico = Joi.string()
-  .pattern(ecoRegex)
-  .messages({
-    'string.pattern.base': 'El número económico debe tener exactamente 6 dígitos.'
-  });
+// Mandar el documento del mantemiento seleccionado
+const PedirFechaSeleccionada = async (id) => {
+  return await OP.getFechaSeleccionada(id);
+};
 
-// Pedir mantenimiento
-const SchemaPedirMantenimiento = Joi.object({
-  economico
-});
+// Mandar el archivo de la constancia de la fecha seleccionada
+const obtenerArchivoMantenimiento = async (fechasr) => {
+  return await OP.getMantenimientoArchivo(fechasr);
+};
 
-export const schemas = {
-  SchemaPedirMantenimiento
+// Mandar todas las constancias
+const obtenerArchivosMantenimientos = async (economico) => {
+  const constanciasArchivos = await OP.getMantenimientosArchivos(economico);
+  if (constanciasArchivos.length > 0) {
+    const archivos = constanciasArchivos.map(item => {
+      return item.constancia;
+    });
+    return archivos;
+  } else {
+    throw { code: 404, message: 'Mantenimientos no encontrados' };
+  }
+};
+
+export const validators = {
+  PedirFechasRealizadas,
+  PedirFechaSeleccionada,
+  obtenerArchivoMantenimiento,
+  obtenerArchivosMantenimientos
 };

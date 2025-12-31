@@ -1,72 +1,74 @@
 /* VALIDACIONES DE PANEL DE USUARIOS */
-import Joi from 'joi';
+import bcrypt from 'bcryptjs'; // bcrypt para encriptar la contraseña
+import { verificaciones as VR } from "../../verifications/Paneles/panelUsersVer.js";
+import { operaciones as OP } from "../../repositories/Paneles/panelUsersOpe.js";
 
-// RegEx
-const IDRegex = /^\d{1,5}$/
+// Pedir los datos de los usuarios
+const obtenerUsers = async () => {
+  return await OP.getUsers();
+};
 
-const id = Joi.string()
-  .pattern(IDRegex)
-  .max(5)
-  .required()
-  .messages({
-    'string.empty': 'El ID es obligatorio.',
-    'string.pattern.base': 'El ID debe contener solo números.',
-    'string.max': 'El ID debe tener como máximo 5 caracteres.'
-  });
+// Agregar un nuevo usuario
+const agregarUser = async ({ nickname, psw, tipo, activo }) => {
+  psw = psw.trim();
+  psw = await bcrypt.hash(psw, 12); // Encriptar la contraseña, el hash funciona como un algoritmo de encriptación que genera un hash de la contraseña, el 12 indica la complejidad del algoritmo
+  let isAdmin = 0;
+  if (tipo === 'Administrador') { isAdmin = 1; };
+  let isActivo = 0;
+  if (activo === 'si') { isActivo = 1; };
+  if (await VR.NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
+  await OP.postUser({ nickname, psw, tipo, isAdmin, isActivo });
+};
 
-const nickname = Joi.string()
-  .max(50)
-  .messages({
-    'string.max': 'El nombre no debe tener más de 50 caracteres.'
-  });
+// Actualizar un usuario
+const actualizarUser = async ({ nickname, psw, id, tipo, activo }) => {
+  const SuperID = await VR.IDdelAdmin(id);
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (psw) {
+    psw = psw.trim();
+    psw = await bcrypt.hash(psw, 12); // Encriptar la contraseña
+  };
+  if (nickname) {
+    if (await VR.NicknameOcupado(nickname)) { throw { code: 409, message: 'El Nickname definido ya existe en la base de datos.' }; };
+  };
+  if (tipo && SuperID) { throw { code: 403, message: 'No se puede modificar super administrador' }; };
+  let isActivo;
+  if (activo) {
+    if (activo === 'no' && SuperID) { throw { code: 403, message: 'No se puede desactivar al super administrador' }; };
+    isActivo = activo === 'si' ? 1 : 0;
+  }
+  await OP.updateUser({ nickname, psw, id, tipo, isActivo });
+};
 
-const psw = Joi.string()
-  .max(50)
-  .messages({
-    'string.max': 'La contraseña no debe tener más de 50 caracteres.'
-  });
+// Eliminar un usuario
+const eliminarUser = async ({ id }, Super) => {
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (await VR.IDdelAdmin(id)) { throw { code: 403, message: 'No se puede eliminar al super administrador' }; };
+  const ingResponsable = await VR.nombreResponsable(id);
+  await OP.deleteUser({ id }, ingResponsable, Super);
+};
 
-const tipo = Joi.string()
-  .valid('Geografia', 'Aplicativo', 'Administrador')
-  .messages({
-    'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo o Administrador.'
-  });
+// Cerrar la sesión de todos los usuarios
+const sacarAllUsers = async () => {
+  await OP.logoutaAllUsers();
+};
 
-const activo = Joi.string()
-  .valid('si', 'no')
-  .messages({
-    'any.only': 'El campo activo debe ser Sí o No.'
-  });
+// Desactivar el acceso de todos los usuarios
+const desactivarAllUsers = async () => {
+  await OP.deactivateAllUsers();
+};
 
-// Crear Usuario
-const SchemaCrearUsuario = Joi.object({
-  nickname: nickname.required()
-    .messages({ 'string.empty': 'El nombre del usuario es obligatorio.' }),
-  psw: psw.required()
-    .messages({ 'string.empty': 'La contraseña es obligatoria.' }),
-  tipo: tipo.required()
-    .messages({ 'string.empty': 'El tipo de usuario es obligatorio.' }),
-  activo: activo.required()
-    .messages({ 'any.required': '"El campo activo es obligatorio.' })
-});
+// Activar el acceso de todos los usuarios
+const activarAllUsers = async () => {
+  await OP.activateAllUsers();
+};
 
-// Actualizar Usuario
-const SchemaActualizarUsuario = Joi.object({
-  id,
-  nickname: Joi.string().allow(''),
-  psw: psw.allow(''),
-  tipo: tipo.valid('Geografia', 'Aplicativo', 'Administrador', '')
-    .messages({ 'any.only': 'El tipo de usuario debe ser Geografia, Aplicativo, Administrador o estar vacío.' }),
-  activo: activo.allow('')
-});
-
-// Eliminar Usuario
-const SchemaEliminarUsuario = Joi.object({
-  id
-});
-
-export const schemas = {
-  SchemaCrearUsuario,
-  SchemaActualizarUsuario,
-  SchemaEliminarUsuario
+export const validators = {
+  obtenerUsers,
+  agregarUser,
+  actualizarUser,
+  eliminarUser,
+  sacarAllUsers,
+  desactivarAllUsers,
+  activarAllUsers
 };

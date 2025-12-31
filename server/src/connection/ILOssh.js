@@ -6,7 +6,7 @@ import { NodeSSH } from 'node-ssh';
 import config from "../configs/ILO_configs.js";
 
 // Importo los servicios que procesan los datos obtenidos desde la ILO
-import { ILOdata, ILOhardware, ILOdescripcion } from '../datos/ILOdata.js';
+import { ILOdata, ILOhardware, ILOdescripcion } from '../services/ILOdata.js';
 
 // Desestructuro las variables necesarias desde la configuración
 const username = config.ILOusername;

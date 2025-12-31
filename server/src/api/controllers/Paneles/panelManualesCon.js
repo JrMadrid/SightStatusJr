@@ -1,11 +1,11 @@
 /* CONTROLADORES DE PANEL DE MANUALES */
-import { schemas as SC } from '../../validators/Paneles/panelManualesVal.js';
-import { services as SR } from '../../services/Paneles/panelManualSer.js';
+import { schemas as SC } from '../../schemas/Paneles/panelManualesSch.js';
+import { validators as VL } from '../../validators/Paneles/panelManualVal.js';
 
 // Pedir los datos de los manuales
 const getManuales = async (req, res) => {
   try {
-    const manuales = await SR.obtenerManuales();
+    const manuales = await VL.obtenerManuales();
     res.status(200).json(manuales);
   } catch (error) {
     console.error('Error: // Pedir los datos de los manuales, ', error);
@@ -22,7 +22,7 @@ const postManual = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-    await SR.publicarManual(value, manual);
+    await VL.publicarManual(value, manual);
     res.status(200).json({ message: 'Manual agregado exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar un nuevo manual, ', error);
@@ -41,7 +41,7 @@ const updateManual = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-    await SR.actualizarManual(value);
+    await VL.actualizarManual(value);
     res.status(200).json({ message: 'Manual actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un manual, ', error);
@@ -61,7 +61,7 @@ const deleteManual = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-    await SR.eliminarManual(value);
+    await VL.eliminarManual(value);
     res.status(200).json({ message: 'Manual eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un manual, ', error);
@@ -74,7 +74,7 @@ const Manual = async (req, res) => {
   try {
     if (!req.params.id) { return; }
     const id = req.params.id;
-    const documento = await SR.manualArchivo(id);
+    const documento = await VL.manualArchivo(id);
     if (!documento.manual) {
       return res.sendStatus(404);
     }

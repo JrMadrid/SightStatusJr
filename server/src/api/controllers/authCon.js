@@ -1,6 +1,6 @@
 /* CONTROLADORES DE AUTENTICACIÓN DE USUARIOS */
-import { services as SR } from '../services/authSer.js';
-import { schemas as SC } from '../validators/authVal.js';
+import { validators as VL } from '../validators/authVal.js';
+import { schemas as SC } from '../schemas/authSch.js';
 
 // Verificar si ya tiene sesión activa
 const check = async (req, res) => {
@@ -29,7 +29,7 @@ const login = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes || 'hola' });
     };
-    const { usuario, admon, tipo } = await SR.loginService(value);
+    const { usuario, admon, tipo } = await VL.loginService(value);
     req.session.user = usuario;
     req.session.admin = admon;
     req.session.login = req.session.user ? true : false; // Se ha iniciado sesión correctamente		
@@ -52,7 +52,7 @@ const login = async (req, res) => {
 
 // Definir el tipo de usuario
 const user = async (req, res) => {
-  const userInfo = await SR.definirTipoUsuario(req.session);
+  const userInfo = await VL.definirTipoUsuario(req.session);
   res.status(200).json(userInfo);
 };
 

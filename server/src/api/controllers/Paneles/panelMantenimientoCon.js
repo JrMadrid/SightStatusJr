@@ -1,13 +1,13 @@
 /* CONTROLADORES DE PANEL DE MANTENIMIENTOS */
-import { schemas as SC } from '../../validators/Paneles/panelMantenimientoVal.js';
-import { services as SR } from '../../services/Paneles/panelMantenimientoSer.js';
+import { schemas as SC } from '../../schemas/Paneles/panelMantenimientoSch.js';
+import { validators as VL } from '../../validators/Paneles/panelMantenimientoVal.js';
 
 // Pedir los datos de los mantenimientos
 const getMantenimientos = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const mantenimientos = await SR.obtenerMantenimientos(responsable, tipo);
+    const mantenimientos = await VL.obtenerMantenimientos(responsable, tipo);
     res.status(200).json(mantenimientos);
   } catch (error) {
     console.error('Error: // Pedir los datos de los mantenimientos, ', error);
@@ -23,7 +23,7 @@ const postMantenimiento = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: erroresUnidos });
     }
-    await SR.publicarMantenimiento(value);
+    await VL.publicarMantenimiento(value);
     res.status(200).json({ message: 'Mantenimiento agregado exitosamente' });
   } catch (error) {
     res.status(500 || error?.code).json({ message: error?.message || 'Error agregando nuevo mantenimiento' });
@@ -41,7 +41,7 @@ const postConstancia = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       res.status(400).json({ message: erroresUnidos })
     }
-    await SR.publicarConstancia(value, { imagen, responsable });
+    await VL.publicarConstancia(value, { imagen, responsable });
     res.status(200).json({ message: 'Mantenimiento agregado exitosamente' }); // Responder con éxito
   } catch (error) {
     console.error('Error: // Agregar constancia de mantenimiento, ', error);
@@ -61,7 +61,7 @@ const updateMantenimiento = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: erroresUnidos });
     }
-    await SR.actualizarMantenimiento(value);
+    await VL.actualizarMantenimiento(value);
     res.status(200).json({ message: 'Mantenimiento actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un mantenimiento, ', error);
@@ -81,7 +81,7 @@ const deleteMantenimiento = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: erroresUnidos });
     }
-    await SR.eliminarMantenimiento(value);
+    await VL.eliminarMantenimiento(value);
     res.status(200).json({ message: 'Mantenimiento eliminado exitosamente' });
   } catch (error) {
     console.error('Error // Eliminar un mantenimiento, ', error);

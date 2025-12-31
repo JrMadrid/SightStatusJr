@@ -1,56 +1,33 @@
 /* VALIDACIONES DE PANEL DE INFORMES */
-import Joi from 'joi';
+import { verificaciones as VR } from "../../verifications/Paneles/panelInformeVer.js";
+import { operaciones as OP } from "../../repositories/Paneles/panelInformeOpe.js";
 
-// RegEx
-const IDRegex = /^\d{1,5}$/
-const ecoRegex = /^\d{6}$/
-
-const nombre = Joi.string()
-  .max(100)
-  .allow('')
-  .messages({
-    'string.max': 'El nombre no debe superar los 100 caracteres.',
-  });
-
-// Agregar informe
-const SchemaAgregarInforme = Joi.object({
-  economico: Joi.string()
-    .pattern(ecoRegex)
-    .required()
-    .messages({
-      'string.empty': 'El número económico es obligatorio.',
-      'string.pattern.base': 'El número económico debe tener exactamente 6 dígitos.'
-    }),
-  frealizada: Joi.date()
-    .required()
-    .messages({
-      'any.required': 'La fecha de realización es obligatoria.',
-      'date.base': 'La fecha debe tener un formato válido.'
-    }),
-  nombre: nombre,
-  documento: nombre,
-  descripcion: Joi.string()
-    .max(100)
-    .allow('')
-    .messages({
-      'string.max': 'La descripción no puede tener más de 100 caracteres.'
-    })
-});
-
-// Eliminar informe
-const SchemaEliminarInforme = Joi.object({
-  id: Joi.string()
-    .pattern(IDRegex)
-    .max(5)
-    .required()
-    .messages({
-      'string.empty': 'El ID es obligatorio.',
-      'string.pattern.base': 'El ID debe contener solo números.',
-      'string.max': 'El ID debe tener como máximo 5 caracteres.',
-    })
-});
-
-export const schemas = {
-  SchemaAgregarInforme, 
-  SchemaEliminarInforme
+// Pedir los datos de los informes
+const obtenerInformes = async (tipo, responsable) => {
+  return await OP.getInformes(tipo, responsable);
 };
+
+// Agregar un nuevo informe
+const publicarInforme = async ({ descripcion, nombre, documento, frealizada, economico }, informe, ingeniero) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; }
+  if (!(await VR.SucursalPerteneciente(economico, ingeniero))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
+  await OP.postInforme({ descripcion, nombre, documento, frealizada, economico }, informe);
+};
+
+// Eliminar un informe
+const eliminarInforme = async ({ id }) => {
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; }
+  await OP.deleteInforme({ id });
+};
+
+// Pedir el informe en formato PDF
+const archivoInforme = async (id) => {
+  return await OP.informeArchivo(id);
+};
+
+export const validators = {
+  obtenerInformes,
+  publicarInforme,
+  eliminarInforme,
+  archivoInforme
+}

@@ -1,5 +1,5 @@
 {
-  "name": "statusapp",
+  "name": "coresightjr",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -39,7 +39,6 @@
     "leaflet.fullscreen": "^4.0.0",
     "mini-css-extract-plugin": "^2.4.5",
     "pdfmake": "^0.2.19",
-    "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",
     "postcss-normalize": "^10.0.1",
@@ -61,7 +60,6 @@
     "semver": "^7.3.5",
     "source-map-loader": "^3.0.0",
     "style-loader": "^3.3.1",
-    "tailwindcss": "^3.0.2",
     "terser-webpack-plugin": "^5.2.5",
     "web-vitals": "^2.1.4",
     "webpack": "^5.64.4",
@@ -92,7 +90,7 @@
       "last 1 safari version"
     ]
   },
-  "description": "proyecto statusApps",
+  "description": "proyecto CoreSightJr",
   "main": "index.js",
   "author": "",
   "jest": {

@@ -1,78 +1,51 @@
 /* VALIDACIONES DE INFORMATIVA -- UBICACIÓN */
-import Joi from "joi";
+import { verificaciones as VR } from "../../verifications/Informativas/UbicacionInfoVer.js";
+import { operaciones as OP } from "../../repositories/Informativas/UbicacionInfoOpe.js";
 
-// RegEx
-const ecoRegex = /^\d{6}$/
+// Verificar el economico antes de cualquier consulta
+const pedirVerificarEconomico = async (economico, responsable, tipo) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (tipo === 'Geografia') {
+    if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
+  };
+  const existe = await VR.UbicacionExiste(economico);
+  if (!existe) {
+    await OP.getVerificarEconomico(economico, existe);
+  };
+};
 
-const economico = Joi.string()
-  .pattern(ecoRegex)
-  .messages({
-    'string.pattern.base': 'El número económico debe tener exactamente 6 dígitos.'
-  });
+// Pedir los datos de la ubicación de la sucursal
+const pedirUbicacionDatos = async (economico, responsable, tipo) => {
+  return await OP.getUbicacionDatos(economico, responsable, tipo);
+};
 
-// Pedir ubicación
-const SchemaPedirUbicacion = Joi.object({
-  economico
-});
+// Pedir la imagen de la ubicación de la sucursal
+const pedirUbicacionFoto = async (economico, responsable, tipo) => {
+  return await OP.getUbicacionFoto(economico, responsable, tipo);
+};
 
-// Actualizar ubicación
-const SchemaActualizarUbicacion = Joi.object({
-  economico,
+// Editar los datos de la ubicación
+const editarDatosUbicacion = async (value) => {
+  const data = { ...value };
+  const economico = data.economico;
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
+  delete data.economico;
+  const [propiedadEditar, valor] = Object.entries(data)[0];
+  return await OP.updateDatosUbicacion(propiedadEditar, valor, economico);
+};
 
-  latitud: Joi.number()
-    .precision(8)
-    .min(-90)
-    .max(90)
-    .messages({
-      "number.base": "La latitud debe ser un número decimal.",
-      "number.min": "La latitud no puede ser menor que -90.",
-      "number.max": "La latitud no puede ser mayor que 90."
-    }),
+// Editar la imagen de la ubicación
+const editarImagenUbicacion = async (imagen, economico) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (!(await VR.UbicacionExiste(economico))) { throw { code: 404, message: 'No se encontró la ubicación' }; };
+  return await OP.updateImagenUbicacion(imagen, economico);
+};
 
-  longitud: Joi.number()
-    .precision(8)
-    .min(-180)
-    .max(180)
-    .messages({
-      "number.base": "La longitud debe ser un número decimal.",
-      "number.min": "La longitud no puede ser menor que -180.",
-      "number.max": "La longitud no puede ser mayor que 180."
-    }),
-
-  direccion: Joi.string()
-    .max(255)
-    .allow(null, '')
-    .messages({
-      "string.base": "La dirección debe ser un texto.",
-      "string.max": "La dirección no puede exceder los 255 caracteres."
-    }),
-
-  actualizado: Joi.date()
-    .iso()
-    .less("now")
-    .allow(null)
-    .messages({
-      "date.base": "La fecha de actualización debe ser válida.",
-      "date.format": "La fecha debe estar en formato ISO (YYYY-MM-DD).",
-      "date.less": "La fecha de actualización no puede ser futura."
-    }),
-
-  descripcion: Joi.string()
-    .max(3000)
-    .allow(null, '')
-    .messages({
-      "string.base": "La descripción debe ser un texto.",
-      "string.max": "La descripción no puede exceder los 3,000 caracteres."
-    }),
-
-  BorrarImagen: Joi.boolean().optional()
-
-}).min(1) // Asegura que al menos un campo se envíe
-  .messages({
-    "object.min": "Debes enviar al menos un campo para actualizar."
-  });
-
-export const schemas = {
-  SchemaPedirUbicacion,
-  SchemaActualizarUbicacion
+export const validators = {
+  pedirVerificarEconomico,
+  pedirUbicacionDatos,
+  pedirUbicacionFoto,
+  editarDatosUbicacion,
+  editarImagenUbicacion
 };

@@ -48,11 +48,7 @@ export default function InfoUbicacion() {
     const verificarEconomico = async () => {
       try {
         const url = `/api/informativa/ubicacion/verificar/${economico}`;
-        const response = await fetch(url, { credentials: 'include' });
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.message || "Lo sentimos, ocurrió un problema");
-        }
+        const datos = await fetchData(url);
         setEconomicoValido(true);
       } catch (error) {
         console.error("Error: // Verificar el economico antes de cualquier consulta, ", error);

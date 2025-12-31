@@ -1,7 +1,7 @@
 /* CONTROLADORES DE INFORMATIVA -- UBICACIÓN */
 import { fileTypeFromBuffer } from "file-type";
-import { schemas as SC } from "../../validators/Informativas/UbicacionInfoVal.js";
-import { services as SR } from "../../services/Informativas/UbicacionInfoSer.js";
+import { schemas as SC } from "../../schemas/Informativas/UbicacionInfoSch.js";
+import { validators as VL } from "../../validators/Informativas/UbicacionInfoVal.js";
 
 // Verificar el economico antes de cualquier consulta
 const getVerificarEconomico = async (req, res) => {
@@ -18,8 +18,8 @@ const getVerificarEconomico = async (req, res) => {
     const economico = value.economico;
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    await SR.pedirVerificarEconomico(economico, responsable, tipo);
-    return res.sendStatus(200);
+    await VL.pedirVerificarEconomico(economico, responsable, tipo);
+    return res.status(200).json({ validez: true });
   } catch (error) {
     console.error('Error: // Pedir los datos de la ubicación de la sucursal, ', error);
     res.status(error?.code || 500).json({ message: error?.message || 'Ubicación no encontrada' });
@@ -41,7 +41,7 @@ const getUbicacionDatos = async (req, res) => {
     const economico = value.economico;
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const mapa = await SR.pedirUbicacionDatos(economico, responsable, tipo);
+    const mapa = await VL.pedirUbicacionDatos(economico, responsable, tipo);
     if (!mapa) {
       return res.sendStatus(404);
     }
@@ -67,7 +67,7 @@ const getUbicacionFoto = async (req, res) => {
     const economico = value.economico;
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const archivo = await SR.pedirUbicacionFoto(economico, responsable, tipo);
+    const archivo = await VL.pedirUbicacionFoto(economico, responsable, tipo);
     if (!archivo.imagen) {
       return res.status(404).json({ code: 404, message: 'Sin imagen' });
     }
@@ -96,7 +96,7 @@ const updateDatosUbicacion = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.editarDatosUbicacion(value);
+    await VL.editarDatosUbicacion(value);
     return res.status(200).json({ ok: true, message: `Cambio correcto de ${propiedadEditar}` });
   } catch (error) {
     console.error('Error: // Editar los datos de la ubicación, ', error);
@@ -109,7 +109,7 @@ const updateImagenUbicacion = async (req, res) => {
   try {
     const imagen = req.file.buffer; // Obtiene el archivo como un buffer
     const economico = req.body.economico;
-    await SR.editarImagenUbicacion(imagen, economico);
+    await VL.editarImagenUbicacion(imagen, economico);
     return res.status(200).json({ ok: true, message: `Cambio correcto de imagen` });
   } catch (error) {
     console.error('Error: // Editar la imagen de la ubicación, ', error);

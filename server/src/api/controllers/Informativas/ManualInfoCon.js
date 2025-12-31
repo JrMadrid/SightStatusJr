@@ -1,5 +1,5 @@
 /* CONTROLADORES DE INFORMATIVA -- MANUAL */
-import { services as SR } from '../../services/Informativas/ManualInfoSer.js';
+import { validators as VL } from '../../validators/Informativas/ManualInfoVal.js';
 
 // Mandar los datos del manual
 const manualinfo = async (req, res) => {
@@ -8,7 +8,7 @@ const manualinfo = async (req, res) => {
       return res.status(400).json({ message: "ID requerido" });
     }
     const manualid = req.params.id;
-    const manualinfo = await SR.obtenerDatosManual(manualid);
+    const manualinfo = await VL.obtenerDatosManual(manualid);
     return res.status(200).json(manualinfo);
   } catch (error) {
     console.error('Error: // Mandar los datos del manual, ', error);
@@ -23,7 +23,7 @@ const manual = async (req, res) => {
       return res.status(400).json({ message: "ID requerido" });
     }
     const manualid = req.params.id;
-    let manualAr = await SR.obtenerArchivoManual(manualid);
+    let manualAr = await VL.obtenerArchivoManual(manualid);
     if (!manualAr.manual) {
       return res.sendStatus(404);
     }

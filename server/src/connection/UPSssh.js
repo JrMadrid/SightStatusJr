@@ -1,15 +1,17 @@
 /* CONEXIÓN A LA UPS VIA SSH */
-// Importo la librería 'NodeSSH' para la conexión SSH a la UPS
-import { NodeSSH } from 'node-ssh';
+import { NodeSSH } from 'node-ssh'; // Librería 'NodeSSH' para la conexión SSH a la UPS
 import config from "../configs/UPS_configs.js"; // Configuraciones de la UPS
-import { UPSdata } from '../datos/UPSdata.js'; // Función para manejar los datos de la UPS
-import { UPShardware } from '../datos/UPSdata.js'; // Función para manejar los datos de hardware de la UPS
-import { UPSdescripcion } from '../datos/UPSdata.js'; // Función para manejar la descripción de la UPS
+import { UPSdata } from '../services/UPSdata.js'; // Función para manejar los datos de la UPS
+import { UPShardware } from '../services/UPSdata.js'; // Función para manejar los datos de hardware de la UPS
+import { UPSdescripcion } from '../services/UPSdata.js'; // Función para manejar la descripción de la UPS
 
-const username = config.UPSusername;  // Nombre de usuario para la conexión SSH
-const password = config.UPSpassword;  // Contraseña para la conexión SSH
-const command = config.UPScommand;    // Comando para inicializar la conexión
-const intentos = 3;                   // Número de intentos en caso de fallo
+const username = config.UPSusername; // Nombre de usuario para la conexión SSH
+const password = config.UPSpassword; // Contraseña para la conexión SSH
+const command = config.UPScommand; // Comando para inicializar la conexión
+const intentos = 3; // Número de intentos en caso de fallo
+
+// Mapa de procesos activos para poder cancelarlos
+// const procesos = {};
 
 /**
  * Establece una conexión SSH con la UPS y obtiene información relevante.

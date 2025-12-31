@@ -1,25 +1,32 @@
-/* VALIDACIONES DE AUTENTICACIÓN DE USUARIOS*/
-import Joi from 'joi';
+/* VALIDACIONES DE AUTENTICACIÓN DE USUARIOS */
+import { verificaciones as VR } from "../verifications/authVer.js";
+import { operaciones as OP } from "../repositories/authOpe.js";
 
-// Comprobar Usuario
-const SchemaComprobarUsuario = Joi.object({
-  nickname: Joi.string()
-    .required()
-    .max(50)
-    .messages({
-      'string.empty': 'El nombre del usuario es obligatorio.',
-      'string.max': 'El nombre no debe tener más de 50 caracteres.'
-    }),
+// Leer y comprobar el usuario
+const loginService = async ({ nickname, psw }) => {
+  if (!(await VR.usuarioExiste(nickname))) { throw { code: 404, message: "El usuario no existe" } };
+  if (!(await VR.comprobarActivo(nickname))) { throw { code: 403, message: "Su acceso es inválido" } };
+  return await OP.comprobarUsuario({ nickname, psw });
+};
 
-  psw: Joi.string()
-    .required()
-    .max(50)
-    .messages({
-      'string.empty': 'La contraseña es obligatoria.',
-      'string.max': 'La contraseña no debe tener más de 50 caracteres.'
-    })
-});
+// Definir el tipo de usuario
+const definirTipoUsuario = async (session) => {
+  const user = {
+    username: session.user,
+    isAdmin: session.admin,
+    tipo: session.tipo,
+    id: 0
+  };
+  if (session.admin == undefined) return user;
+  if (session.admin === true) {
+    user.id = (session.tipo === 'Super Administrador') ? 1 : 2;
+  } else {
+    user.id = (session.tipo === 'Aplicativo') ? 3 : 4;
+  }
+  return user;
+};
 
-export const schemas = {
-  SchemaComprobarUsuario
+export const validators = {
+  loginService,
+  definirTipoUsuario
 };

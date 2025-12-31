@@ -1,75 +1,54 @@
-/* VALIDACIONES DE PANEL DE MANTENIMIENTOS y CONSTANCIAS*/
-import Joi from 'joi';
+/* VALIDACIONES DE PANEL DE MANTENIMIENTOS */
+import { verificaciones as VR } from "../../verifications/Paneles/panelMantenimientoVer.js";
+import { operaciones as OP } from "../../repositories/Paneles/panelMantenimientoOpe.js";
 
-// RegEx
-const IDRegex = /^\d{1,5}$/
-const ecoRegex = /^\d{6}$/
+// Pedir los datos de los mantenimientos
+const obtenerMantenimientos = async (responsable, tipo) => {
+  return await OP.getMantenimientos(responsable, tipo);
+};
 
-const id = Joi.string()
-  .pattern(IDRegex)
-  .max(5)
-  .required()
-  .messages({
-    'string.empty': 'El ID es obligatorio.',
-    'string.pattern.base': 'El ID debe contener solo números.',
-    'string.max': 'El ID debe tener como máximo 5 caracteres.',
-  });
-
-const economico = Joi.string()
-  .pattern(ecoRegex)
-  .max(6)
-  .messages({
-    'string.pattern.base': 'El número económico debe tener exactamente 6 dígitos.',
-    'string.max': 'El número económico debe tener como máximo 6 caracteres.'
-  });
-
-const festimada = Joi.date()
-  .messages({
-    'date.base': 'La fecha estimada debe ser una fecha válida.',
-  });
-
-// Agregar mantenimiento
-const SchemaAgregarMantenimiento = Joi.object({
-  festimada: festimada.required()
-    .messages({ 'any.required': 'La fecha estimada es obligatoria.' }),
-  economico: economico.required()
-    .messages({ 'string.empty': 'El número económico no puede estar vacío.' })
-});
-
-// Actualizar mantenimiento
-const SchemaActualizarMantenimiento = Joi.object({
-  id,
-  festimada: festimada.allow(''),
-  economico: economico.allow('')
-});
-
-// Eliminar mantenimiento
-const SchemaEliminarMantenimiento = Joi.object({
-  id
-});
+// Agregar un nuevo mantenimiento
+const publicarMantenimiento = async ({ festimada, economico }) => {
+  if (!(await VR.comprobarFechaEstimada(festimada))) { throw { code: 400, message: 'Fecha estimada menor a 01/Enero/2024' }; }
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; }
+  return await OP.postMantenimiento({ festimada, economico });
+};
 
 // Agregar constancia de mantenimiento
-const SchemaAgregarConstanciaMantenimiento = Joi.object({
-  id,
+const publicarConstancia = async ({ frealizada, descripcion, id }, { imagen, responsable }) => {
+  if (!(await VR.comprobarID(id))) throw { code: 404, message: 'No se encontró el ID' };
+  if (!(await VR.comprobarSuMantenimiento(id, responsable))) throw { code: 400, message: 'No es su mantenimiento' };
+  if (!(await VR.comprobarFechaRealizada(frealizada, id))) throw { code: 400, message: 'Fecha realizada menor a fecha estimada' };
+  if (await VR.ConstanciaExiste(id)) throw { code: 409, message: 'Ya tiene constancia' };
+  const suSucursal = await VR.ecoSucursal(id);
+  const yy = frealizada.getFullYear();
+  const mm = frealizada.getMonth();
+  const siguiFEstimada = await VR.nextFEstimada(yy, mm);
+  await OP.actualizarMantenimientoConConstancia({ frealizada, descripcion, imagen, id, yy, siguiFEstimada, suSucursal });
+};
 
-  frealizada: Joi.date()
-    .required()
-    .messages({
-      'date.base': 'La fecha realizada debe ser una fecha válida.',
-      'any.required': 'La fecha realizada es obligatoria.',
-    }),
+// Actualizar un mantenimiento
+const actualizarMantenimiento = async ({ festimada, economico, id }) => {
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  if (festimada) {
+    if (!(await VR.comprobarFechaEstimada(festimada))) { throw { code: 400, message: 'Fecha estimada menor a 01/Enero/2024' }; };
+  };
+  if (economico) {
+    if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  };
+  return await OP.updateMantenimiento({ festimada, economico, id });
+};
 
-  descripcion: Joi.string()
-    .max(8000)
-    .allow('')
-    .messages({
-      'string.max': 'La descripción no debe exceder los 8000 caracteres.',
-    })
-});
+// Eliminar un mantenimiento
+const eliminarMantenimiento = async ({ id }) => {
+  if (!(await VR.comprobarID(id))) { throw { code: 404, message: 'No se encontró el ID' }; };
+  return await OP.deleteMantenimiento({ id });
+};
 
-export const schemas = {
-  SchemaAgregarMantenimiento,
-  SchemaAgregarConstanciaMantenimiento,
-  SchemaActualizarMantenimiento,
-  SchemaEliminarMantenimiento
+export const validators = {
+  obtenerMantenimientos,
+  publicarMantenimiento,
+  publicarConstancia,
+  actualizarMantenimiento,
+  eliminarMantenimiento
 };

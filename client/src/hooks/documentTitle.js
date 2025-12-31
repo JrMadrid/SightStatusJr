@@ -1,7 +1,7 @@
 /* FUNCIÓN DE NOMBRAR PAGINAS */
 import { useEffect } from "react";
 
-export default function usePageTitle(title, defaultTitle = "StatusAppJR") {
+export default function usePageTitle(title, defaultTitle = "CoreSightJr") {
   useEffect(() => {
     document.title = title;
     return () => {

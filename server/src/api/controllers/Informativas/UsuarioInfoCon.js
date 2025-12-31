@@ -1,14 +1,14 @@
 /* CONTROLADORES DE INFORMATIVA -- USUARIO */
 import { fileTypeFromBuffer } from "file-type";
-import { schemas as SC } from "../../validators/Informativas/UsuarioInfoVal.js";
-import { services as SR } from "../../services/Informativas/UsuarioInfoSer.js";
+import { schemas as SC } from "../../schemas/Informativas/UsuarioInfoSch.js";
+import { validators as VL } from "../../validators/Informativas/UsuarioInfoVal.js";
 
 // Pedir la lista de usuarios
 const getListaUsuarios = async (req, res) => {
   const tipo = req.session.tipo;
   if (tipo === "Super Administrador") {
     try {
-      const lista = await SR.obtenerListaUsuarios();
+      const lista = await VL.obtenerListaUsuarios();
       return res.status(200).json(lista)
     } catch (error) {
       console.error('Error: // Pedir la lista de usuarios, ', error);
@@ -26,7 +26,7 @@ const getDatosSeleccionado = async (req, res) => {
     let seleccionado;
     const tipo = req.session.tipo;
     tipo === "Super Administrador" ? seleccionado = req.params.nickname : seleccionado = req.session.perfil;
-    const datos = await SR.obtenerDatosSeleccionado(seleccionado);
+    const datos = await VL.obtenerDatosSeleccionado(seleccionado);
     return res.status(200).json(datos);
   } catch (error) {
     console.error('Error: // Pedir los datos del personal, ', error);
@@ -40,7 +40,7 @@ const getFotoSeleccionado = async (req, res) => {
     let seleccionado;
     const tipo = req.session.tipo;
     tipo !== "Super Administrador" ? seleccionado = req.session.perfil : seleccionado = req.params.nickname;
-    const archivo = await SR.obtenerFotoSeleccionado(seleccionado);
+    const archivo = await VL.obtenerFotoSeleccionado(seleccionado);
     if (!archivo.foto) {
       return res.status(404).json({ code: 404, message: 'Sin foto' });
     }
@@ -72,7 +72,7 @@ const editDataPersonal = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.editarDatosPersonal(value);
+    await VL.editarDatosPersonal(value);
     return res.status(200).json({ ok: true, message: `Cambio correcto de ${propiedadEditar}` });
   } catch (error) {
     console.error('Error: // Editar los datos del personal, ', error);
@@ -85,7 +85,7 @@ const editFotoPersonal = async (req, res) => {
   try {
     const foto = req.file.buffer; // Obtiene el archivo como un buffer
     const id = req.body.id;
-    await SR.editarFotoPersonal(foto, id);
+    await VL.editarFotoPersonal(foto, id);
     return res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Editar la foto del personal, ', error);

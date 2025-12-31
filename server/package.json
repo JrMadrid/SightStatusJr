@@ -1,5 +1,5 @@
 {
-  "name": "statusapp",
+  "name": "coresightjr",
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
@@ -14,7 +14,7 @@
     "client": "cd ../client && npm start"
   },
   "author": "",
-  "description": "proyecto statusApps ",
+  "description": "proyecto CoreSightJr ",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-session-sequelize": "^7.1.7",

@@ -1,6 +1,6 @@
 /* CONTROLADORES DE INFORMATIVA -- MANTENIMIENTO */
-import { schemas as SC } from '../../validators/Informativas/MantenimientoInfoVal.js';
-import { services as SR } from '../../services/Informativas/MantenimientoInfoSer.js';
+import { schemas as SC } from '../../schemas/Informativas/MantenimientoInfoSch.js';
+import { validators as VL } from '../../validators/Informativas/MantenimientoInfoVal.js';
 
 const getFechasRealizadas = async (req, res) => {
   // Mandar las fechas vinculadas al economico
@@ -17,7 +17,7 @@ const getFechasRealizadas = async (req, res) => {
     const economico = value.economico;
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const fechasr = await SR.PedirFechasRealizadas(economico, responsable, tipo);
+    const fechasr = await VL.PedirFechasRealizadas(economico, responsable, tipo);
     return res.status(200).json(fechasr);
   } catch (error) {
     console.error('Error: // Manda las fechas vinculadas al economico, ', error);
@@ -33,7 +33,7 @@ const getFechaSeleccionada = async (req, res) => {
     }
     const id = req.params.id;
     if (id === '0') throw { code: 404, message: 'Mantenimiento no válido' };
-    const mantenimiento = await SR.PedirFechaSeleccionada(id);
+    const mantenimiento = await VL.PedirFechaSeleccionada(id);
     if (!mantenimiento.constancia) {
       return res.sendStatus(404);
     }
@@ -54,7 +54,7 @@ const getMantenimientoArchivo = async (req, res) => {
     }
     const fechasr = req.params.fechasr;
     if (fechasr && fechasr !== null && fechasr !== 'null') {
-      const constanciaArchivo = await SR.obtenerArchivoMantenimiento(fechasr);
+      const constanciaArchivo = await VL.obtenerArchivoMantenimiento(fechasr);
       if (!constanciaArchivo.constancia) {
         return res.sendStatus(404);
       }
@@ -77,7 +77,7 @@ const getMantenimientosArchivos = async (req, res) => {
       return res.status(400).json({ message: "Económico requerido" });
     }
     const economico = req.params.economico;
-    const constancias = await SR.obtenerArchivosMantenimientos(economico);
+    const constancias = await VL.obtenerArchivosMantenimientos(economico);
     res.status(200).json(constancias);
   } catch (error) {
     console.error('Error: // Mandar todas las constancias, ', error);

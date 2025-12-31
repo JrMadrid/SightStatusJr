@@ -1,7 +1,7 @@
 /* CONTROLADORES DE INFORMATIVA -- SUCURSAL */
 import config from '../../../configs/APP_config.js';
-import { schemas as SC } from '../../validators/Informativas/SucursalInfoVal.js';
-import { services as SR } from '../../services/Informativas/SucursalInfoSer.js';
+import { schemas as SC } from '../../schemas/Informativas/SucursalInfoSch.js';
+import { validators as VL } from '../../validators/Informativas/SucursalInfoVal.js';
 const isMock = config.MOCKS; // Accede al valor de la variable de entorno MOCKS.
 // UPS
 const { UPSssh: RealUPSssh, UPSHardware: RealUPSHardware, UPSDescripcion: RealUPSDescripcion } = await import('../../../connection/UPSssh.js');
@@ -17,7 +17,7 @@ const { BiometricoData: MockBIOMETRICOtcpip, Biometricohardware: MockBiometricoH
 const BIOMETRICOtcpip = isMock ? MockBIOMETRICOtcpip : RealBIOMETRICOtcpip;
 const BiometricoHardware = isMock ? MockBiometricoHardware : RealBiometricoHardware;
 // import { BIOMETRICOtcpip, BiometricoHardware } from '../../../connection/BIOMETRICOtcpip.js';
-const { BIOMETRICOsolicitud: RealBIOMETRICOsolicitud } = await import('../../../datos/Solicitudes/SolBiometricos.js');
+const { BIOMETRICOsolicitud: RealBIOMETRICOsolicitud } = await import('../../../services/Solicitudes/SolBiometricos.js');
 const { BIOMETRICOsolicitudMock: MockBIOMETRICOsolicitud } = await import('../../../mocks/Simular/SimBiometrico.js');
 const BIOMETRICOsolicitud = isMock ? MockBIOMETRICOsolicitud : RealBIOMETRICOsolicitud;
 
@@ -36,7 +36,7 @@ const getSucursalDispositivos = async (req, res) => {
     const economico = value.economico;
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const aplicaciones = await SR.DatosDispositivos(economico, responsable, tipo); // Ejecuta la consulta
+    const aplicaciones = await VL.DatosDispositivos(economico, responsable, tipo); // Ejecuta la consulta
     return res.status(200).json(aplicaciones) // Retorna el resultado en formato JSON
   } catch (error) {
     console.error('Error: // Consultar y retornar los dispositivos registrados por número económico, ', error);
@@ -51,7 +51,7 @@ const info = async (req, res) => {
     const ip = req.params.ip; // Se obtiene la IP desde los parámetros de la URL
     req.session.aplicacionip = ip; // Guarda la IP en sesión
     // Consulta el tipo de dispositivo asociado a la IP
-    const dispositivo = await SR.nombreDispositivoXIP(ip);
+    const dispositivo = await VL.nombreDispositivoXIP(ip);
     req.session.aplicacion = dispositivo; // Guarda el nombre del dispositivo en la sesión
     // Dependiendo del tipo de dispositivo, realiza la conexión correspondiente
     if (dispositivo === 'UPS') {
@@ -61,7 +61,7 @@ const info = async (req, res) => {
       sshInfo = await BIOMETRICOtcpip(ip);
     }
     // Consultar información general y de la sucursal del dispositivo
-    const dbInfo = await SR.informationGneralDispositivo(ip);
+    const dbInfo = await VL.informationGneralDispositivo(ip);
     // Se fusiona la información de la base de datos con la obtenida por SSH/TCP
     const Infos = Object.assign({}, sshInfo, dbInfo);
     const Info = [Infos];
@@ -86,7 +86,7 @@ const dispositivos = async (req, res) => {
     }
     const economico = value.economico;
     // Consultar todos los dispositivos válidos de la sucursal
-    const dbInfo = await SR.dispositiosválidos(economico);
+    const dbInfo = await VL.dispositiosválidos(economico);
     // Recorre cada dispositivo para validar y actualizar la información faltante
     for (let i = 0; i < dbInfo.length; i++) {
       let ip = dbInfo[i].ip;
@@ -109,7 +109,7 @@ const dispositivos = async (req, res) => {
           // Conexiones futuras para ILO están comentadas
 
           // Actualizar el campo "general" en la base de datos
-          await SR.actualizarInformacionGeneral(general, ip);
+          await VL.actualizarInformacionGeneral(general, ip);
         }
         // Si el campo "descripcion" está vacío o nulo, se actualiza
         if (dbInfo[i].descripcion === null || dbInfo[i].descripcion === '') {
@@ -122,7 +122,7 @@ const dispositivos = async (req, res) => {
             descripcion = sshInfo.descripcion;
           }
           // Actualizar el campo "descripcion" en la base de datos
-          await SR.actualizarInformacionDescripcion(descripcion, ip);
+          await VL.actualizarInformacionDescripcion(descripcion, ip);
         }
       }
     }

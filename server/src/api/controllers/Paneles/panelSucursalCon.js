@@ -1,13 +1,13 @@
 /* CONTROLADORES DE PANEL DE SUCURSALES */
-import { schemas as SC } from '../../validators/Paneles/panelSucursalVar.js';
-import { services as SR } from '../../services/Paneles/panelSucursalSer.js';
+import { schemas as SC } from '../../schemas/Paneles/panelSucursalSch.js';
+import { validators as VL } from '../../validators/Paneles/panelSucursalVal.js';
 
 // Pedir los datos de las sucursales
 const getSucursales = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const sucursales = await SR.obtenerSucursales(responsable, tipo);
+    const sucursales = await VL.obtenerSucursales(responsable, tipo);
     res.status(200).json(sucursales);
   } catch (error) {
     console.error('Error: // Pedir los datos de las sucursales, ', error);
@@ -23,7 +23,7 @@ const postSucursal = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.agregarSucursal(value);
+    await VL.agregarSucursal(value);
     res.status(200).json({ message: 'Sucursal agregada exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar una nueva sucursal, ', error);
@@ -43,7 +43,7 @@ const updateSucursal = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.actualizarSucursal(value);
+    await VL.actualizarSucursal(value);
     res.status(200).json({ message: 'Sucursal actualizada exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar una sucursal, ', error);
@@ -63,7 +63,7 @@ const deleteSucursal = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.eliminarSucursal(value);
+    await VL.eliminarSucursal(value);
     res.status(200).json({ message: 'Sucursal eliminada exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar una sucursal, ', error);

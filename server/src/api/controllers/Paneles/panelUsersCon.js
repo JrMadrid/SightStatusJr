@@ -1,11 +1,11 @@
 /* CONTROLADORES DE PANEL DE USUARIOS */
-import { schemas as SC } from '../../validators/Paneles/PanelUsersVal.js';
-import { services as SR } from '../../services/Paneles/panelUsersSer.js';
+import { schemas as SC } from '../../schemas/Paneles/PanelUsersSch.js';
+import { validators as VL } from '../../validators/Paneles/panelUsersVal.js';
 
 // Pedir los datos de los usuarios
 const getUsers = async (req, res) => {
   try {
-    let usuarios = await SR.obtenerUsers();
+    let usuarios = await VL.obtenerUsers();
     res.status(200).json(usuarios);
   } catch (error) {
     console.error('Error: // Pedir los datos de los usuarios, ', error);
@@ -21,7 +21,7 @@ const postUser = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     };
-    await SR.agregarUser(value);
+    await VL.agregarUser(value);
     res.status(200).json({ message: 'Usuario agregado exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar un nuevo usuario, ', error);
@@ -41,7 +41,7 @@ const updateUser = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }; 
-    await SR.actualizarUser(value);
+    await VL.actualizarUser(value);
     res.status(200).json({ message: 'Usuario actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un usuario, ', error);
@@ -62,7 +62,7 @@ const deleteUser = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.eliminarUser(value, Super);
+    await VL.eliminarUser(value, Super);
     res.status(200).json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un usuario, ', error);
@@ -73,7 +73,7 @@ const deleteUser = async (req, res) => {
 // Cerrar la sesión de todos los usuarios
 const logoutaAllUsers = async (req, res) => {
   try {
-    await SR.sacarAllUsers();
+    await VL.sacarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Cerrar la sesión de todos los usuarios, ', error);
@@ -84,7 +84,7 @@ const logoutaAllUsers = async (req, res) => {
 // Desactivar el acceso de todos los usuarios
 const deactivateAllUsers = async (req, res) => {
   try {
-    await SR.desactivarAllUsers();
+    await VL.desactivarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Desactivar el acceso de todos los usuarios, ', error);
@@ -95,7 +95,7 @@ const deactivateAllUsers = async (req, res) => {
 // Activar el acceso de todos los usuarios
 const activateAllUsers = async (req, res) => {
   try {
-    await SR.activarAllUsers();
+    await VL.activarAllUsers();
     res.sendStatus(200);
   } catch (error) {
     console.error('Error: // Activar el acceso de todos los usuarios, ', error);

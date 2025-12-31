@@ -1,5 +1,5 @@
 /* CONTROLADORES DE INFORMATIVA --  INFORMES */
-import { services as SR } from '../../services/Informativas/InformeInfoSer.js';
+import { validators as VL } from '../../validators/Informativas/InformeInfoVal.js';
 
 // Mandar los datos del informe
 const informeinfo = async (req, res) => {
@@ -8,7 +8,7 @@ const informeinfo = async (req, res) => {
       return res.status(400).json({ message: "ID requerido" });
     }
     const id = req.params.id;
-    const datos = await SR.obtenerInfoInforme(id);
+    const datos = await VL.obtenerInfoInforme(id);
     res.status(200).json(datos);
   } catch (error) {
     console.error('Error: // Mandar los datos del informe, ', error);
@@ -23,7 +23,7 @@ const informe = async (req, res) => {
       return res.status(400).json({ message: "ID requerido" });
     }
     const id = req.params.id;
-    const documento = await SR.obtenerArchivoInforme(id);
+    const documento = await VL.obtenerArchivoInforme(id);
     if (!documento.informe) {
       res.sendStatus(404);
     }

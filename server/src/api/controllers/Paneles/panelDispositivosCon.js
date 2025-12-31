@@ -1,6 +1,6 @@
 /* CONTROLADORES DE PANEL DE DISPOSITIVOS */
-import { services as SR } from '../../services/Paneles/panelDispositivosSer.js';
-import { schemas as SC } from '../../validators/Paneles/panelDispositivosVal.js';
+import { validators as VL } from '../../validators/Paneles/panelDispositivosVal.js';
+import { schemas as SC } from '../../schemas/Paneles/panelDispositivosSch.js';
 import pingHost from '../../../connection/PING.js';
 
 // Pedir los datos de los dispositivos
@@ -8,7 +8,7 @@ const getDatosDispositivos = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const dispositivos = await SR.obtenerDatosDispositivos(responsable, tipo);
+    const dispositivos = await VL.obtenerDatosDispositivos(responsable, tipo);
     res.status(200).json(dispositivos);
   } catch (error) {
     console.error('Error: // Pedir los datos de los dispositivos, ', error);
@@ -21,7 +21,7 @@ const getListaDispositivos = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    const lista = await SR.obtenerListaDispositivos(responsable, tipo);
+    const lista = await VL.obtenerListaDispositivos(responsable, tipo);
     res.status(200).json(lista);
   } catch (error) {
     console.error('Error: // Pedir la lista de los dispositivos, ', error);
@@ -39,7 +39,7 @@ const postDispositivo = async (req, res) => {
       // console.log(error.details.map(e => e.type)); // Esto imprime los tipos de error
       return res.status(400).json({ message: erroresUnidos });
     }
-    await SR.agregarDispositivo(value);
+    await VL.agregarDispositivo(value);
     res.status(200).json({ message: 'Dispositivo agregado exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar un nuevo dispositivo, ', error);
@@ -59,7 +59,7 @@ const updateDispositivo = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.actualizarDispositivo(value);
+    await VL.actualizarDispositivo(value);
     res.status(200).json({ message: 'Dispositivo actualizado exitosamente' });
   } catch (error) {
     console.error('Error: // Actualizar un dispositivo, ', error);
@@ -80,7 +80,7 @@ const deleteDispositivo = async (req, res) => {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
     }
-    await SR.eliminarDispositivo(value);
+    await VL.eliminarDispositivo(value);
     res.status(200).json({ message: 'Dispositivo eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un dispositivo, ', error);

@@ -1,13 +1,13 @@
 /* CONTROLADORES DE PANEL DE INFORMES */
-import { schemas as SC } from '../../validators/Paneles/panelInformeVal.js';
-import { services as SR } from '../../services/Paneles/panelInformeSer.js';
+import { schemas as SC } from '../../schemas/Paneles/panelInformeSch.js';
+import { validators as VL } from '../../validators/Paneles/panelInformeVal.js';
 
 // Pedir los datos de los informes
 const getInformes = async (req, res) => {
   try {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
-    let informes = await SR.obtenerInformes(tipo, responsable);
+    let informes = await VL.obtenerInformes(tipo, responsable);
     res.status(200).json(informes);
   } catch (error) {
     console.error('Error: // Pedir los datos de los informes, ', error);
@@ -25,7 +25,7 @@ const postInforme = async (req, res) => {
       return res.status(400).json({ message: erroresUnidos });
     };
     const ingeniero = req.session.user;
-    await SR.publicarInforme(value, informe, ingeniero);
+    await VL.publicarInforme(value, informe, ingeniero);
     res.status(200).json({ message: 'Informe agregado exitosamente' });
   } catch (error) {
     console.error('Error: // Agregar un nuevo informe, ', error);
@@ -45,7 +45,7 @@ const deleteInforme = async (req, res) => {
       const erroresUnidos = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: erroresUnidos });
     };
-    await SR.eliminarInforme(value);
+    await VL.eliminarInforme(value);
     res.status(200).json({ message: 'Informe eliminado exitosamente' });
   } catch (error) {
     console.error('Error: // Eliminar un informe, ', error);
@@ -60,7 +60,7 @@ const Informe = async (req, res) => {
       return res.status(400).json({ message: "ID requerido" });
     };
     const id = req.params.id
-    const documento = await SR.archivoInforme(id);
+    const documento = await VL.archivoInforme(id);
     if (!documento.informe) {
       return res.sendStatus(404);
     };

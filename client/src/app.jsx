@@ -22,6 +22,8 @@ import PanManuales from "@pages/Panels/PanelManual.jsx";
 import Informes from "@pages/Panels/PanelInforme.jsx";
 /* Components */
 import Navbar from '@elementos/Navbar.jsx';
+import DevCredits from "@elementos/DevCredits";
+
 /* Context */
 import { UserProvider } from '@context/UserContext.jsx';
 
@@ -53,6 +55,7 @@ function App() {
           </Route>
         </Routes>
       </Router>
+      <DevCredits />
     </UserProvider>
   );
 };

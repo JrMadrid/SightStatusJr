@@ -1,20 +1,46 @@
 /* VALIDACIONES DE INFORMATIVA -- SUCURSAL */
-import Joi from "joi";
+import { verificaciones as VR } from "../../verifications/Informativas/SucursalInfoVer.js";
+import { operaciones as OP } from "../../repositories/Informativas/SucursalInfoOpe.js";
 
-// RegEx
-const ecoRegex = /^\d{6}$/
+// Consultar y retornar los dispositivos registrados por número económico
+const DatosDispositivos = async (economico, responsable, tipo) => {
+  if (!(await VR.SucursalExiste(economico))) { throw { code: 404, message: 'No se encontró la sucursal (economico no válido)' }; };
+  if (tipo === 'Geografia') {
+    if (!(await VR.SucursalPerteneciente(economico, responsable))) { throw { code: 404, message: 'No es su sucursal (economico no válido)' }; }
+  };
+  return await OP.getDatosDispositivos(economico, responsable, tipo);
+};
 
-const economico = Joi.string()
-  .pattern(ecoRegex)
-  .messages({
-    'string.pattern.base': 'El número económico debe tener exactamente 6 dígitos.'
-  });
+// Obtener la información general de un dispositivo en específico por su IP
+const nombreDispositivoXIP = async (ip) => {
+  return await OP.dispositivoIP(ip);
+};
 
-// Pedir sucursal
-const SchemaPedirSucursal = Joi.object({
-  economico
-});
+// Consultar información general y de la sucursal del dispositivo
+const informationGneralDispositivo = async (ip) => {
+  return await OP.infoGeneralDispositivo(ip);
+};
 
-export const schemas = {
-  SchemaPedirSucursal
+// Consultar todos los dispositivos válidos de la sucursal
+const dispositiosválidos = async (economico) => {
+  return await OP.dispositivosSucursal(economico)
+};
+
+// Actualizar el campo "general" en la base de datos
+const actualizarInformacionGeneral = async (general, ip) => {
+  await OP.actualizarGeneral(general, ip);
+};
+
+// Actualizar el campo "descripcion" en la base de datos
+const actualizarInformacionDescripcion = async (descripcion, ip) => {
+  await OP.actualizarDescripcion(descripcion, ip);
+};
+
+export const validators = {
+  DatosDispositivos,
+  nombreDispositivoXIP,
+  informationGneralDispositivo,
+  dispositiosválidos,
+  actualizarInformacionGeneral,
+  actualizarInformacionDescripcion
 };
