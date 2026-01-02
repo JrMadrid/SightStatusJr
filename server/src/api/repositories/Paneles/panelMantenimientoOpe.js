@@ -60,10 +60,10 @@ const actualizarMantenimientoConConstancia = async ({ frealizada, descripcion, i
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Agregar constancia de mantenimiento, ', error);
   }
 };
 

@@ -1,44 +1,32 @@
 -- CREAR TABLA DE SUCURSALES
 
-USE [statusAppsPro]
+USE [CoreSightJRPro];
 GO
 
-/****** Object:  Table [dbo].[sucursales] ******/
-SET ANSI_NULLS ON
-GO
+CREATE TABLE dbo.sucursales (
+    id INT IDENTITY(1,1) NOT NULL,
+    canal NVARCHAR(50) NULL,
+    nombre NVARCHAR(50) NULL,
+    economico VARCHAR(6) NOT NULL,
+    ingresponsable NVARCHAR(50) NOT NULL,
 
-SET QUOTED_IDENTIFIER ON
-GO
+    CONSTRAINT PK_sucursales
+        PRIMARY KEY CLUSTERED (id),
 
-CREATE TABLE [dbo].[sucursales](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[canal] [nvarchar](50) NULL,
-	[nombre] [nvarchar](50) NULL,
-	[economico] [varchar](6) NOT NULL,
-	[ingresponsable] [nvarchar](50) NOT NULL,
- CONSTRAINT [PK__sucursal__3213E83FBCDF8441] PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
- CONSTRAINT [uq_economico] UNIQUE NONCLUSTERED 
-(
-	[economico] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY]
-GO
+    CONSTRAINT UQ_sucursales_economico
+        UNIQUE (economico),
 
-ALTER TABLE [dbo].[sucursales]  WITH NOCHECK ADD  CONSTRAINT [FK_ingresponsable] FOREIGN KEY([ingresponsable])
-REFERENCES [dbo].[users] ([nickname])
-GO
-
-ALTER TABLE [dbo].[sucursales] CHECK CONSTRAINT [FK_ingresponsable]
+    CONSTRAINT FK_sucursales_users_ingresponsable
+        FOREIGN KEY (ingresponsable)
+        REFERENCES dbo.users (nickname)
+);
 GO
 
 
 -- DATO ESPECIAL
 -- La primera sucursal se usa para representar que no se ha establecido una sucursal 
 
-USE [statusAppsPro]
+USE [CoreSightJR]
 GO
 
 INSERT INTO [dbo].[sucursales]

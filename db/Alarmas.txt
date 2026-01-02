@@ -1,0 +1,21 @@
+-- CREAR TABLA DE ALARMA DE DISPOSITIVOS
+
+USE [CoreSightJRPro];
+GO
+
+CREATE TABLE dbo.alarmas (
+    id INT IDENTITY(1,1) NOT NULL,
+    ip VARCHAR(15) NOT NULL,
+    severidad VARCHAR(10) NOT NULL,  -- ALTA | MEDIA | BAJA
+    mensaje NVARCHAR(MAX) NOT NULL,
+    fecha DATETIME2 NOT NULL 
+        CONSTRAINT DF_alarmas_fecha DEFAULT (SYSDATETIME()),
+
+    CONSTRAINT PK_alarmas
+        PRIMARY KEY CLUSTERED (id),
+
+    CONSTRAINT FK_alarmas_dispositivos_ip
+        FOREIGN KEY (ip)
+        REFERENCES dbo.dispositivos (ip)
+);
+GO

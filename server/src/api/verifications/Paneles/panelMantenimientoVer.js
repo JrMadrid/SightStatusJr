@@ -10,7 +10,7 @@ const SucursalExiste = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los mantenimientos, ', error);
   }
 };
 
@@ -21,7 +21,7 @@ const comprobarFechaEstimada = async (festimada) => {
     const fechaIngresada = new Date(festimada);
     return fechaIngresada > fechaLimite;
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que fecha estimada es mayor a 01/Enero/2024, ', error);
     return false;
   }
 };
@@ -36,11 +36,11 @@ const comprobarFechaRealizada = async (frealizada, id) => {
     let fechaestimada = response.recordset[0].fechaestimada;
     return fechaestimada < frealizada;
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que fecha realizada es mayor que fecha estimada, ', error);
   }
 };
 
-// Verificar que fecha realizada es mayor que fecha estimada
+// Verificar que la fecha ya tenga mantenimiento
 const ConstanciaExiste = async (id) => {
   try {
     const query = 'SELECT constancia FROM mantenimientos WHERE id = @id';
@@ -49,7 +49,7 @@ const ConstanciaExiste = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset[0].constancia !== null;// Ya tiene mantenimiento
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que la fecha ya tenga mantenimiento, ', error);
   }
 };
 
@@ -63,7 +63,7 @@ const comprobarSuMantenimiento = async (id, responsable) => {
     const ingeniero = resultado.recordset[0].ingeniero;
     return responsable.toLowerCase() === ingeniero.toLowerCase(); // Si es su mantenimiento
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que el mantenimiento es de su sucursal - geografia, ', error);
   }
 };
 
@@ -76,7 +76,7 @@ const ecoSucursal = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset[0].economico;
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Saber el economico, ', error);
   }
 };
 
@@ -103,7 +103,7 @@ const comprobarID = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0; // El ID exite
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que ID del dispositivo existe para corrobar ejecución, ', error);
   }
 };
 

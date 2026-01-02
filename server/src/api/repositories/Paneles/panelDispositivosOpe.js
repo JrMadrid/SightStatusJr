@@ -109,19 +109,19 @@ const deleteDispositivo = async ({ id }) => {
     await transaction.begin();
     const request = new sql.Request(transaction);
     request.input('id', sql.Int, id);
-    await request.query('ALTER TABLE info NOCHECK CONSTRAINT FK_info_dispositivos');
+    await request.query('ALTER TABLE alarmas NOCHECK CONSTRAINT FK_alarmas_dispositivos_ip');
     await request.query('DELETE FROM dispositivos WHERE id = @id');
-    await request.query('ALTER TABLE info CHECK CONSTRAINT FK_info_dispositivos');
+    await request.query('ALTER TABLE alarmas CHECK CONSTRAINT FK_alarmas_dispositivos_ip');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Eliminar un dispositivo, ', error);
   }
 };
 

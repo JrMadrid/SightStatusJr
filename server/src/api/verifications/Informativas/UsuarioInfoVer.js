@@ -10,7 +10,7 @@ const UsuarioExiste = async (seleccionado) => {
     const response = await request.query(query);
     return response.recordset.length > 0; // El usuario existe
   } catch (error) {
-    console.error('Error al comprobar el usuario: ', error);
+    console.error('Error: // Verificar si el usuario existe, ', error);
   }
 };
 

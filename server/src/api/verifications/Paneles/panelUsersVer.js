@@ -15,7 +15,7 @@ const NicknameOcupado = async (nickname) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0; // Devuelve `true` si el nickname existe, `false` si no
   } catch (error) {
-    console.error('Error al comprobar el nickname:', error);
+    console.error('Error: // Verificar que el nickname no está ocupado, ', error);
   }
 };
 
@@ -28,7 +28,7 @@ const comprobarID = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0; // Devuelve `true` si el ID existe, `false` si no
   } catch (error) {
-    console.error('Error al comprobar el ID:', error);
+    console.error('Error: // Verificar que ID del usuario existe para corrobar ejecución, ', error);
   }
 };
 
@@ -41,7 +41,7 @@ const nombreResponsable = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset[0].nickname;
   } catch (error) {
-    console.error('Error al conocer el nombre del ing. Responsable por su id', error);
+    console.error('Error: // Conocer el nombre del ing. Responsable por su id, ', error);
   }
 };
 

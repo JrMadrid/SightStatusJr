@@ -10,7 +10,7 @@ const SucursalExiste = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los dispositivos, ', error);
   }
 };
 
@@ -24,7 +24,7 @@ const SucursalPerteneciente = async (economico, responsable) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al comprobar la sucursal: ', error);
+    console.error('Error: // Verificar que la sucursal le pertenezca a ese usuario, ', error);
   }
 };
 

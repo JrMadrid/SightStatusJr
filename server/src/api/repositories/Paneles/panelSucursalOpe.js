@@ -105,19 +105,19 @@ const updateSucursal = async ({ economico, canal, nombre, id, ingresponsable, re
       await request.query(query);
     }
     if (economico) { // Si actualiza el economico debe cambiar en todas las tablas
-      await request.query('ALTER TABLE ubicacion NOCHECK CONSTRAINT FK_ubicacion_sucursal');
-      await request.query('ALTER TABLE dispositivos NOCHECK CONSTRAINT fk_economico');
-      await request.query('ALTER TABLE mantenimientos NOCHECK CONSTRAINT FK_mantenimiento_sucursales');
-      await request.query('ALTER TABLE informes NOCHECK CONSTRAINT FK_informes_sucursales');
+      await request.query('ALTER TABLE ubicacion NOCHECK CONSTRAINT FK_ubicacion_sucursales_economico');
+      await request.query('ALTER TABLE dispositivos NOCHECK CONSTRAINT FK_dispositivos_sucursales_economico');
+      await request.query('ALTER TABLE mantenimientos NOCHECK CONSTRAINT FK_mantenimientos_sucursales_economico');
+      await request.query('ALTER TABLE informes NOCHECK CONSTRAINT FK_informes_sucursales_economico');
       await request.query(query);
       await request.query(`UPDATE ubicacion SET economico = '${economico}' FROM ubicacion WHERE economico = '${numeroE}'`);
       await request.query(`UPDATE dispositivos SET economico = '${economico}' FROM dispositivos WHERE economico = '${numeroE}'`);
       await request.query(`UPDATE mantenimientos SET economico = '${economico}' FROM mantenimientos WHERE economico = '${numeroE}'`);
       await request.query(`UPDATE informes SET economico = '${economico}' FROM informes WHERE economico = '${numeroE}'`);
-      await request.query('ALTER TABLE ubicacion CHECK CONSTRAINT FK_ubicacion_sucursal');
-      await request.query('ALTER TABLE dispositivos CHECK CONSTRAINT fk_economico');
-      await request.query('ALTER TABLE mantenimientos CHECK CONSTRAINT FK_mantenimiento_sucursales');
-      await request.query('ALTER TABLE informes CHECK CONSTRAINT FK_informes_sucursales');
+      await request.query('ALTER TABLE ubicacion CHECK CONSTRAINT FK_ubicacion_sucursales_economico');
+      await request.query('ALTER TABLE dispositivos CHECK CONSTRAINT FK_dispositivos_sucursales_economico');
+      await request.query('ALTER TABLE mantenimientos CHECK CONSTRAINT FK_mantenimientos_sucursales_economico');
+      await request.query('ALTER TABLE informes CHECK CONSTRAINT FK_informes_sucursales_economico');
     };
     await transaction.commit();
 
@@ -143,10 +143,10 @@ const updateSucursal = async ({ economico, canal, nombre, id, ingresponsable, re
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Actualizar una sucursal, ', error);
   }
 };
 
@@ -158,30 +158,30 @@ const deleteSucursal = async ({ id }) => {
     transaction = new sql.Transaction();
     await transaction.begin();
     const request = new sql.Request(transaction);
-    await request.query('ALTER TABLE ubicacion NOCHECK CONSTRAINT FK_ubicacion_sucursal');
-    await request.query('ALTER TABLE dispositivos NOCHECK CONSTRAINT fk_economico');
-    await request.query('ALTER TABLE mantenimientos NOCHECK CONSTRAINT FK_mantenimiento_sucursales');
-    await request.query('ALTER TABLE informes NOCHECK CONSTRAINT FK_informes_sucursales');
+    await request.query('ALTER TABLE ubicacion NOCHECK CONSTRAINT FK_ubicacion_sucursales_economico');
+    await request.query('ALTER TABLE dispositivos NOCHECK CONSTRAINT FK_dispositivos_sucursales_economico');
+    await request.query('ALTER TABLE mantenimientos NOCHECK CONSTRAINT FK_mantenimientos_sucursales_economico');
+    await request.query('ALTER TABLE informes NOCHECK CONSTRAINT FK_informes_sucursales_economico');
     await request.query(`DELETE FROM sucursales WHERE economico = '${numeroE}'`); // Se elimina la sucursal
     await request.query(`DELETE FROM ubicacion WHERE economico = '${numeroE}'`); // Se elimina la ubicacion de la sucursal
     await request.query(`DELETE FROM mantenimientos WHERE economico = '${numeroE}'`); // Se eliminan los mantenimientos de la sucursal
     await request.query(`DELETE FROM informes WHERE economico = '${numeroE}'`); // Se eliminan los informes de la sucursal
     await request.query(`DELETE FROM dispositivos WHERE economico = '${numeroE}' AND (ip LIKE '000.%' OR ip LIKE '001.%')`); // Se eliminan las ips de los dispositivos no validas de la sucursal
     await request.query(`UPDATE dispositivos SET economico = '000000' FROM dispositivos WHERE economico = ${numeroE} AND (ip NOT LIKE '000.%' OR ip NOT LIKE '001.%')`); // Sus dispositivos pasan a sucursal especial "Sin establecer"
-    await request.query('ALTER TABLE ubicacion CHECK CONSTRAINT FK_ubicacion_sucursal');
-    await request.query('ALTER TABLE informes CHECK CONSTRAINT FK_informes_sucursales');
-    await request.query('ALTER TABLE mantenimientos CHECK CONSTRAINT FK_mantenimiento_sucursales');
-    await request.query('ALTER TABLE dispositivos CHECK CONSTRAINT fk_economico');
+    await request.query('ALTER TABLE ubicacion CHECK CONSTRAINT FK_ubicacion_sucursales_economico');
+    await request.query('ALTER TABLE informes CHECK CONSTRAINT FK_informes_sucursales_economico');
+    await request.query('ALTER TABLE mantenimientos CHECK CONSTRAINT FK_mantenimientos_sucursales_economico');
+    await request.query('ALTER TABLE dispositivos CHECK CONSTRAINT FK_dispositivos_sucursales_economico');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Eliminar una sucursal, ', error);
   }
 };
 
@@ -194,7 +194,7 @@ const Neconomico = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset[0].economico;
   } catch (error) {
-    console.error('Error al conseguir el economico: ', error);
+    console.error('Error: // Conseguir el economico para transacción, ', error);
   }
 };
 

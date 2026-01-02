@@ -1,64 +1,43 @@
 -- CREAR TABLA DE PERSONAL
 
-USE [statusAppsPro]
+USE [CoreSightJRPro];
 GO
 
-/****** Object:  Table [dbo].[personal] ******/
-SET ANSI_NULLS ON
-GO
+CREATE TABLE dbo.personal (
+    id INT IDENTITY(1,1) NOT NULL,
+    nickname NVARCHAR(50) NOT NULL,
+    cedula CHAR(15) NOT NULL 
+        CONSTRAINT DF_personal_cedula DEFAULT ('0000-0000-00000'),
+    localidad NVARCHAR(100) NULL,
+    foto VARBINARY(MAX) NULL,
+    fecha_nacimiento DATE NULL,
+    sexo CHAR(1) NULL,
+    fecha_contratacion DATE NOT NULL 
+        CONSTRAINT DF_personal_fecha_contratacion DEFAULT (GETDATE()),
+    descripcion NVARCHAR(MAX) NULL,
+    grado_academico NVARCHAR(100) NULL,
+    puesto NVARCHAR(100) NOT NULL 
+        CONSTRAINT DF_personal_puesto DEFAULT ('SIN PUESTO'),
+    nombre NVARCHAR(200) NULL,
+    telefono VARCHAR(20) NULL,
 
-SET QUOTED_IDENTIFIER ON
-GO
+    CONSTRAINT PK_personal
+        PRIMARY KEY CLUSTERED (id),
 
-CREATE TABLE [dbo].[personal](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[nickname] [nvarchar](50) NOT NULL,
-	[cedula] [char](15) NOT NULL,
-	[localidad] [nvarchar](100) NULL,
-	[foto] [varbinary](max) NULL,
-	[fecha_nacimiento] [date] NULL,
-	[sexo] [char](1) NULL,
-	[fecha_contratacion] [date] NOT NULL,
-	[descripcion] [nvarchar](max) NULL,
-	[grado_academico] [nvarchar](100) NULL,
-	[puesto] [nvarchar](100) NOT NULL,
-	[nombre] [nvarchar](200) NULL,
-	[telefono] [varchar](20) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
-UNIQUE NONCLUSTERED 
-(
-	[nickname] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
+    CONSTRAINT UQ_personal_nickname
+        UNIQUE (nickname),
 
-ALTER TABLE [dbo].[personal] ADD  DEFAULT ('0000-0000-00000') FOR [cedula]
-GO
-
-ALTER TABLE [dbo].[personal] ADD  DEFAULT (getdate()) FOR [fecha_contratacion]
-GO
-
-ALTER TABLE [dbo].[personal] ADD  DEFAULT ('SIN PUESTO') FOR [puesto]
-GO
-
-ALTER TABLE [dbo].[personal] ADD  DEFAULT ((1)) FOR [activo]
-GO
-
-ALTER TABLE [dbo].[personal]  WITH NOCHECK ADD  CONSTRAINT [FK_PersonalDetalles_Usuarios] FOREIGN KEY([nickname])
-REFERENCES [dbo].[users] ([nickname])
-ON DELETE CASCADE
-GO
-
-ALTER TABLE [dbo].[personal] CHECK CONSTRAINT [FK_PersonalDetalles_Usuarios]
+    CONSTRAINT FK_personal_users_nickname
+        FOREIGN KEY (nickname)
+        REFERENCES dbo.users (nickname)
+        ON DELETE CASCADE
+);
 GO
 
 
 -- DATO ESPECIAL
 -- El primer elemento sera el único Super Administrador
-USE [statusAppsPro]
+USE [CoreSightJR]
 GO
 
 INSERT INTO [dbo].[personal]

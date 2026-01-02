@@ -10,7 +10,7 @@ const SucursalExiste = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los informes, ', error);
   }
 };
 
@@ -24,7 +24,7 @@ const SucursalPerteneciente = async (economico, ingeniero) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error: // Verificar que la sucursal le pertenezca a ese usuario, ', error);
   }
 };
 
@@ -37,7 +37,7 @@ const comprobarID = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que ID del informe existe para corrobar ejecución, ', error);
   }
 };
 

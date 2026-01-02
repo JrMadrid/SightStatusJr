@@ -10,7 +10,7 @@ const SucursalExiste = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0; // La sucursal existe
   } catch (error) {
-    console.error('Error al comprobar la sucursal:', error);
+    console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los dispositivos, ', error);
   }
 };
 
@@ -23,7 +23,7 @@ const IpOcupada = async (ip) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;  // La ip esta ocupada
   } catch (error) {
-    console.error('Error al comprobar la IP:', error);
+    console.error('Error: // Verificar que la ip del dispositivo no esta ocupada, ', error);
   }
 };
 
@@ -36,7 +36,7 @@ const comprobarID = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0; // El ID exite
   } catch (error) {
-    console.error('Error al ejecutar:', error);
+    console.error('Error: // Verificar que ID del dispositivo existe para corrobar ejecución, ', error);
   }
 };
 

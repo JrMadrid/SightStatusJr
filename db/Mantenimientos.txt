@@ -1,40 +1,25 @@
 -- CREAR TABLA DE MANTENIMIENTOS 
 
-USE [statusAppsPro]
+USE [CoreSightJRPro];
 GO
 
-/****** Object:  Table [dbo].[mantenimientos] ******/
-SET ANSI_NULLS ON
-GO
+CREATE TABLE dbo.mantenimientos (
+    id INT IDENTITY(1,1) NOT NULL,
+    fechaestimada DATE NOT NULL 
+        CONSTRAINT DF_mantenimientos_fechaestimada DEFAULT ('2000-01-01'),
+    fecharealizada DATE NULL,
+    economico VARCHAR(6) NOT NULL 
+        CONSTRAINT DF_mantenimientos_economico DEFAULT ('000000'),
+    constancia VARBINARY(MAX) NULL,
+    descripcion NVARCHAR(MAX) NULL,
 
-SET QUOTED_IDENTIFIER ON
-GO
+    CONSTRAINT PK_mantenimientos
+        PRIMARY KEY CLUSTERED (id),
 
-CREATE TABLE [dbo].[mantenimientos](
-	[id] [int] IDENTITY(1,1) NOT NULL,
-	[fechaestimada] [date] NOT NULL,
-	[fecharealizada] [date] NULL,
-	[economico] [varchar](6) NOT NULL,
-	[constancia] [varbinary](max) NULL,
-	[descripcion] [nvarchar](max) NULL,
-PRIMARY KEY CLUSTERED 
-(
-	[id] ASC
-)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-
-ALTER TABLE [dbo].[mantenimientos] ADD  CONSTRAINT [DF_fechaestimada]  DEFAULT ('2000-01-01') FOR [fechaestimada]
-GO
-
-ALTER TABLE [dbo].[mantenimientos] ADD  DEFAULT ('000000') FOR [economico]
-GO
-
-ALTER TABLE [dbo].[mantenimientos]  WITH NOCHECK ADD  CONSTRAINT [FK_mantenimientos_sucursales] FOREIGN KEY([economico])
-REFERENCES [dbo].[sucursales] ([economico])
-GO
-
-ALTER TABLE [dbo].[mantenimientos] CHECK CONSTRAINT [FK_mantenimientos_sucursales]
+    CONSTRAINT FK_mantenimientos_sucursales_economico
+        FOREIGN KEY (economico)
+        REFERENCES dbo.sucursales (economico)
+);
 GO
 
 

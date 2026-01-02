@@ -30,10 +30,10 @@ const postUser = async ({ nickname, psw, tipo, isAdmin, isActivo }) => {
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Agregar un nuevo usuario, ', error);
   }
 };
 
@@ -77,25 +77,25 @@ const updateUser = async ({ nickname, psw, id, tipo, isActivo }) => {
     requestActualizar.input('tipo', sql.VarChar, tipo);
     requestActualizar.input('isActivo', sql.Bit, isActivo);
 
-    await requestActualizar.query('ALTER TABLE sucursales NOCHECK CONSTRAINT FK_ingresponsable');
-    await requestActualizar.query('ALTER TABLE personal NOCHECK CONSTRAINT FK_PersonalDetalles_Usuarios');
+    await requestActualizar.query('ALTER TABLE sucursales NOCHECK CONSTRAINT FK_sucursales_users_ingresponsable');
+    await requestActualizar.query('ALTER TABLE personal NOCHECK CONSTRAINT FK_personal_users_nickname');
     await requestActualizar.query(query);
     if (nickname) {
       await requestActualizar.query(`UPDATE sucursales SET ingresponsable = @nickname FROM sucursales WHERE ingresponsable = '${nick}'`);
       await requestActualizar.query(`UPDATE personal SET nickname = @nickname FROM personal WHERE nickname = '${nick}'`);
     };
-    await requestActualizar.query('ALTER TABLE personal CHECK CONSTRAINT FK_PersonalDetalles_Usuarios');
-    await requestActualizar.query('ALTER TABLE sucursales CHECK CONSTRAINT FK_ingresponsable');
+    await requestActualizar.query('ALTER TABLE personal CHECK CONSTRAINT FK_personal_users_nickname');
+    await requestActualizar.query('ALTER TABLE sucursales CHECK CONSTRAINT FK_sucursales_users_ingresponsable');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Actualizar un usuario, ', error);
   }
 };
 
@@ -110,23 +110,23 @@ const deleteUser = async ({ id }, ingResponsable, Super) => {
     const query = 'DELETE FROM users WHERE id = @id';
     requestEliminar.input('ingResponsable', sql.VarChar, ingResponsable);
 
-    await requestEliminar.query('ALTER TABLE sucursales NOCHECK CONSTRAINT FK_ingresponsable');
-    await requestEliminar.query('ALTER TABLE personal NOCHECK CONSTRAINT FK_PersonalDetalles_Usuarios');
+    await requestEliminar.query('ALTER TABLE sucursales NOCHECK CONSTRAINT FK_sucursales_users_ingresponsable');
+    await requestEliminar.query('ALTER TABLE personal NOCHECK CONSTRAINT FK_personal_users_nickname');
     await requestEliminar.query(`UPDATE sucursales SET ingresponsable = '${Super}' FROM sucursales WHERE ingresponsable = @ingResponsable`);
     await requestEliminar.query(`DELETE FROM personal WHERE nickname = @ingResponsable`);
     await requestEliminar.query(query);
-    await requestEliminar.query('ALTER TABLE personal CHECK CONSTRAINT FK_PersonalDetalles_Usuarios');
-    await requestEliminar.query('ALTER TABLE sucursales CHECK CONSTRAINT FK_ingresponsable');
+    await requestEliminar.query('ALTER TABLE personal CHECK CONSTRAINT FK_personal_users_nickname');
+    await requestEliminar.query('ALTER TABLE sucursales CHECK CONSTRAINT FK_sucursales_users_ingresponsable');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
       try {
         await transaction.rollback();
       } catch (rollbackError) {
-        console.error('Error al revertir la transacción:', rollbackError);
+        console.error('Error al revertir la transacción: ', rollbackError);
       }
     }
-    console.error('Error: ', error);
+    console.error('Error: // Eliminar un usuario, ', error);
   }
 };
 

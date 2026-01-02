@@ -15,7 +15,7 @@ const EconomicoOcupado = async (economico) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al comprobar el economico: ', error);
+    console.error('Error: // Verificar que el economico no esta ocupado, ', error);
   }
 };
 
@@ -28,7 +28,7 @@ const comprobarID = async (id) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al ejecutar: ', error);
+    console.error('Error: // Verificar que ID de la sucursal existe para corrobar ejecución, ', error);
   }
 };
 
@@ -41,7 +41,7 @@ const IngResponsable = async (ingresponsable) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;
   } catch (error) {
-    console.error('Error al conseguir el usuario: ', error);
+    console.error('Error: // Verificar que existe el ingresponsable, ', error);
   }
 };
 

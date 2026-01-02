@@ -24,7 +24,7 @@ module.exports = {
       DEV: false,
       MOCKS: false,
       DB_HOST: '192.168.100.17',
-      DB_DATABASE: 'CoreSightJrDev',
+      DB_DATABASE: 'CoreSightJrPro',
       DB_USER: 'sa',
       DB_PASSWORD: 'superadmin'
     }

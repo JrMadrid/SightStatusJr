@@ -10,7 +10,7 @@ const dipositivoExiste = async (dispositivo) => {
     const resultado = await request.query(query);
     return resultado.recordset.length > 0;  // El dispositivo existe
   } catch (error) {
-    console.error('Error al comprobar el dispositivo: ', error);
+    console.error('Error: // Verificar que existe el dipositivo, ', error);
   }
 };
 
