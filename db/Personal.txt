@@ -1,6 +1,6 @@
 -- CREAR TABLA DE PERSONAL
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.personal (

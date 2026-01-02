@@ -1,6 +1,6 @@
 -- CREAR TABLA DE INFORMES
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.informes (

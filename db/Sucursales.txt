@@ -1,6 +1,6 @@
 -- CREAR TABLA DE SUCURSALES
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.sucursales (

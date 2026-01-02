@@ -1,6 +1,6 @@
 -- CREAR TABLA DE UBICACIÓN DE LAS SUCURSALES
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.ubicacion (

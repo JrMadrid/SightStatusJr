@@ -1,6 +1,6 @@
 -- CREAR TABLA DE MANTENIMIENTOS 
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.mantenimientos (

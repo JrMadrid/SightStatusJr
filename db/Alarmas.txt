@@ -1,6 +1,6 @@
 -- CREAR TABLA DE ALARMA DE DISPOSITIVOS
 
-USE [CoreSightJRPro];
+USE [CoreSightJrPro];
 GO
 
 CREATE TABLE dbo.alarmas (
