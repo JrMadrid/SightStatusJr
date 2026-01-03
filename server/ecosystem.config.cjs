@@ -2,34 +2,22 @@ module.exports = {
   apps: [{
     name: 'back',
     script: 'src/index.js',
-    env: { // desarrollo
+    // MODOS
+    env: { // DESARROLLO
       watch: true,
-      DEBUG: 'app:*',
       NODE_ENV: 'development',
-      APP_HOST: 'localhost',
-      APP_PORT: 88,
+      DEBUG: 'app:*',
       DEV: true,
       MOCKS: true,
-      DB_HOST: '192.168.100.17',
-      DB_DATABASE: 'CoreSightJrDev',
-      DB_USER: 'sa',
-      DB_PASSWORD: 'superadmin'
     },
-    env_production: { // producción
+    env_production: { // PRODUCCIÓN
       watch: false,
-      DEBUG: '',
       NODE_ENV: 'production',
-      APP_HOST: '192.168.100.17',
-      APP_PORT: 88,
+      DEBUG: '',
       DEV: false,
-      MOCKS: false,
-      DB_HOST: '192.168.100.17',
-      DB_DATABASE: 'CoreSightJrPro',
-      DB_USER: 'sa',
-      DB_PASSWORD: 'superadmin'
+      MOCKS: false
     }
   }],
-
   deploy: {
     production: {
       user: 'SSH_USERNAME',

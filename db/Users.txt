@@ -21,16 +21,13 @@ GO
 
 
 -- DATO ESPECIAL
-USE [CoreSightJR]
-GO
-
 INSERT INTO [dbo].[users]
            ([nickname]
            ,[psw]
            ,[isAdmin]
            ,[tipo])
      VALUES
-           ('lider'
+           ('Lider'
            ,'lider'
            ,1
            ,'Super Administrador')

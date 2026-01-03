@@ -37,13 +37,10 @@ GO
 
 -- DATO ESPECIAL
 -- El primer elemento sera el único Super Administrador
-USE [CoreSightJR]
-GO
-
 INSERT INTO [dbo].[personal]
            ([nickname])
      VALUES
-           ('Jefe')
+           ('Lider')
 GO
 
 

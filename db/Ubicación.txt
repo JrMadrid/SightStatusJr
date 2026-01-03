@@ -29,9 +29,6 @@ GO
 -- DATO ESPECIAL
 -- La primera sucursal se usa para representar que no se ha establecido una sucursal 
 
-USE [CoreSightJR]
-GO
-
 INSERT INTO [dbo].[ubicacion]
            ([economico]
            ,[descripcion])

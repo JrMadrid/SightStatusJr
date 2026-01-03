@@ -26,9 +26,6 @@ GO
 -- DATO ESPECIAL
 -- La primera sucursal se usa para representar que no se ha establecido una sucursal 
 
-USE [CoreSightJR]
-GO
-
 INSERT INTO [dbo].[sucursales]
            ([canal]
            ,[nombre]
@@ -38,7 +35,7 @@ INSERT INTO [dbo].[sucursales]
            ('--'
            ,'Sin establecer'
            ,'000000'
-           ,'Jefe')
+           ,'Lider')
 GO
 
 
