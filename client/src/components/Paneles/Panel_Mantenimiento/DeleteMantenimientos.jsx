@@ -1,27 +1,20 @@
 /* PANEL DE ADMINISTRACIÓN DE MATENIMIENTOS -- ELIMINAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const DeleteMantenimientos = () => {
-  const [loading, setLoading] = useState(false);
+  const { remove: deleteMantenimiento, loading, message } = useCrudApi('/api/panel/mantenimientos');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   // Eliminar un mantenimiento
   const eliminar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const response = await axios.delete(`/api/panel/mantenimientos/eliminar/${id}`);
-      setMessage(response.data.message || 'Mantenimiento eliminado exitosamente');
+      await deleteMantenimiento(id)
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al eliminar el mantenimiento');
-      console.error("Error: // Error al eliminar mantenimiento");
-    } finally {
-      setLoading(false);
+      console.error("Error: // Error al eliminar mantenimiento", error);
     }
   };
 

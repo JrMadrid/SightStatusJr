@@ -1,9 +1,8 @@
 /* PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS -- ACTUALIZAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const UpdateDispositivo = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     ip: '',
@@ -12,43 +11,26 @@ const UpdateDispositivo = () => {
     descripcion: '',
     general: '',
   });
+  const { update: updateDispositivo, loading, message } = useCrudApi('/api/panel/dispositivos');
   const [id, setId] = useState("");
-  const [message, setMessage] = useState('');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Actualizar un dispositivo
   const Actualizar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      // Crear objeto limpio sin mutar el estado
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/dispositivos/actualizar/${id}`;
-      const response = await axios.put(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      window.location.reload();
-      setMessage(response.data.message || 'Dispositivo actualizado exitosamente');
+      await updateDispositivo(id, formData);
+      window.location.reload()
     } catch (error) {
       console.error(' Error: // Actualizar un dispositivo, ', error);
-      setMessage(error.response?.data?.message || 'Error al actualizar el dispositivo');
-    } finally {
-      setLoading(false);
     }
   };
 

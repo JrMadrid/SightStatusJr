@@ -1,6 +1,7 @@
 /* PAGINA DE TABLA DE DISPOSITIVOS Y DE PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS */
 import { useContext } from "react";
 import { UserContext } from '@context/UserContext.jsx';
+import { access } from '@utils/permissions.js';
 import SelectDispositivos from '@paneles/Panel_Dispositivos/SelectDispositivos.jsx';
 import DispositivosPanel from '@paneles/Panel_Dispositivos/DispositivoPanel.jsx';
 import '@cssp/section.css';
@@ -10,12 +11,12 @@ const PanDispositivos = () => {
   return (
     <>
       <div className='display'>
-        {user && (user.id === 1 || user.id === 2 || user.id === 3 || user.id === 4) && ( // TODOS
+        {user && access(user, 'dispositivos', 'view') && (
           <div className='section tabla'>
             <SelectDispositivos />
           </div>
         )}
-        {user && (user.id === 1 || user.id === 2) && ( // SUPER ADMINISTRADOR Y ADMINISTRADOR
+        {user && access(user, 'dispositivos', 'edit') && (
           <div className='section panel'>
             <DispositivosPanel />
           </div>

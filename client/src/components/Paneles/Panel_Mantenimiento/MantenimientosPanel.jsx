@@ -1,28 +1,34 @@
-/* COMPONENTE DE PANEL DE ADMINISTRACIÓN DE MANTENIMIENTOS */
-import { useContext } from 'react';
-import { UserContext } from '@context/UserContext';
+/* COMPONENTE DE PANEL DE ADMINISTRACIÓN DE MANTENIMIENTOS Y CONSTANCIAS */
 import PostMantenimientos from './PostMantenimientos';
 import UpdateMantenimientos from './UpdateMantenimiento';
 import DeleteMantenimientos from './DeleteMantenimientos';
+import PostConstancia from './PostConstancia';
 import '@css/panel.css';
 
-const MantenimientosPanel = () => {
-  const user = useContext(UserContext);
-
+export const MantenimientosPanel = () => {
   return (
     <>
-      {user && (user.id === 1 || user.id === 2) && ( // SUPER ADMINISTRADOR O ADMINISTRADOR
-        <div className='cajamadre'>
-          <h3>Administración</h3>
-          <div className='cajahija'>
-            <PostMantenimientos />
-            <UpdateMantenimientos />
-            <DeleteMantenimientos />
-          </div>
+      <div className='cajamadre'>
+        <h3>Administración</h3>
+        <div className='cajahija'>
+          <PostMantenimientos />
+          <UpdateMantenimientos />
+          <DeleteMantenimientos />
         </div>
-      )}
+      </div>
     </>
   );
 };
 
-export default MantenimientosPanel;
+export const ConstanciaPanel = () => {
+  return (
+    <>
+      <div className='cajamadre'>
+        <h3>Mantenimiento</h3>
+        <div className='cajahija'>
+          <PostConstancia />
+        </div>
+      </div>
+    </>
+  );
+};

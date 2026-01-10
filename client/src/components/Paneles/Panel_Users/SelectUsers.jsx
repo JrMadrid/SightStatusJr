@@ -1,28 +1,28 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- VISUALIZAR */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import useCrudApi from '@hooks/useCrudApi';
+import usePageTitle from '@hooks/usePageTitle.js';
 import { Paginador } from '@elementos/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectUsers = () => {
-  usePageTitle("Usuarios");
+  usePageTitle('Usuarios');
   const navigate = useNavigate();
+  const { read: readUsers, message } = useCrudApi('/api/panel/users');
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   // Pedir los datos de los usuarios
   useEffect(() => {
-    const url = `/api/panel/users`;
     const usuarios = async () => {
       try {
-        const datos = await fetchData(url);
+        const datos = await readUsers();
         setData(datos);
         setCount(datos.length);
-      } catch (error) {
-        console.error('Error: // Pedir los datos de los usuarios, ', error);
-        toast.error(error.message || 'Error con los datos');
+      } catch (err) {
+        console.error('Error: // Pedir los datos de los usuarios', err);
+        toast.error(message || 'Error al cargar los usuarios');
       }
     };
 

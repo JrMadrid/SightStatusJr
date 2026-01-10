@@ -1,51 +1,33 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- CONTROLAR */
-import axios from '@api/axiosConfig';
-import toast from 'react-hot-toast';
+import useControlUsers from '@hooks/useControlUsers';
 
 const ControlUsers = () => {
+  const { ejecutar } = useControlUsers();
 
   // Cerrar la sesión de todos los usuarios
-  const desconectar = async () => {
-    let url = `/api/panel/users/logoutall`;
-    try {
-      const response = await axios.get(url);
-      if (response.status === 200) {
-        toast.success("Se cerraron todas las sesiones");
-      }
-    } catch (error) {
-      console.error('Error: // Cerrar la sesión de todos los usuarios, ', error);
-      toast.error(error.mesage || 'Error al cerrar sesiones');
-    }
+  const desconectar = () => {
+    ejecutar(
+      '/api/panel/users/logoutall',
+      'Se cerraron todas las sesiones'
+    );
   };
 
   // Desactivar el acceso de todos los usuarios
-  const desactivar = async () => {
-    let url = `/api/panel/users/deactivateall`;
-    try {
-      const response = await axios.get(url);
-      if (response.status === 200) {
-        toast.success("Se desactivaron todos los usuarios");
-      }
-      window.location.reload();
-    } catch (error) {
-      console.error('Error: // Desactivar el acceso de todos los usuarios, ', error);
-      toast.error(error.mesage || 'Error al desactivar accesos');
-    }
+  const desactivar = () => {
+    ejecutar(
+      '/api/panel/users/deactivateall',
+      'Se desactivaron todos los usuarios',
+      true
+    );
   };
 
   // Activar el acceso de todos los usuarios
-  const activar = async () => {
-    let url = `/api/panel/users/activateall`;
-    try {
-      const response = await axios.get(url);
-      if (response.status === 200) {
-        toast.success("Se activaron todos los usuarios");
-      }
-      window.location.reload();
-    } catch (error) {
-      console.error('Error: // Activar el acceso de todos los usuarios, ', error);
-      toast.error(error.mesage || 'Error al activar accesos');
-    }
+  const activar = () => {
+    ejecutar(
+      '/api/panel/users/activateall',
+      'Se activaron todos los usuarios',
+      true
+    );
   };
 
   return (

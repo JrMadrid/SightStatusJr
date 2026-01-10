@@ -2,28 +2,28 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import jsPDF from 'jspdf';
-import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import useCrudApi from '@hooks/useCrudApi';
+import usePageTitle from '@hooks/usePageTitle.js';
 import { Paginador } from '@elementos/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectMantenimientos = () => {
   usePageTitle("Mantenimientos");
   const navigate = useNavigate();
+  const { read: readMantenimientos, message } = useCrudApi('/api/panel/mantenimientos');
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   // Pedir los datos de los mantenimientos
   useEffect(() => {
-    const url = `/api/panel/mantenimientos`;
     const mantenimientos = async () => {
       try {
-        const datos = await fetchData(url);
+        const datos = await readMantenimientos();
         setData(datos);
         setCount(datos.length)
       } catch (error) {
         console.error('Error: // Pedir los datos de los mantenimientos, ', error);
-        toast.error(error.message || 'Error con los dataos')
+        toast.error(message || 'Error con los dataos')
       }
     };
 

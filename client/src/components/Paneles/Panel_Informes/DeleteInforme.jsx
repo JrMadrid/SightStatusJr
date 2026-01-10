@@ -1,28 +1,20 @@
 /* PANEL DE ADMINISTRACIÓN DE INFORMES -- ELIMINAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const DeleteInforme = () => {
-  const [loading, setLoading] = useState(false);
+  const { remove: deleteInforme, loading, message } = useCrudApi('/api/panel/informes');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   // Eliminar un informe
   const eliminar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const url = `/api/panel/informes/eliminar/${id}`;
-      const response = await axios.delete(url);
-      setMessage(response.data.message || 'Informe eliminado exitosamente');
+      await deleteInforme(id);
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al eliminar el informe');
       console.error('Error: // Eliminar un informe, ', error);
-    } finally {
-      setLoading(false);
     }
   };
 

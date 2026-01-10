@@ -1,9 +1,8 @@
 /* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- ACTUALIZAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const UpdateSucursales = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     canal: '',
     nombre: '',
@@ -11,43 +10,26 @@ const UpdateSucursales = () => {
     ingresponsable: '',
     rellenar: ''
   });
+  const { update: updateSucursal, loading, message } = useCrudApi('/api/panel/sucursales');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   const cambio = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    setFormData(prevFormData => ({
+      ...prevFormData,
+      [name]: type === 'radio' ? value : type === 'checkbox' ? checked : value
+    }));
   };
-
 
   // Actualizar una sucursal
   const actualizar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/sucursales/actualizar/${id}`;
-      const response = await axios.put(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Sucursal actualizada exitosamente');
+      await updateSucursal(id, formData);
       window.location.reload();
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al actualizar la sucursal');
-      console.error('Error // Actualizar una sucursal, ', error);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error('Error: // Actualizar una sucursal, ', err);
     }
   };
 

@@ -1,18 +1,17 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- ACTUALIZAR */
 import { useState } from 'react';
+import useCrudApi from '@hooks/useCrudApi';
 import { FaUser } from 'react-icons/fa';
-import axios from '@api/axiosConfig';
 
 const UpdateUsers = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nickname: '',
     psw: '',
     tipo: '',
     activo: ''
   });
+  const { update: updateUser, loading, message } = useCrudApi('/api/panel/users');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   const cambio = (e) => {
     const { name, value, type, checked } = e.target;
@@ -25,31 +24,12 @@ const UpdateUsers = () => {
   // Actualizar un usuario
   const actualizar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      let cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/users/actualizar/${id}`;
-      const response = await axios.put(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Usuario actualizado exitosamente');
+      await updateUser(id, formData);
       window.location.reload();
-    } catch (error) {
-      console.error('Error: // Actualizar un usuario, ', error);
-      setMessage(error.response?.data?.message || 'Error al actualizar el usuario');
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error('Error: // Actualizar un usuario, ', err);
     }
   };
 

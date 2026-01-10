@@ -1,23 +1,23 @@
 /* PANEL DE ADMINISTRACIÓN DE MANUALES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import useCrudApi from '@hooks/useCrudApi';
+import usePageTitle from '@hooks/usePageTitle.js';
 import { Paginador } from '@elementos/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectManuales = () => {
   usePageTitle("Manuales");
   const navigate = useNavigate();
+  const { read: readManuales, message } = useCrudApi('/api/panel/manuales');
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   // Pedir los datos de los manuales
   useEffect(() => {
-    const url = `/api/panel/manuales`;
     const manuales = async () => {
       try {
-        const datos = await fetchData(url);
+        const datos = await readManuales();
         setData(datos);
         setCount(datos.length);
       } catch (error) {

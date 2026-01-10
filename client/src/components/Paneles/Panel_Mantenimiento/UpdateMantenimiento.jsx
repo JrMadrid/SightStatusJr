@@ -1,49 +1,32 @@
 /* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- ACTUALIZAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const UpdateMantenimientos = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     festimada: '',
   });
+  const { update: updateMantenimiento, loading, message } = useCrudApi('/api/panel/mantenimientos');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Actualizar un mantenimiento
   const Actualizar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/mantenimientos/actualizar/${id}`;
-      const response = await axios.put(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Mantenimiento actualizado exitosamente');
+      await updateMantenimiento(id, formData);
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al actualizar el mantenimiento');
       console.error("Error: // Actualizar un mantenimiento, ");
-    } finally {
-      setLoading(false);
     }
   };
 

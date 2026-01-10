@@ -60,7 +60,7 @@ const PostConstancia = () => {
       DatosParaEnviar.append('frealizada', cleanedData.frealizada);
       DatosParaEnviar.append('descripcion', cleanedData.descripcion);
       DatosParaEnviar.append('id', cleanedData.id);
-      const url = `/api/panel/mantenimientos/constancia/agregar`;
+      const url = `/api/panel/mantenimientos/constancia`;
       const response = await axios.post(url,
         DatosParaEnviar,
         { headers: { 'Content-Type': 'multipart/form-data' } });
@@ -110,3 +110,4 @@ const PostConstancia = () => {
 };
 
 export default PostConstancia;
+

@@ -1,28 +1,20 @@
 /* PANEL DE ADMINISTRACIÓN DE MANUALES -- ELIMINAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const DeleteManuales = () => {
-  const [loading, setLoading] = useState(false);
+  const { remove: deleteManual, loading, message } = useCrudApi('/api/panel/manuales');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   // Eliminar un manual
   const eliminar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const url = `/api/panel/manuales/eliminar/${id}`;
-      const response = await axios.delete(url);
-      setMessage(response.data.message || 'Manual eliminado exitosamente');
+      await deleteManual(id);
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al eliminar el manual');
       console.error('Error: // Eliminar un manual, ', error);
-    } finally {
-      setLoading(false);
     }
   };
 

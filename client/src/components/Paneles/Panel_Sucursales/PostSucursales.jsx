@@ -1,9 +1,8 @@
 /* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- CREAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const PostSucursales = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     canal: '',
     nombre: '',
@@ -11,41 +10,25 @@ const PostSucursales = () => {
     ingresponsable: '',
     rellenar: 'no'
   });
-  const [message, setMessage] = useState('');
+  const { create: createSucursal, loading, message } = useCrudApi('/api/panel/sucursales');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Agregar una nueva sucursal
   const Agregar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/sucursales/agregar`;
-      const response = await axios.post(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Sucursal agregado exitosamente');
-      window.location.reload(); // Recargar la página para ver la nueva sucursal
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al agregar la sucursal');
-      console.error('Error // Agregar una nueva sucursal, ', error);
-    } finally {
-      setLoading(false);
+      await createSucursal(formData);
+      window.location.reload()
+    } catch (err) {
+      console.error('Error: // Agregar una nueva sucursal, ', err);
     }
   };
 

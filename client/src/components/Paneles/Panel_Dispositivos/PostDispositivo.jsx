@@ -1,51 +1,34 @@
 /* PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS -- CREAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const PostDispositivo = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     ip: '',
     economico: '',
     nombre: '',
     descripcion: ''
   });
-  const [message, setMessage] = useState('');
+  const { create: createDispositivo, loading, message } = useCrudApi('/api/panel/dispositivos');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
+
 
   // Agregar un nuevo dispositivo
   const Agregar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      // Crear objeto limpio sin mutar el estado
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if ((key === 'descripcion' || key === 'general') && typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/dispositivos/agregar`;
-      const response = await axios.post(url,
-        cleanedData,
-        { headers: { 'Content-Type': 'application/json' } });
-      setMessage(response.data.message || 'Dispositivo agregado exitosamente');
+      await createDispositivo(formData);
       window.location.reload();
     } catch (error) {
       console.error('Error: // Agregar un nuevo dispositivo, ', error);
-      setMessage(error.response?.data?.message || 'Error al agregar el dispositivo');
-    } finally {
-      setLoading(false);
     }
   };
 

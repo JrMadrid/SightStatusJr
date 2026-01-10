@@ -5,8 +5,8 @@ import { controllers as CN } from '../../controllers/Paneles/panelInformeCon.js'
 const panelInformeRou = express.Router();
 
 panelInformeRou.get('/informes', CN.getInformes); // Pedir los datos de los informes -- /panel/informes
-panelInformeRou.post('/informes/agregar', subir.PDF.single('informe'), CN.postInforme); // Agregar un nuevo informe -- /panel/informes/agregar
-panelInformeRou.delete('/informes/eliminar/:id', ADMIN, CN.deleteInforme); // Eliminar un informe -- /panel/informes/eliminar/:id
+panelInformeRou.post('/informes', subir.PDF.single('informe'), CN.postInforme); // Agregar un nuevo informe -- /panel/informes
+panelInformeRou.delete('/informes/:id', ADMIN, CN.deleteInforme); // Eliminar un informe -- /panel/informes/:id
 panelInformeRou.get('/informe/:id', CN.Informe); // Pedir el informe en formato PDF -- /panel/informe/:id
 
 export default panelInformeRou;

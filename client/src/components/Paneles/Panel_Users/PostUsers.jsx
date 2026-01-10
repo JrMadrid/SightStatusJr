@@ -1,62 +1,34 @@
 /* PANEL DE ADMINISTRACIÓN DE USUARIOS -- CREAR */
 import { useState } from 'react';
+import useCrudApi from '@hooks/useCrudApi';
 import { FaUser } from 'react-icons/fa';
-import axios from '@api/axiosConfig';
 
 const PostUsers = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nickname: '',
     psw: '',
     tipo: 'Geografia',
     activo: 'si'
   });
-  const [message, setMessage] = useState('');
+  const { create: createUser, loading, message } = useCrudApi('/api/panel/users');
 
   const cambio = (e) => {
-    const { name, value, type, checked } = e.target;
-    if (type === 'checkbox') {
-
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        [name]: checked ? 1 : 0
-      }));
-    } else {
-      setFormData(prevFormData => ({
-        ...prevFormData,
-        [name]: value
-      }));
-    }
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Agregar un nuevo usuario
   const Agregar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/users/agregar`;
-      const response = await axios.post(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Usuario agregado exitosamente');
-      window.location.reload();
-    } catch (error) {
-      console.error('Error: // Agregar un nuevo usuario, ', error);
-      setMessage(error.response?.data?.message || 'Error al agregar el usuario');
-    } finally {
-      setLoading(false);
+      await createUser(formData);
+      window.location.reload()
+    } catch (err) {
+      console.error('Error: // Agregar un nuevo usuario, ', err);
     }
   };
 

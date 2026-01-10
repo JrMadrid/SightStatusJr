@@ -1,48 +1,31 @@
 /* PANEL DE ADMINISTRACIÓN DE MANTENIMIENTOS -- CREAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const PostMantenimientos = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     economico: '',
     festimada: '',
   });
-  const [message, setMessage] = useState('');
+  const { create: createMantenimiento, loading, message } = useCrudApi('/api/panel/mantenimientos');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Agregar un nuevo mantenimiento
   const Agregar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/mantenimientos/agregar`;
-      const response = await axios.post(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Mantenimiento agregado exitosamente');
+      await createMantenimiento(formData);
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al agregar el mantenimiento');
       console.error("Error: // Agregar un nuevo mantenimiento, ");
-    } finally {
-      setLoading(false);
     }
   };
 

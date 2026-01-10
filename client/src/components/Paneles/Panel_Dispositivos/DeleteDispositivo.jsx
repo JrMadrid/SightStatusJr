@@ -1,28 +1,20 @@
 /* PANEL DE ADMINISTRACIÓN DE DISPOSITIVOS -- ELIMINAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const DeleteDispositivo = () => {
-  const [loading, setLoading] = useState(false);
+  const { remove: deleteDispositivo, loading, message } = useCrudApi('/api/panel/dispositivos');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   // Eliminar un dispositivo
   const Eliminar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const url = `/api/panel/dispositivos/eliminar/${id}`;
-      const response = await axios.delete(url);
-      setMessage(response.data.message || 'Dispositivo eliminado exitosamente');
+      await deleteDispositivo(id);
       window.location.reload();
     } catch (error) {
-      console.error(' Error: // Eliminar un dispositivo, ', error);
-      setMessage(error.response?.data?.message || 'Error al eliminar el dispositivo');
-    } finally {
-      setLoading(false)
+      console.error('Error: // Eliminar un dispositivo, ', error);
     }
   };
 

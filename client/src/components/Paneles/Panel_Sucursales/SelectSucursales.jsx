@@ -1,28 +1,28 @@
 /* TABLA DE SUCURSALES Y PANEL DE ADMINISTRACIÓN DE SUCURSALES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
 import { useNavigate } from "react-router-dom";
-import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import useCrudApi from '@hooks/useCrudApi';
+import usePageTitle from '@hooks/usePageTitle.js';
 import { Paginador } from '@elementos/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectSucursales = () => {
   usePageTitle("Sucursales");
   const navigate = useNavigate();
+  const { read: readSucursales, message } = useCrudApi('/api/panel/sucursales');
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   // Pedir los datos de las sucursales
   useEffect(() => {
-    const url = `/api/panel/sucursales`;
     const sucursales = async () => {
       try {
-        const datos = await fetchData(url);
+        const datos = await readSucursales();
         setData(datos);
         setCount(datos.length);
       } catch (error) {
         console.error('Error // Pedir los datos de las sucursales, ', error);
-        toast.error(error.message || 'Error al cargar las sucursales');
+        toast.error(message || 'Error al cargar las sucursales');
       }
     };
 

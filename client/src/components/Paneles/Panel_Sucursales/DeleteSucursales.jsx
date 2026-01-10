@@ -1,30 +1,23 @@
 /* PANEL DE ADMINISTRACIÓN DE SUCURSALES -- ELIMINAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const DeleteSucursales = () => {
-  const [loading, setLoading] = useState(false);
+  const { remove: deleteUser, loading, message } = useCrudApi('/api/panel/sucursales');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   // Eliminar una sucursal
   const eliminar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-      const url = `/api/panel/sucursales/eliminar/${id}`;
-      const response = await axios.delete(url);
-      setMessage(response.data.message || 'Sucursal eliminada exitosamente');
+      await deleteUser(id);
       window.location.reload();
-    } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al eliminar la sucursal');
-      console.error('Error // Eliminar una sucursal, ', error);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error('Error: // Eliminar una sucursal, ', err);
     }
   };
+
 
   return (
     <>

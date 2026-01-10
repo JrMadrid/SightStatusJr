@@ -1,28 +1,28 @@
 /* PANEL DE ADMINISTRACIÓN DE INFORMES -- VISUALIZAR */
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import useCrudApi from '@hooks/useCrudApi';
+import usePageTitle from '@hooks/usePageTitle.js';
 import { Paginador } from '@elementos/Paginador.jsx';
 import toast from 'react-hot-toast';
 
 const SelectInformes = () => {
   usePageTitle("Informes");
   const navigate = useNavigate();
+  const { read: readInformes, message } = useCrudApi('/api/panel/informes');
   const [data, setData] = useState([]);
   const [count, setCount] = useState(0);
 
   // Pedir los datos de los informes
   useEffect(() => {
-    const url = `/api/panel/informes`;
     const informes = async () => {
       try {
-        const datos = await fetchData(url);
+        const datos = await readInformes();
         setData(datos);
         setCount(datos.length)
       } catch (error) {
         console.error('Error: // Pedir los datos de los informes, ', error);
-        toast.error(error.message || 'Error con los datos')
+        toast.error(message || 'Error con los datos')
       }
     };
 

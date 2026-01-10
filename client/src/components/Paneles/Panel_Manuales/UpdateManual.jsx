@@ -1,48 +1,32 @@
 /* PANEL DE ADMINISTRACIÓN DE MANUALES -- ACTUALIZAR */
 import { useState } from 'react';
-import axios from '@api/axiosConfig';
+import useCrudApi from '@hooks/useCrudApi';
 
 const PostManual = () => {
-  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     descripcion: ''
   });
+  const { update: updateManual, loading, message } = useCrudApi('/api/panel/manuales');
   const [id, setId] = useState('');
-  const [message, setMessage] = useState('');
 
   const cambio = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   // Actualizar un manual
   const Actualizar = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage('');
 
     try {
-       const cleanedData = {};
-      for (const key in formData) {
-        let value = formData[key];
-        if (typeof value === 'string') {
-          value = value.trim();
-        }
-        if (value !== '') {
-          cleanedData[key] = value;
-        }
-      };
-      const url = `/api/panel/manuales/actualizar/${id}`;
-      const response = await axios.put(url,
-        cleanedData,
-        { headers: { "Content-Type": "application/json" } });
-      setMessage(response.data.message || 'Manual actualizado exitosamente');
+      await updateManual(id, formData);
       window.location.reload();
     } catch (error) {
-      setMessage(error.response?.data?.message || 'Error al actualizar el manual');
-    } finally {
-      setLoading(false);
+      console.error('Error: // Actualizar un manual, ', error);
     }
   };
 
