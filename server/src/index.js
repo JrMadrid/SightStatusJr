@@ -1,23 +1,24 @@
-/* INICIAR EL SERVIDOR */
+/* INICIO DEL SERVIDOR - CORESIGHTJR */
 import { connectToDatabase, syncStore } from './infra/sessionStore.js';
 import dbConnection from './db/connection.js';
-import app from "./app.js";
-import config from "./configs/APP_config.js"; // Importo la configuración con las credenciales y el puerto de la aplicación desde el archivo de configuración
-import debug from 'debug'; // Importamos la librería debug para el manejo de logs
+import app from './app.js';
+import config from './configs/APP_config.js';
+import datosDB from './db/dataInit.js';
+import debug from 'debug';
 
 let server;
-const debugServer = debug('app:server'); // Creamos un objeto de depuración para el servidor
-const host = config.APPhost; // Definimos el host del servidor, si no está definido en la configuración, usamos 'localhost' por defecto
-const port = config.APPport; // Definimos el puerto del servidor, si no está definido en la configuración, usamos el puerto 88 por defecto
+const debugServer = debug('app:server');
+const host = config.APPhost;
+const port = config.APPport;
 
-// Configuramos el entorno de desarrollo para mostrar los logs de depuración definiendo los prefixos de los logs que queremos ver
+// Logs según entorno
 if (process.env.NODE_ENV === 'development') {
-  debug.enable('app:*'); // Habilitamos los logs de depuración para el entorno de desarrollo
+  debug.enable('app:*');
 } else {
-  debug.disable(); // Deshabilitamos los logs de depuración para otros entornos
-};
+  debug.disable();
+}
 
-// Función con reintentos
+// Reintentos controlados (tu versión, correcta)
 const intentos = async (fn, retries, delay = 10000, name = 'operación') => {
   let attempt = 0;
   while (attempt < retries) {
@@ -25,33 +26,59 @@ const intentos = async (fn, retries, delay = 10000, name = 'operación') => {
       return await fn();
     } catch (err) {
       attempt++;
-      console.error(`Error en ${name}, intento ${attempt} de ${retries}:`, err.message);
+      console.error(`Error en ${name}, intento ${attempt}/${retries}:`, err.message);
       if (attempt >= retries) throw err;
-      console.log(`Reintentando en ${delay / 1000}s...`);
       await new Promise(res => setTimeout(res, delay));
     }
   }
 };
 
-/* INICIAR EL SERVIDOR */
-const startServer = async () => { // Iniciamos el servidor
+const startServer = async () => {
   try {
-    await intentos(dbConnection, 5, 10000, 'Conexión a la BD principal'); // Conectamos a la base de datos principal
-    await intentos(connectToDatabase, 5, 10000, 'Conexión a la BD de sesiones'); // Conectamos a la base de datos de sesiones
-    await intentos(syncStore, 3, 3000, 'Sincronización de sesiones'); // Sincronizamos la tienda de sesiones
-    server = app.listen(port,'0.0.0.0', () => { // Iniciamos el servidor en el puerto definido
-      console.log(`Servidor backend escuchando en ${host}:${port}`);
+    await intentos(dbConnection, 5, 10000, 'Conexión BD principal');
+    await datosDB();// Insertar datos iniciales en la base de datos
+    await intentos(connectToDatabase, 5, 10000, 'Conexión BD sesiones');
+    await intentos(syncStore, 3, 3000, 'Sincronización sesiones');
+
+    server = app.listen(port, '0.0.0.0', () => {
+      console.log(`CoreSightJr Backend en http://${host}:${port}`);
+      console.log(`Entorno: ${process.env.NODE_ENV}`);
     });
   } catch (err) {
-    console.error('Error al iniciar el servidor: ', err);
-    process.exit(1); // Salimos del proceso con un código de error 1
+    console.error('Error crítico al iniciar el servidor:', err);
+    process.exit(1);
   }
 };
 
-startServer(); // Llamamos a la función para iniciar el servidor
+// Graceful shutdown (clave para PM2)
+const shutdown = (signal) => {
+  console.log(`${signal} recibido, cerrando servidor...`);
+  if (server) {
+    server.close(() => {
+      console.log('Servidor cerrado correctamente');
+      process.exit(0);
+    });
+  } else {
+    process.exit(0);
+  }
+};
+
+process.on('SIGTERM', shutdown);
+process.on('SIGINT', shutdown);
+
+// Errores globales (muy importante)
+process.on('uncaughtException', (err) => {
+  console.error('Excepción no controlada:', err);
+});
+
+process.on('unhandledRejection', (reason) => {
+  console.error('Promesa rechazada sin catch:', reason);
+});
 
 /* Simular errores */
 // throw new Error('Error de prueba: excepción no controlada'); // Simular una excepción no controlada
 // Promise.reject('Error de prueba: promesa rechazada sin catch'); // Simular un rechazo no manejado
 
-export { server }; // Exportar el servidor para cerrarlo en errores globales
+startServer();
+
+export { server };
