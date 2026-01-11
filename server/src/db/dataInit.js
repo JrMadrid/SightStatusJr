@@ -20,38 +20,40 @@ const datosDB = async () => {
     const sucursal = '000000';
 
     // Users
+    await ingresarDatos.query(`DBCC CHECKIDENT ('users', RESEED, 0)`);
     await ingresarDatos
       .input('nickname', sql.VarChar, nickname)
       .input('psw', sql.VarChar, hash)
       .input('isAdmin', sql.Bit, 1)
       .input('tipo', sql.VarChar, 'Super Administrador')
       .query(`
-        INSERT INTO users (nickname, psw, isAdmin, tipo)
-        VALUES (@nickname, @psw, @isAdmin, @tipo)
+      INSERT INTO users (nickname, psw, isAdmin, tipo)
+      VALUES (@nickname, @psw, @isAdmin, @tipo)
       `);
 
     // Personal
+    await ingresarDatos.query(`DBCC CHECKIDENT ('personal', RESEED, 0)`);
     await ingresarDatos
-      .input('nickname', sql.VarChar, nickname)
       .query(`
-        INSERT INTO personal (nickname)
-        VALUES (@nickname)
+      INSERT INTO personal (nickname)
+      VALUES (@nickname)
       `);
 
     // Sucursales
+    await ingresarDatos.query(`DBCC CHECKIDENT ('sucursales', RESEED, 0)`);
     await ingresarDatos
       .input('canal', sql.VarChar, '--')
       .input('nombre', sql.VarChar, 'Sin establecer')
       .input('economico', sql.VarChar, sucursal)
       .input('ingresponsable', sql.VarChar, nickname)
       .query(`
-        INSERT INTO sucursales (canal, nombre, economico, ingresponsable)
-        VALUES (@canal, @nombre, @economico, @ingresponsable)
+      INSERT INTO sucursales (canal, nombre, economico, ingresponsable)
+      VALUES (@canal, @nombre, @economico, @ingresponsable)
       `);
 
     // Ubicacion
+    await ingresarDatos.query(`DBCC CHECKIDENT ('ubicacion', RESEED, 0)`);
     await ingresarDatos
-      .input('economico', sql.VarChar, sucursal)
       .input('descripcion', sql.NVarChar,
         'Sucursal especial, toma los dispositivos que se han quedado sin sucursal al ser eliminada la sucursal que los poseía'
       )
