@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import logoSoporte from '@imgs/LogoSoporte.png';
 import '@css/Infor_Sucursal.css';
 

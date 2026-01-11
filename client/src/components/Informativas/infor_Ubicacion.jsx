@@ -6,7 +6,7 @@ import { toast } from 'react-hot-toast';
 import fetchData from '@api/fetchConfig.js';
 import axios from '@api/axiosConfig.js';
 import EstadoConexion from '@elementos/EstadoConexion.jsx';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import '@css/Infor_Sucursal.css';
 import '@css/infor_Ubicacion.css';
 import { FaTools, FaRegListAlt, FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
@@ -21,7 +21,7 @@ import "leaflet.fullscreen/Control.FullScreen.css";
 
 // Icono personalizado
 const customIcon = new L.Icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34],
+  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png', iconSize: [20, 30], iconAnchor: [12, 41], popupAnchor: [10, -34],
 });
 
 export default function InfoUbicacion() {
@@ -363,7 +363,7 @@ export default function InfoUbicacion() {
   function ClickUbicacion() {
     useMapEvent('click', (e) => {
       toast.dismiss(); // Cierra cualquier toast previo
-      toast(`Latitud: ${e.latlng.lat.toFixed(8)}, Longitud: ${e.latlng.lng.toFixed(8)}`, { duration: 8000, })
+      toast(`Latitud: ${e.latlng.lat.toFixed(8)}\nLongitud: ${e.latlng.lng.toFixed(8)}`, { duration: 10000, })
     });
     return null;
   }
@@ -396,7 +396,7 @@ export default function InfoUbicacion() {
         <h2 className='titulo'>Soporte Técnico Honduras</h2>
         <div className='cajaInformacionUbicacion' style={{ height: '45vh' }}>
           {hay && (
-            <MapContainer center={[mapa.latitud, mapa.longitud]} zoom={25} style={{ height: '100%', width: "60%", borderRadius: '6px' }} fullscreenControl={true} >
+            <MapContainer center={[mapa.latitud, mapa.longitud]} zoom={17} style={{ height: '100%', width: "60%", borderRadius: '6px' }} fullscreenControl={true} >
               <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors' />
               <Marker position={[mapa.latitud, mapa.longitud]} icon={customIcon}>
                 <Popup><strong>{nombre}</strong><br />{mapa.direccion}</Popup>

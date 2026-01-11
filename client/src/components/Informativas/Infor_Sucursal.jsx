@@ -7,7 +7,7 @@ import fetchData from '@api/fetchConfig.js';
 import SelectedPDF from '@elementos/PDF/SelectedPDF.jsx';
 import ALLPDF from '@elementos/PDF/AllPDF.jsx';
 import { ListExcel } from '@listas/Lista_Excel.jsx';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import InfoAppBIG from '@pantallas/BIGscreen.jsx';
 import InfoAppMEDIUM from '@pantallas/MEDIUMscreen.jsx';
 import InfoAppSMALL from '@pantallas/SMALLscreen.jsx';

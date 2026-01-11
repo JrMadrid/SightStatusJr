@@ -3,6 +3,7 @@ import config from '../../../configs/APP_config.js';
 import { schemas as SC } from '../../schemas/Informativas/SucursalInfoSch.js';
 import { validators as VL } from '../../validators/Informativas/SucursalInfoVal.js';
 const isMock = config.MOCKS; // Accede al valor de la variable de entorno MOCKS.
+
 // UPS
 const { UPSssh: RealUPSssh, UPSHardware: RealUPSHardware, UPSDescripcion: RealUPSDescripcion } = await import('../../../connection/UPSssh.js');
 const { UPSssh: MockUPSssh, UPSHardware: MockUPSHardware, UPSDescripcion: MockUPSDescripcion } = await import('../../../mocks/UPSmock.js');
@@ -17,7 +18,7 @@ const { BiometricoData: MockBIOMETRICOtcpip, Biometricohardware: MockBiometricoH
 const BIOMETRICOtcpip = isMock ? MockBIOMETRICOtcpip : RealBIOMETRICOtcpip;
 const BiometricoHardware = isMock ? MockBiometricoHardware : RealBiometricoHardware;
 // import { BIOMETRICOtcpip, BiometricoHardware } from '../../../connection/BIOMETRICOtcpip.js';
-const { BIOMETRICOsolicitud: RealBIOMETRICOsolicitud } = await import('../../../services/Solicitudes/SolBiometricos.js');
+const { BIOMETRICOsolicitud: RealBIOMETRICOsolicitud } = await import('../../../datos/Solicitudes/SolBiometricos.js');
 const { BIOMETRICOsolicitudMock: MockBIOMETRICOsolicitud } = await import('../../../mocks/Simular/SimBiometrico.js');
 const BIOMETRICOsolicitud = isMock ? MockBIOMETRICOsolicitud : RealBIOMETRICOsolicitud;
 

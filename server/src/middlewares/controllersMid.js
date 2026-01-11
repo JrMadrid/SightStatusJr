@@ -51,7 +51,7 @@ const filtroPDF = (req, archivo, cb) => {
 const PDF = multer({
   storage: almacenamientoMemoria, // Guardar archivo en memoria
   fileFilter: filtroPDF, // Validar que sea PDF
-  limits: { fileSize: 10 * 1024 * 1024 } // Límite de 10MB
+  limits: { fileSize: 15 * 1024 * 1024 } // Límite de 15MB
 });
 
 export const subir = {

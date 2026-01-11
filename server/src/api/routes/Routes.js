@@ -7,12 +7,13 @@ import { requireUserSession as USER } from '../../middlewares/controllersMid.js'
 const __filename = fileURLToPath(import.meta.url); // Convierte la URL del archivo actual a una ruta de archivo local
 const __dirname = path.dirname(__filename); // Obtiene el directorio del archivo actual
 
-import authRou from './authRou.js'; // Rutas de autenticación de usuarios
+// Ruta de autenticación de usuarios */
+import authRou from './authRou.js';
 /* Paneles de administracion */
 import panelUserRou from './Paneles/panelUsersRou.js';
 import panelSucursalRou from './Paneles/panelSucursalRou.js'
 import panelDispositivosRou from './Paneles/panelDispositivosRou.js';
-import panelMantenimientoRou from './Paneles/panelMatenimientoRou.js';
+import panelMantenimientoRou from './Paneles/panelMantenimientoRou.js';
 import panelManualesRou from './Paneles/panelManualesRou.js'
 import panelInformeRou from './Paneles/panelInformeRou.js';
 /* Paginas Informativas */

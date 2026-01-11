@@ -1,6 +1,6 @@
 -- CREAR TABLA DE MANTENIMIENTOS 
 
-USE [CoreSightJrPro];
+USE [CoreSightJr];
 GO
 
 CREATE TABLE dbo.mantenimientos (
@@ -24,8 +24,8 @@ GO
 
 
 -- DATO ESPECIAL
-Documentos de 2024 o mas antiguos son considerados historicos y no generan nuevos mantenimientos estimados.
-(Opcional) Se podría dejar el primer elemento como la plantilla a utilizar para los mantenimientos
+-- Documentos de 2024 o mas antiguos son considerados historicos y no generan nuevos mantenimientos estimados.
+-- (Opcional) Se podría dejar el primer elemento como la plantilla a utilizar para los mantenimientos
 
 -- REINICIAR EL ID
 DBCC CHECKIDENT ('mantenimientos', RESEED, 0);

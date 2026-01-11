@@ -64,7 +64,7 @@ const PostManual = () => {
       DatosParaEnviar.append('nombre', cleanedData.nombre);
       DatosParaEnviar.append('descripcion', cleanedData.descripcion);
       DatosParaEnviar.append('documento', documento);
-      const url = `/api/panel/manuales/agregar`;
+      const url = `/api/panel/manuales`;
       const response = await axios.post(url,
         DatosParaEnviar,
         { headers: { 'Content-Type': 'multipart/form-data' } });

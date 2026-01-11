@@ -1,6 +1,6 @@
 -- CREAR TABLA DE UBICACIÓN DE LAS SUCURSALES
 
-USE [CoreSightJrPro];
+USE [CoreSightJr];
 GO
 
 CREATE TABLE dbo.ubicacion (
@@ -26,7 +26,7 @@ CREATE TABLE dbo.ubicacion (
 GO
 
 
--- DATO ESPECIAL
+-- DATO ESPECIAL INICIAL
 -- La primera sucursal se usa para representar que no se ha establecido una sucursal 
 
 INSERT INTO [dbo].[ubicacion]

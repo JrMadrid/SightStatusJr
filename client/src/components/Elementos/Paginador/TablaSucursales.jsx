@@ -24,7 +24,7 @@ const TablaSucursales = ({ user, data, eleccion, eleccionUbica, eleccionMante, c
         </thead>
         <tbody>
           {data
-            .filter(item => !item.economico.startsWith('000000'))
+            .filter(item => !item.economico.startsWith('000001'))
             .map(item => (
               <tr key={item.economico}>
                 <td className='tdData'><FaCircle onClick={() => { eleccion(item.economico, item.nombre, item.ingresponsable) }} className='select ir' /></td>

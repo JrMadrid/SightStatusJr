@@ -106,13 +106,13 @@ export default function Navbar() {
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/manuales">
-                Manuales
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/informes">
+                Informes
               </NavLink>
             </li>
             <li>
-              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/informes">
-                Informes
+              <NavLink className={({ isActive }) => (isActive ? "active" : "")} to="/manuales">
+                Manuales
               </NavLink>
             </li>
             <li className='tipo'>

@@ -1,10 +1,10 @@
 /* DEFINE LA ESTRUCTURA Y LA LÓGICA PRINCIPAL DE LA APLICACIÓN */
-import express from 'express'; // Importa el módulo 'express' que permite crear aplicaciones web y APIs en Node.js.
+import express from 'express';
 import { handleUncaughtExceptions, handleUnhandledRejections } from './utils/errorHandlers.js';
 import { appMiddlewares } from './middlewares/appMid.js';
 import { Routes } from './api/routes/Routes.js';
 import { multerErrorHandler } from './middlewares/multerMid.js';
-const app = express(); // Crea una instancia de la aplicación Express para manejar las solicitudes HTTP y definir las rutas de la aplicación.
+const app = express();
 
 /* Manejo de errores globales */
 handleUncaughtExceptions();

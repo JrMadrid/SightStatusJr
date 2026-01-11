@@ -1,6 +1,6 @@
 -- CREAR TABLA DE SUCURSALES
 
-USE [CoreSightJrPro];
+USE [CoreSightJr];
 GO
 
 CREATE TABLE dbo.sucursales (
@@ -23,7 +23,7 @@ CREATE TABLE dbo.sucursales (
 GO
 
 
--- DATO ESPECIAL
+-- DATO ESPECIAL INICIAL
 -- La primera sucursal se usa para representar que no se ha establecido una sucursal 
 
 INSERT INTO [dbo].[sucursales]

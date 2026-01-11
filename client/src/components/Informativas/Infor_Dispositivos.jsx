@@ -6,7 +6,7 @@ import fetchData from '@api/fetchConfig.js';
 import Pingdispo from '@elementos/BotonPing.jsx';
 import ALLPDF from '@elementos/PDF/AllPDF.jsx'
 import { ListExcel } from '@listas/Lista_Excel.jsx';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import '@css/Infor_Dispositivo.css';
 import logoSoporte from '@imgs/LogoSoporte.png';
 import { HiExternalLink, HiFastForward } from "react-icons/hi";

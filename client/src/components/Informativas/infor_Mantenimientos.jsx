@@ -8,7 +8,7 @@ import PDFConstancias from '@elementos/PDF/ConstanciasPDF.jsx';
 import PDFConstancia from '@elementos/PDF/ConstanciaPDF.jsx';
 import JPGConstancia from '@elementos/PDF/ConstanciaJPG.jsx';
 import { ListExcel } from '@listas/Lista_Excel.jsx';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import '@css/Infor_Sucursal.css';
 import { FaRegListAlt } from 'react-icons/fa';
 import { FaMapLocationDot } from "react-icons/fa6";

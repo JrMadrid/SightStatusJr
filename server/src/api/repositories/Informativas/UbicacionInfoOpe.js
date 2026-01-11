@@ -68,8 +68,9 @@ const updateDatosUbicacion = async (propiedadEditar, valor, economico) => {
       sqlType = sql.NVarChar;
       break;
     case 'latitud':
+      sqlType = sql.Decimal(10,8);
     case 'longitud':
-      sqlType = sql.Decimal;
+      sqlType = sql.Decimal(11,8);
       break;
     case 'actualizado':
       sqlType = sql.DateTime;

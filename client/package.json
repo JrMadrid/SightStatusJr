@@ -92,7 +92,7 @@
   },
   "description": "proyecto CoreSightJr",
   "main": "index.js",
-  "author": "",
+  "author": "Juan Ramón Madrid",
   "jest": {
     "roots": [
       "<rootDir>/src"

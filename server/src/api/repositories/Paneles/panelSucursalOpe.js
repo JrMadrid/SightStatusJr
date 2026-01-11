@@ -9,7 +9,6 @@ const getSucursales = async (responsable, tipo) => {
     query = `
           SELECT id, economico, canal, nombre, ingresponsable 
           FROM sucursales 
-          WHERE economico != 000000 
           ORDER BY canal ASC, nombre ASC
           `;
   }

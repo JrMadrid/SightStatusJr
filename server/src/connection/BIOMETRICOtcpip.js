@@ -1,7 +1,7 @@
 /* CONEXIÓN AL BIOMETRICO VIA TCP */
 import ZK from 'node-zklib'; // Importo la librería node-zklib para comunicarme con el dispositivo biométrico
 import config from "../configs/BIOMETRICO_config.js"; // Importo la configuración con las credenciales y el puerto del biométrico desde el archivo de configuración
-import { BiometricoData, Biometricohardware } from '../services/BIOMETRICOdata.js'; // Importo las funciones que procesarán la información obtenida del biométrico
+import { BiometricoData, Biometricohardware } from '../datos/BIOMETRICOdata.js'; // Importo las funciones que procesarán la información obtenida del biométrico
 
 // Desestructuro las variables necesarias desde la configuración
 const username = config.BIOMETRICOusername;

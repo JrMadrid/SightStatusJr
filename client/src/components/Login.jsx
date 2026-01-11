@@ -47,7 +47,7 @@ const LoginPanel = () => {
 
       // Si el login es exitoso, redirigir según el tipo de usuario
       if (response.data.iniciado) {
-        toast.success('Sesión iniciada, \n duración de 3 dias', { duration: 3000 });
+        toast.success('Sesión iniciada\nduración de 3 dias', { duration: 3000 });
         // Esperar 3 segundos antes de redirigir
         setTimeout(() => {
           window.location.href = '/sucursales';  // Redirigir a la página de inicio

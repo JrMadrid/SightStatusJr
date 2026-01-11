@@ -42,6 +42,7 @@ const getUbicacionDatos = async (req, res) => {
     const responsable = req.session.user;
     const tipo = req.session.tipo;
     const mapa = await VL.pedirUbicacionDatos(economico, responsable, tipo);
+
     if (!mapa) {
       return res.sendStatus(404);
     }
@@ -90,6 +91,7 @@ const getUbicacionFoto = async (req, res) => {
 const updateDatosUbicacion = async (req, res) => {
   try {
     const { propiedadEditar, valor, economico } = req.body;
+    
     const validar = { [propiedadEditar]: valor, economico };
     const { error, value } = SC.SchemaActualizarUbicacion.validate(validar, { abortEarly: false });
     if (error) {

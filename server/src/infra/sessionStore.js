@@ -1,9 +1,9 @@
 /* CONEXIÓN A LA BASE DE DATOS DE SESSION */
-import config from "../configs/DB_config.js"; // Configuración de las variables de entorno
-import { Sequelize } from 'sequelize'; // Importar Sequelize para la conexión a la base de datos
-import tedious from 'tedious'; // Importar el módulo tedious para la conexión a SQL Server
-import session from 'express-session'; // Importar express-session para manejar sesiones
-import SequelizeStore from 'connect-session-sequelize'; // Importar el módulo connect-session-sequelize para almacenar sesiones en la base de datos
+import config from "../configs/DB_config.js";
+import { Sequelize } from 'sequelize';
+import tedious from 'tedious';
+import session from 'express-session';
+import SequelizeStore from 'connect-session-sequelize';
 
 // Configuración de Sequelize para conectar a SQL Server
 const sequelize = new Sequelize(config.database, config.user, config.password, {
@@ -26,9 +26,9 @@ const connectToDatabase = async () => {
 };
 
 // Crea una instancia de SequelizeStore para almacenar sesiones en la base de datos usando sequelize
-const Store = SequelizeStore(session.Store); // Crear una nueva tienda de sesiones
-const store = new Store({ // Configurar la tienda de sesiones
-  db: sequelize, // Base de datos a utilizar
+const Store = SequelizeStore(session.Store);
+const store = new Store({
+  db: sequelize,
 });
 
 // Sincronizar la base de datos para crear las tablas de sesión si una existen

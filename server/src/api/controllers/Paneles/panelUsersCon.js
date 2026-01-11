@@ -40,7 +40,7 @@ const updateUser = async (req, res) => {
     if (error) {
       const mensajes = error.details.map(err => err.message).join('\n');
       return res.status(400).json({ message: mensajes });
-    }; 
+    };
     await VL.actualizarUser(value);
     res.status(200).json({ message: 'Usuario actualizado exitosamente' });
   } catch (error) {
@@ -104,8 +104,8 @@ const activateAllUsers = async (req, res) => {
 };
 
 export const controllers = {
-  postUser,
   getUsers,
+  postUser,
   updateUser,
   deleteUser,
   logoutaAllUsers,

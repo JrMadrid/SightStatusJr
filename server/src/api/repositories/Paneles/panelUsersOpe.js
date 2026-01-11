@@ -101,8 +101,8 @@ const updateUser = async ({ nickname, psw, id, tipo, isActivo }) => {
 
 // Eliminar un usuario
 const deleteUser = async ({ id }, ingResponsable, Super) => {
+  let transaction;
   try {
-    let transaction;
     transaction = new sql.Transaction();
     await transaction.begin();
     const requestEliminar = new sql.Request(transaction);

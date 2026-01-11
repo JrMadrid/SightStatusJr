@@ -1,6 +1,6 @@
 -- CREAR TABLA DE USUARIOS
 
-USE [CoreSightJrPro];
+USE [CoreSightJr];
 GO
 
 CREATE TABLE dbo.users (
@@ -20,7 +20,7 @@ CREATE TABLE dbo.users (
 GO
 
 
--- DATO ESPECIAL
+-- DATO ESPECIAL INICIAL
 INSERT INTO [dbo].[users]
            ([nickname]
            ,[psw]

@@ -42,7 +42,7 @@ const datosDB = async () => {
     // Sucursales
     await ingresarDatos.query(`DBCC CHECKIDENT ('sucursales', RESEED, 0)`);
     await ingresarDatos
-      .input('canal', sql.VarChar, '--')
+      .input('canal', sql.VarChar, ' ')
       .input('nombre', sql.VarChar, 'Sin establecer')
       .input('economico', sql.VarChar, sucursal)
       .input('ingresponsable', sql.VarChar, nickname)

@@ -8,7 +8,7 @@ import axios from '@api/axiosConfig';
 import fechaFomatoSQL from '@utils/formatoFecha.js';
 import calcularEdad from '@utils/edad.js';
 import Whatsapp from '@elementos/WspNumber.jsx';
-import usePageTitle from '@hooks/documentTitle.js';
+import usePageTitle from '@hooks/usePageTitle.js';
 import '@css/Infor_Sucursal.css';
 import { FaRegEdit, FaCheck, FaTimes, FaRegTrashAlt } from 'react-icons/fa';
 import logoSoporte from '@imgs/LogoSoporte.png';

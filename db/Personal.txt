@@ -1,6 +1,6 @@
 -- CREAR TABLA DE PERSONAL
 
-USE [CoreSightJrPro];
+USE [CoreSightJr];
 GO
 
 CREATE TABLE dbo.personal (
@@ -35,7 +35,7 @@ CREATE TABLE dbo.personal (
 GO
 
 
--- DATO ESPECIAL
+-- DATO ESPECIAL INICIAL
 -- El primer elemento sera el único Super Administrador
 INSERT INTO [dbo].[personal]
            ([nickname])
