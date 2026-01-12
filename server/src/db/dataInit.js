@@ -20,19 +20,19 @@ const datosDB = async () => {
     const sucursal = '000000';
 
     // Users
-    await ingresarDatos.query(`DBCC CHECKIDENT ('users', RESEED, 0)`);
+    await ingresarDatos.query(`DBCC CHECKIDENT ('users', RESEED, 1)`);
     await ingresarDatos
-      .input('nickname', sql.VarChar, nickname)
-      .input('psw', sql.VarChar, hash)
+      .input('nickname', sql.NVarChar, nickname)
+      .input('psw', sql.NVarChar, hash)
       .input('isAdmin', sql.Bit, 1)
-      .input('tipo', sql.VarChar, 'Super Administrador')
+      .input('tipo', sql.NVarChar, 'Super Administrador')
       .query(`
       INSERT INTO users (nickname, psw, isAdmin, tipo)
       VALUES (@nickname, @psw, @isAdmin, @tipo)
       `);
 
     // Personal
-    await ingresarDatos.query(`DBCC CHECKIDENT ('personal', RESEED, 0)`);
+    await ingresarDatos.query(`DBCC CHECKIDENT ('personal', RESEED, 1)`);
     await ingresarDatos
       .query(`
       INSERT INTO personal (nickname)
@@ -40,19 +40,19 @@ const datosDB = async () => {
       `);
 
     // Sucursales
-    await ingresarDatos.query(`DBCC CHECKIDENT ('sucursales', RESEED, 0)`);
+    await ingresarDatos.query(`DBCC CHECKIDENT ('sucursales', RESEED, 1)`);
     await ingresarDatos
-      .input('canal', sql.VarChar, ' ')
-      .input('nombre', sql.VarChar, 'Sin establecer')
+      .input('canal', sql.NVarChar, ' ')
+      .input('nombre', sql.NVarChar, 'Sin establecer')
       .input('economico', sql.VarChar, sucursal)
-      .input('ingresponsable', sql.VarChar, nickname)
+      .input('ingresponsable', sql.NVarChar, nickname)
       .query(`
       INSERT INTO sucursales (canal, nombre, economico, ingresponsable)
       VALUES (@canal, @nombre, @economico, @ingresponsable)
       `);
 
     // Ubicacion
-    await ingresarDatos.query(`DBCC CHECKIDENT ('ubicacion', RESEED, 0)`);
+    await ingresarDatos.query(`DBCC CHECKIDENT ('ubicacion', RESEED, 1)`);
     await ingresarDatos
       .input('descripcion', sql.NVarChar,
         'Sucursal especial, toma los dispositivos que se han quedado sin sucursal al ser eliminada la sucursal que los poseía'
@@ -61,6 +61,7 @@ const datosDB = async () => {
         INSERT INTO ubicacion (economico, descripcion)
         VALUES (@economico, @descripcion)
       `);
+
     await transaction.commit();
     console.log('Todos los datos iniciales insertados correctamente');
   } catch (error) {

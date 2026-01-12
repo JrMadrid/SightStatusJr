@@ -3,7 +3,15 @@ import sql from 'mssql';
 
 // Evitar modificación de la sucursal "Sin establecer"
 const IDdelSinEstablecer = async (id) => {
-  return id === '1'; // ID del Sin establecer
+  try {
+    const query = 'SELECT nombre FROM sucursales WHERE id = @id';
+    const request = new sql.Request();
+    request.input('id', sql.Numeric, id);
+    const nombre = ((await request.query(query)).recordset[0].nombre);
+    return nombre === 'Sin establecer'; // Devuelve `true` si es el sin establecer
+  } catch (error) {
+    console.error('Error: // Evitar modificación de la sucursal "Sin establecer", ', error);
+  }
 };
 
 // Verificar que el economico no esta ocupado 

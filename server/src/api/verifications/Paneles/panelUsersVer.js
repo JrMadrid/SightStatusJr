@@ -1,9 +1,17 @@
 /* VERIFICACIONES SQL DE PANEL DE USUARIOS */
 import sql from 'mssql';
 
-// Evitar modificación del administrador 
+// Evitar modificación del super administrador 
 const IDdelAdmin = async (id) => {
-  return id === '1'; // ID del super admin
+  try {
+    const query = 'SELECT tipo FROM users WHERE id = @id';
+    const request = new sql.Request();
+    request.input('id', sql.Numeric, id);
+    const tipo = ((await request.query(query)).recordset[0].tipo);
+    return tipo === 'Super Administrador'; // Devuelve `true` si es el super administrador
+  } catch (error) {
+    console.error('Error: // Evitar modificación del super administrador, ', error);
+  }
 };
 
 // Verificar que el nickname no está ocupado 
