@@ -1,3 +1,9 @@
+/*
+ * Project: SightStatusJr
+ * Author: Juan Ramón Madrid Medina
+ * Year: 2026 
+ * License: MIT
+ */
 /* PUNTO DE ENTRADA PARA RENDERIZADO */
 import React from 'react';
 import ReactDOM from 'react-dom/client';

@@ -52,7 +52,7 @@ export default function DevCredits() {
             whiteSpace: "nowrap",
           }}
         >
-          <strong style={{ color: "#ffaf90" }}>CoreSightJr</strong>
+          <strong style={{ color: "#ffaf90" }}>SightStatusJr</strong>
 
           <span>Desarrollado por <strong>Juan Ramón Madrid</strong></span>
 

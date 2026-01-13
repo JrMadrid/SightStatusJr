@@ -1,6 +1,6 @@
 module.exports = {
   apps: [{
-    name: 'coresightjr-backend',
+    name: 'sightstatusjr-backend',
     script: 'src/index.js',
 
     // Conexiones (SSH/TCP)

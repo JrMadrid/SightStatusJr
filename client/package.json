@@ -1,5 +1,5 @@
 {
-  "name": "coresightjr",
+  "name": "sightstatusjr",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -90,9 +90,10 @@
       "last 1 safari version"
     ]
   },
-  "description": "proyecto CoreSightJr",
+  "description": "SightStatusJr - Sistema de gestión técnica para entornos empresariales",
   "main": "index.js",
-  "author": "Juan Ramón Madrid",
+  "author": "Juan Ramón Madrid Medina",
+  "license": "MIT",
   "jest": {
     "roots": [
       "<rootDir>/src"

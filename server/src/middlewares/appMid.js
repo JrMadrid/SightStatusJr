@@ -1,4 +1,4 @@
-/* MIDDLEWARES DE LA APLICACIÓN - CORESIGHTJR */
+/* MIDDLEWARES DE LA APLICACIÓN - SIGHTSTATUSJR */
 import express from 'express';
 import cors from 'cors';
 import session from 'express-session';
@@ -38,7 +38,7 @@ export const appMiddlewares = (app) => {
       path: '/'
     },
     store: store,
-    name: 'coresightjr_session' // Nombre específico de cookie
+    name: 'sightstatusjr_session' // Nombre específico de cookie
   }));
 
   // Archivos estáticos

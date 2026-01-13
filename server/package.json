@@ -1,5 +1,5 @@
 {
-  "name": "coresightjr",
+  "name": "sightstatusjr",
   "version": "1.0.0",
   "main": "src/index.js",
   "type": "module",
@@ -13,8 +13,9 @@
     "restart": "pm2 restart back",
     "client": "cd ../client && npm start"
   },
-  "author": "Juan Ramón Madrid",
-  "description": "proyecto CoreSightJr ",
+  "author": "Juan Ramón Madrid Medina",
+  "license": "MIT",
+  "description": "SightStatusJr - Sistema de gestión técnica para entornos empresariales",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "connect-session-sequelize": "^7.1.7",

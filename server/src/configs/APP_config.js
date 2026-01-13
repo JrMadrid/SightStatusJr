@@ -1,4 +1,4 @@
-/* CONFIGURACIÓN DE LA APLICACIÓN - CORESIGHTJR */
+/* CONFIGURACIÓN DE LA APLICACIÓN - SIGHTSTATUSJR */
 import { config } from "dotenv";
 
 config({

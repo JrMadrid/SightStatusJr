@@ -1,3 +1,9 @@
+/*
+ * Project: SightStatusJr
+ * Author: Juan Ramón Madrid Medina
+ * Year: 2026 
+ * License: MIT
+ */
 /* DEFINE LA ESTRUCTURA Y LA LÓGICA PRINCIPAL DE LA APLICACIÓN */
 import express from 'express';
 import { handleUncaughtExceptions, handleUnhandledRejections } from './utils/errorHandlers.js';

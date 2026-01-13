@@ -1,312 +1,170 @@
-# CoreSightJr
+# SightStatusJr
 
-![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)   
-![Node.js](https://img.shields.io/badge/Node.js-43853D?style=flat&logo=node.js&logoColor=white)  
-![Express.js](https://img.shields.io/badge/Express.js-404D59?style=flat)  
-![SQL Server](https://img.shields.io/badge/SQL%20Server-CC2927?style=flat&logo=microsoft-sql-server&logoColor=white)
-![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)
+## Descripción
 
----
+**SightStatusJr** es un sistema de gestión y monitoreo empresarial desarrollado como un **monolito Node.js + React**, orientado a la administración técnica de infraestructura, usuarios y operaciones internas. El sistema fue diseñado, implementado y mantenido íntegramente por **Juan Ramón Madrid Medina**.
 
-## 📑 Índice
-1. [Descripción](#-descripción)  
-2. [Características Principales](#-características-principales)  
-3. [Arquitectura Moderna](#-arquitectura-moderna)  
-4. [Tecnologías](#-tecnologías)  
-5. [Instalación y Ejecución](#-instalación-y-ejecución)  
-6. [Estructura del Proyecto](#-estructura-del-proyecto)  
-7. [Guía de Desarrollo](#-guía-de-desarrollo)  
-8. [Deploy y Producción](#-deploy-y-producción)
+Actualmente, el sistema **no está enfocado en diseño responsive**. La interfaz está pensada para uso en entornos de escritorio, priorizando funcionalidad, estabilidad y control administrativo.
 
 ---
 
-## 📝 Descripción
-**CoreSightJr** es una plataforma moderna de gestión empresarial construida con React 18 y Vite. Diseñada para administrar usuarios, sucursales, dispositivos, mantenimientos, manuales e informes con una arquitectura responsive y escalable.
+## Características principales
 
-### 🎯 **Características Destacadas**
-- ✅ **Responsive Design**: Mobile-first approach con breakpoints optimizados
-- ✅ **Sistema de Diseño**: Variables CSS consistentes y tema unificado
-- ✅ **Estado Global**: Hooks personalizados para manejo de aplicación
-- ✅ **SEO Optimizado**: Meta tags, robots.txt y manifest.json configurados
-- ✅ **Componentes UI**: Biblioteca de componentes reutilizables
-- ✅ **Manejo de Errores**: Sistema robusto de errores y loading states
-- ✅ **Build Optimizado**: Code splitting y lazy loading con Vite
-
----
-
-## 🏗️ **Arquitectura Moderna**
-
-### **Frontend (React + Vite)**
-```
-client/
-├── src/
-│   ├── components/          # Componentes UI reutilizables
-│   │   ├── ui/             # Componentes base (Button, Modal, etc.)
-│   │   └── Elementos/      # Componentes específicos del negocio
-│   ├── pages/              # Páginas de la aplicación
-│   ├── hooks/              # Custom hooks (useApi, useApplication)
-│   ├── styles/             # Sistema de diseño CSS
-│   │   ├── variables.css  # Variables CSS y tema
-│   │   ├── globals.css    # Estilos globales
-│   │   ├── components.css # Componentes UI
-│   │   └── layout.css     # Layout responsive
-│   ├── context/            # Context API
-│   ├── api/               # Configuración de API
-│   └── utils/             # Utilidades
-├── public/                # Assets estáticos
-└── dist/                  # Build de producción
-```
-
-### **Backend (Node.js + Express)**
-```
-server/
-├── src/
-│   ├── api/               # Endpoints y rutas
-│   ├── configs/           # Configuración
-│   ├── connection/        # Conexión a BD
-│   ├── middlewares/       # Middlewares
-│   └── services/          # Lógica de negocio
-└── ecosystem.config.cjs   # Configuración PM2
-```
+* Arquitectura monolítica (frontend integrado al backend)
+* Gestión de usuarios y roles
+* Administración de sucursales
+* Gestión y monitoreo de dispositivos
+* Control de mantenimientos
+* Generación y consulta de informes
+* Manejo de manuales técnicos
+* Autenticación y sesiones
+* Entorno preparado para producción con PM2
 
 ---
 
-## 🛠️ **Tecnologías**
+## Arquitectura del sistema
 
-### **Frontend**
-- **React 18.3.1** - UI library con hooks modernos
-- **Vite 7.2.7** - Build tool ultra rápido
-- **React Router 6** - Enrutamiento declarativo
-- **CSS Variables** - Sistema de diseño moderno
-- **React Hot Toast** - Notificaciones elegantes
-- **React Icons** - Iconos vectoriales
+SightStatusJr utiliza un **monolito moderno**:
 
-### **Backend**
-- **Express.js** - Framework web minimalista
-- **SQL Server** - Base de datos empresarial
-- **Sequelize** - ORM para SQL Server
-- **PM2** - Process manager para producción
-- **JWT** - Autenticación segura
+* El frontend se construye con React y Vite
+* El resultado de la build del cliente se sirve directamente desde el backend
+* No es necesario ejecutar un servidor de frontend en producción
 
-### **DevOps**
-- **ESLint** - Linting de código
-- **Jest** - Testing framework
-- **PM2** - Gestión de procesos
-- **Vite PWA** - Progressive Web App
+En producción, **solo se ejecuta el backend**, el cual expone la API y sirve los archivos estáticos del cliente.
 
 ---
 
-## 🚀 **Instalación y Ejecución**
+## Tecnologías
 
-### **Prerrequisitos**
-- Node.js 18+ 
-- SQL Server 2019+
-- npm o yarn
+### Frontend
 
-### **Instalación**
+* React 18
+* Vite
+* JavaScript (ESM)
+
+### Backend
+
+* Node.js
+* Express.js
+* SQL Server
+* Sequelize ORM
+* PM2 (entorno productivo)
+
+---
+
+## Instalación y ejecución
+
+### Requisitos
+
+* Node.js 18 o superior
+* SQL Server 2019 o superior
+* npm
+
+---
+
+### Instalación
+
 ```bash
-# Clonar repositorio
-git clone https://github.com/JrMadrid/CoreSightJr.git
-cd CoreSightJr
-
-# Instalar dependencias del clientecd client && npm install
-
-# Instalar dependencias del servercd ../server && npm install
+git clone https://github.com/JrMadrid/SightStatusJr.git
+cd SightStatusJr/server
+npm install
 ```
 
-### **Configuración**
+---
+
+### Configuración
+
 ```bash
-# Configurar variables de entornocp client/.env.example client/.env
-cp server/.env.example server/.env
-
-# Editar archivos .env con tus credenciales
+cp server/.env.production server/.env
 ```
 
-### **Ejecución**
+Editar el archivo `.env` con las credenciales de base de datos y variables necesarias siguiendo el ejemplo de .env.example.
 
-#### **Modo Desarrollo**
+---
+
+### Ejecución
+
+#### Desarrollo
+
 ```bash
-# Iniciar servidor (terminal 1)cd server && npm run dev
-
-# Iniciar cliente (terminal 2)cd client && npm run dev
+cd server
+npm run dev
 ```
 
-#### **Modo Producción**
+> En desarrollo puede ejecutarse el cliente de forma independiente, pero **no es obligatorio** para comprender o evaluar el sistema.
+
+---
+
+#### Producción
+
 ```bash
-# Build del clientecd client && npm run build
+cd client
+npm run build
 
-# Mover build al servercp -r client/dist server/public/
+cp -r client/dist server/public/
 
-# Iniciar en produccióncd server && npm run pro
+cd server
+npm run pro
 ```
+
+En producción **no se ejecuta el cliente**, únicamente el servidor.
 
 ---
 
-## 📁 **Estructura del Proyecto**
+## Estructura general del proyecto
 
-### **Aliases de Importación**
-```javascript
-// Nuevos aliases modernos
-import Component from '@components/ui/Button';
-import styles from '@styles/components.css';
-import useApi from '@hooks/useApi';
+* `server/` Backend, API, lógica de negocio y servicio de archivos estáticos
+* `client/` Frontend React (solo se utiliza la build en producción)
+* `db/` Scripts SQL para la creación y mantenimiento de la base de datos SightStatusJr
+* `docs/` Documentación del proyecto
+   * `imgs/` Capturas del sistema en ejecución con datos de ejemplo
+   * `manuals/` Manuales de usuario (usuario estándar y administrador)
 
-// Legacy compatibility (temporal)
-import Component from '@elementos/Button';
-```
-
-### **Sistema de Diseño**
-```css
-/* Variables CSS */
-:root {
-  --color-primary: #0d215c;
-  --color-secondary: #c59e75;
-  --spacing-md: 1rem;
-  --border-radius-md: 8px;
-}
-```
-
-### **Breakpoints Responsive**
-```css
-/* Mobile-first approach */
---breakpoint-sm: 640px;   /* Mobile landscape */
---breakpoint-md: 768px;   /* Tablet */
---breakpoint-lg: 1024px;  /* Desktop */
---breakpoint-xl: 1280px;  /* Large desktop */
-```
 
 ---
 
-## 👨‍💻 **Guía de Desarrollo**
+## Guía de desarrollo
 
-### **Estándares de Código**
-- **Componentes**: PascalCase
-- **Hooks**: camelCase con prefijo `use`
-- **CSS**: BEM methodology + CSS Variables
-- **Archivos**: kebab-case
+### Convenciones
 
-### **Custom Hooks**
-```javascript
-// Hook para peticiones API
-const { data, loading, error } = useApi('/api/users');
+* Componentes React en PascalCase
+* Hooks personalizados con prefijo `use`
+* Variables y funciones en camelCase
+* Estructura modular orientada a mantenibilidad
 
-// Hook de aplicación
-const { state, actions, permissions } = useApplication();
-
-// Hook para CRUD
-const { create, update, remove } = useCrudApi('/api/users');
-```
-
-### **Componentes UI**
-```javascript
-// Sistema de componentes consistente
-import { Button, Modal, LoadingSpinner } from '@components/ui';
-
-// Con variantes y estados<Button variant="primary" size="lg" loading={isLoading}>
-  Guardar
-</Button>
-```
-
-### **Manejo de Errores**
-```javascript
-// Componentes de error consistentes
-<ErrorMessage 
-  error={error} 
-  onRetry={handleRetry}
-  variant="card" 
-/>
-
-// Loading states<LoadingSpinner 
-  size="lg" 
-  text="Cargando usuarios..." 
-  fullScreen 
-/>
-```
+El código prioriza claridad y separación de responsabilidades por encima de optimizaciones prematuras.
 
 ---
 
-## 🌐 **Deploy y Producción**
+## Estado del diseño responsive
 
-### **Build Optimizado**
-```bash
-# Producción con optimizacionesnpm run build
+El sistema **no implementa diseño responsive completo**.
 
-# Análisis de bundlenpm run build -- --analyze
-```
-
-### **Variables de Entorno**
-```bash
-# ProducciónNODE_ENV=production
-VITE_API_URL=https://api.coresightjr.com
-VITE_APP_VERSION=1.0.0
-```
-
-### **PM2 Configuration**
-```javascript
-// ecosystem.config.cjsmodule.exports = {
-  apps: [{
-    name: 'coresightjr',
-    script: './src/index.js',
-    instances: 'max',
-    env: {
-      NODE_ENV: 'development'
-    },
-    env_production: {
-      NODE_ENV: 'production'
-    }
-  }]
-};
-```
-
-### **SEO y PWA**
-- ✅ Meta tags optimizados
-- ✅ Open Graph para redes sociales
-- ✅ Manifest.json para PWA
-- ✅ Robots.txt configurado
-- ✅ Sitemap (cuando exista)
+Esto es una decisión consciente: el proyecto se centra en entornos administrativos de escritorio. La adaptación responsive queda planteada como una mejora futura.
 
 ---
 
-## 🔄 **Migración desde StatusApp**
+## Licencia
 
-### **Cambios Principales**
-1. **Nombre**: StatusApp → CoreSightJr
-2. **Build Tool**: Webpack → Vite
-3. **CSS**: Hardcoded → CSS Variables
-4. **Responsive**: Ninguno → Mobile-first
-5. **Estado**: Context básico → Hooks avanzados
-6. **SEO**: Bloqueado → Optimizado
+Este proyecto está licenciado bajo la **Licencia MIT**.
 
-### **Compatibilidad**
-- ✅ **Endpoints**: Sin cambios
-- ✅ **Base de datos**: Sin cambios
-- ✅ **Autenticación**: Sin cambios
-- ✅ **npm run dev**: Funciona igual
+Ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ---
 
-## 🤝 **Contribuir**
+## Aviso legal
 
-1. Fork del proyecto
-2. Feature branch: `git checkout -b feature/nueva-funcionalidad`
-3. Commit: `git commit -m 'Add nueva funcionalidad'`
-4. Push: `git push origin feature/nueva-funcionalidad`
-5. Pull Request
+Este software se proporciona bajo la Licencia MIT.
 
----
+La eliminación de avisos de copyright o la atribución falsa de autoría constituye una violación de la licencia.
 
-## 📄 **Licencia**
-
-Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para detalles.
+El nombre del proyecto, su identidad visual y su documentación **no están licenciados para uso comercial**.
 
 ---
 
-## 📞 **Soporte**
+## Autor
 
-- **Issues**: [GitHub Issues](https://github.com/JrMadrid/CoreSightJr/issues)
-- **Documentación**: [Wiki del Proyecto](https://github.com/JrMadrid/CoreSightJr/wiki)
-- **Email**: soporte@coresightjr.com
+**Juan Ramón Madrid Medina**
+Ingeniero en Sistemas
 
----
-
-**CoreSightJr** © 2024 - Sistema de Gestión Empresarial Moderno
+© 2024 – 2026 Juan Ramón Madrid Medina

@@ -1,4 +1,10 @@
-/* INICIO DEL SERVIDOR - CORESIGHTJR */
+/*
+ * Project: SightStatusJr
+ * Author: Juan Ramón Madrid Medina
+ * Year: 2026 
+ * License: MIT
+ */
+/* INICIO DEL SERVIDOR - SIGHTSTATUSJR */
 import { connectToDatabase, syncStore } from './infra/sessionStore.js';
 import dbConnection from './db/connection.js';
 import app from './app.js';
@@ -41,7 +47,7 @@ const startServer = async () => {
     await intentos(syncStore, 3, 3000, 'Sincronización sesiones');
 
     server = app.listen(port, '0.0.0.0', () => {
-      console.log(`CoreSightJr Backend en http://${host}:${port}`);
+      console.log(`SightStatusJr Backend en http://${host}:${port}`);
       console.log(`Entorno: ${process.env.NODE_ENV}`);
     });
   } catch (err) {

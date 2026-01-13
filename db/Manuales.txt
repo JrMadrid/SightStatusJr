@@ -1,6 +1,6 @@
 -- CREAR TABLA DE MANUALES
 
-USE [CoreSightJr];
+USE [SightStatusJr];
 GO
 
 CREATE TABLE dbo.manuales (

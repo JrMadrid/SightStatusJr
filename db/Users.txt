@@ -1,6 +1,6 @@
 -- CREAR TABLA DE USUARIOS
 
-USE [CoreSightJr];
+USE [SightStatusJr];
 GO
 
 CREATE TABLE dbo.users (

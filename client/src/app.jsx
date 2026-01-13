@@ -1,3 +1,9 @@
+/*
+ * Project: SightStatusJr
+ * Author: Juan Ramón Madrid Medina
+ * Year: 2026 
+ * License: MIT
+ */
 /* DEFINE LA ESTRUCTURA Y LA LÓGICA PRINCIPAL DE LA APLICACIÓN */
 import { BrowserRouter as Router, Route, Routes, Outlet, useLocation } from 'react-router-dom';
 // import { createBrowserHistory } from 'history'; // Importar "createBrowserHistory" para crear un historial de navegación.
