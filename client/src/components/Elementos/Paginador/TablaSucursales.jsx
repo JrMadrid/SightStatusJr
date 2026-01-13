@@ -13,10 +13,10 @@ const TablaSucursales = ({ user, data, eleccion, eleccionUbica, eleccionMante, c
             <th className='thData eject' title='Mantenimientos de la sucursal' ><FaTools /></th>
             <th className='thData'>Económico</th>
             <th className='thData'>Canal</th>
+            <th className='sunombre thData'>Nombre</th>
             {user && user.id !== 4 && (
-              <th className='sunombre thData'>Nombre</th>
+              <th className='thData'>Ing.Responsable</th>
             )}
-            <th className='thData'>Ing.Responsable</th>
             {user && (user.id === 1 || user.id === 2) && (
               <th className='thData'>ID</th>
             )}

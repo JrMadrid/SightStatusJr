@@ -1,16 +1,16 @@
 /* VERIFICACIONES SQL DE PANEL DE SUCURSALES */
 import sql from 'mssql';
 
-// Evitar modificación de la sucursal "Sin establecer"
+// Evitar modificación de la sucursal con económico "000000"
 const IDdelSinEstablecer = async (id) => {
   try {
-    const query = 'SELECT nombre FROM sucursales WHERE id = @id';
+    const query = 'SELECT economico FROM sucursales WHERE id = @id';
     const request = new sql.Request();
     request.input('id', sql.Numeric, id);
-    const nombre = ((await request.query(query)).recordset[0].nombre);
-    return nombre === 'Sin establecer'; // Devuelve `true` si es el sin establecer
+    const economico = ((await request.query(query)).recordset[0].economico);
+    return economico === '000000'; // Devuelve `true` si es el "000000"
   } catch (error) {
-    console.error('Error: // Evitar modificación de la sucursal "Sin establecer", ', error);
+    console.error('Error: // Evitar modificación de la sucursal con económico "000000", ', error);
   }
 };
 

@@ -32,7 +32,7 @@ INSERT INTO [dbo].[sucursales]
            ,[economico]
            ,[ingresponsable])
      VALUES
-           ('--'
+           (' '
            ,'Sin establecer'
            ,'000000'
            ,'Lider')
