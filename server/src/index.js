@@ -9,7 +9,7 @@ import { connectToDatabase, syncStore } from './infra/sessionStore.js';
 import dbConnection from './db/connection.js';
 import app from './app.js';
 import config from './configs/APP_config.js';
-import datosDB from './db/dataInit.js';
+import semillas from './db/seeds.js';
 import debug from 'debug';
 
 let server;
@@ -42,7 +42,7 @@ const intentos = async (fn, retries, delay = 10000, name = 'operación') => {
 const startServer = async () => {
   try {
     await intentos(dbConnection, 5, 10000, 'Conexión BD principal');
-    await datosDB();// Insertar datos iniciales en la base de datos
+    await semillas();// Insertar datos iniciales en la base de datos
     await intentos(connectToDatabase, 5, 10000, 'Conexión BD sesiones');
     await intentos(syncStore, 3, 3000, 'Sincronización sesiones');
 

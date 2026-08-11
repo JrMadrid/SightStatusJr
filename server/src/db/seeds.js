@@ -3,7 +3,7 @@ import bcrypt from 'bcryptjs';
 import sql from 'mssql';
 
 // Insertar datos iniciales en la base de datos
-const datosDB = async () => {
+const semillas = async () => {
   const queryI = 'SELECT COUNT(*) AS cantidad FROM USERS';
   const request = new sql.Request();
   const cantidad = (await request.query(queryI)).recordset[0].cantidad;
@@ -76,4 +76,4 @@ const datosDB = async () => {
   }
 };
 
-export default datosDB;
+export default semillas;
