@@ -92,7 +92,7 @@ const dispositivos = async (req, res) => {
     for (let i = 0; i < dbInfo.length; i++) {
       let ip = dbInfo[i].ip;
       // Verifica que la IP sea válida
-      if (!ip.startsWith('000.') || !ip.startsWith('001.')) {
+      if (!ip.startsWith('000.') && !ip.startsWith('001.')) {
         // Si el campo "general" está vacío o nulo, se actualiza
         if (dbInfo[i].general === null || dbInfo[i].general === '') {
           let sshInfo = '';

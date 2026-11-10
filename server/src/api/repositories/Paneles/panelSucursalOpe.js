@@ -166,7 +166,7 @@ const deleteSucursal = async ({ id }) => {
     await request.query(`DELETE FROM mantenimientos WHERE economico = '${numeroE}'`); // Se eliminan los mantenimientos de la sucursal
     await request.query(`DELETE FROM informes WHERE economico = '${numeroE}'`); // Se eliminan los informes de la sucursal
     await request.query(`DELETE FROM dispositivos WHERE economico = '${numeroE}' AND (ip LIKE '000.%' OR ip LIKE '001.%')`); // Se eliminan las ips de los dispositivos no validas de la sucursal
-    await request.query(`UPDATE dispositivos SET economico = '000000' FROM dispositivos WHERE economico = ${numeroE} AND (ip NOT LIKE '000.%' OR ip NOT LIKE '001.%')`); // Sus dispositivos pasan a sucursal especial "Sin establecer"
+    await request.query(`UPDATE dispositivos SET economico = '000000' FROM dispositivos WHERE economico = ${numeroE} AND ip NOT LIKE '000.%' AND ip NOT LIKE '001.%'`); // Sus dispositivos pasan a sucursal especial "Sin establecer"
     await request.query('ALTER TABLE ubicacion CHECK CONSTRAINT FK_ubicacion_sucursales_economico');
     await request.query('ALTER TABLE informes CHECK CONSTRAINT FK_informes_sucursales_economico');
     await request.query('ALTER TABLE mantenimientos CHECK CONSTRAINT FK_mantenimientos_sucursales_economico');
