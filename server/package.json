@@ -5,13 +5,11 @@
   "type": "module",
   "scripts": {
     "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --detectOpenHandles",
-    "deve": "nodemon --exec",
-    "start": "pm2 start ecosystem.config.cjs --env production",
-    "start:dev": "pm2 start ecosystem.config.cjs --env development",
-    "dev": "npm run start:dev",
-    "pro": "npm run start",
-    "restart": "pm2 restart back",
-    "client": "cd ../client && npm start"
+    "start": "node src/index.js",
+    "start:prod": "pm2 start ecosystem.config.cjs --env production",
+    "restart:prod": "pm2 restart sightstatusjr-backend",
+    "dev": "cross-env NODE_ENV=development MOCKS=true node --watch src/index.js",
+    "pro": "npm run start:prod"
   },
   "author": "Juan Ramón Madrid Medina",
   "license": "MIT",
@@ -42,8 +40,8 @@
   },
   "devDependencies": {
     "copyfiles": "^2.4.1",
+    "cross-env": "^10.1.0",
     "jest": "^29.7.0",
-    "nodemon": "^3.1.4",
     "supertest": "^7.0.0"
   },
   "keywords": []

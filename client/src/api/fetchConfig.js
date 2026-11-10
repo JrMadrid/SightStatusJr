@@ -1,6 +1,10 @@
 /* CONFIGURACIÓN GLOBAL DE FETCH */
+import { mockFetchData, mocksEnabled } from '../mocks/mockApi';
+
 // Función asíncrona para obtener datos desde una URL
 const fetchData = async (url) => {
+  if (mocksEnabled) return mockFetchData(url);
+
   try {    
     const response = await fetch(url, { credentials: 'include' }); // Incluye cookies
     // Parsear JSON aunque sea un error

@@ -47,9 +47,16 @@ export const Routes = (app) => {
 
   app.use('/api', apiRouter); // Prefijo global
 
-  // SPA FALLBACK
-  // Ruta para manejar todas las peticiones que no coinciden con las rutas definidas anteriormente y servir el index.html
-  app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../../../public', 'index.html')); // Envía el archivo 'index.html' como respuesta a cualquier ruta no definida
-  });
+  if (process.env.NODE_ENV === 'development') {
+    app.get('*', (req, res) => {
+      res.status(404).json({
+        message: 'Frontend runs on Vite during development. Open http://localhost:3000.',
+      });
+    });
+  } else {
+    // Serve the production SPA for frontend routes.
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../../../public', 'index.html'));
+    });
+  }
 };

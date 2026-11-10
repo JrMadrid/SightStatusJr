@@ -9,18 +9,14 @@ module.exports = {
 
     env: {
       NODE_ENV: 'development',
-      watch: true,
       DEBUG: 'app:*',
-      DEV: true,
-      MOCKS: true
+      MOCKS: true,
     },
 
     env_production: {
       NODE_ENV: 'production',
-      watch: false,
-      DEV: false,
       DEBUG: '',
-      MOCKS: false
+      MOCKS: false,
     },
 
     error_file: './logs/err.log',

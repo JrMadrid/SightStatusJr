@@ -41,6 +41,8 @@ export const appMiddlewares = (app) => {
     name: 'sightstatusjr_session' // Nombre específico de cookie
   }));
 
-  // Archivos estáticos
-  app.use(express.static(path.join(__dirname, '../../public')));
+  // Sirve el frontend compilado únicamente fuera del entorno de desarrollo; durante el desarrollo, Vite se encarga de la interfaz de usuario
+  if (!config.DEV) {
+    app.use(express.static(path.join(__dirname, '../../public')));
+  }
 };
