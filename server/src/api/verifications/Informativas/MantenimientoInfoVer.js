@@ -11,6 +11,7 @@ const SucursalExiste = async (economico) => {
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
     console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los dispositivos, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -25,6 +26,7 @@ const SucursalPerteneciente = async (economico, responsable) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que la sucursal le pertenezca a ese usuario, ', error);
+    throw { code: 500 };
   }
 };
 

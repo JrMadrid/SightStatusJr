@@ -64,6 +64,7 @@ const actualizarMantenimientoConConstancia = async ({ frealizada, descripcion, i
       }
     }
     console.error('Error: // Agregar constancia de mantenimiento, ', error);
+    throw { code: 500 };
   }
 };
 

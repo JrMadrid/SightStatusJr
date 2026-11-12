@@ -11,6 +11,7 @@ const usuarioExiste = async (nickname) => {
     return resultado;
   } catch (error) {
     console.error('Error: // Verificar que el usuario existe, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -24,6 +25,7 @@ const comprobarActivo = async (nickname) => {
     return resultado.recordset[0]?.activo ?? false;
   } catch (error) {
     console.error('Error: // Verificar que el usuario esta activo, ', error);
+    throw { code: 500 };
   }
 };
 

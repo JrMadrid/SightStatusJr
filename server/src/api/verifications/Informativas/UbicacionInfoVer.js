@@ -11,6 +11,7 @@ const SucursalExiste = async (economico) => {
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
     console.error('Error: // Verificar que existe la sucursal antes de cualquier operación, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -24,6 +25,7 @@ const UbicacionExiste = async (economico) => {
     return response.recordset.length > 0; // La ubicacion existe
   } catch (error) {
     console.error('Error: // Verificar si la ubicacion existe, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -38,6 +40,7 @@ const SucursalPerteneciente = async (economico, responsable) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que la sucursal le pertenezca a ese usuario, ', error);
+    throw { code: 500 };
   }
 };
 

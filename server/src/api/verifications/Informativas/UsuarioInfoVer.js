@@ -11,6 +11,7 @@ const UsuarioExiste = async (seleccionado) => {
     return response.recordset.length > 0; // El usuario existe
   } catch (error) {
     console.error('Error: // Verificar si el usuario existe, ', error);
+    throw { code: 500 };
   }
 };
 

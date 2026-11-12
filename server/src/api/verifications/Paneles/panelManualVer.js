@@ -11,6 +11,7 @@ const comprobarID = async (id) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que ID del manual existe para corrobar ejecución, ', error);
+    throw { code: 500 };
   }
 };
 

@@ -11,6 +11,7 @@ const SucursalExiste = async (economico) => {
     return resultado.recordset.length > 0;  // La sucursal existe
   } catch (error) {
     console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los mantenimientos, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -22,6 +23,7 @@ const comprobarFechaEstimada = async (festimada) => {
     return fechaIngresada > fechaLimite;
   } catch (error) {
     console.error('Error: // Verificar que fecha estimada es mayor a 01/Enero/2024, ', error);
+    throw { code: 500 };
     return false;
   }
 };
@@ -38,6 +40,7 @@ const comprobarFechaRealizada = async (frealizada, id) => {
     return fechaestimada < frealizada;
   } catch (error) {
     console.error('Error: // Verificar que fecha realizada es mayor que fecha estimada, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -52,6 +55,7 @@ const ConstanciaExiste = async (id) => {
     return mantenimiento ? mantenimiento.constancia !== null : false; // Ya tiene mantenimiento
   } catch (error) {
     console.error('Error: // Verificar que la fecha ya tenga mantenimiento, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -67,6 +71,7 @@ const comprobarSuMantenimiento = async (id, responsable) => {
     return responsable.toLowerCase() === ingeniero.toLowerCase(); // Si es su mantenimiento
   } catch (error) {
     console.error('Error: // Verificar que el mantenimiento es de su sucursal - geografia, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -80,6 +85,7 @@ const ecoSucursal = async (id) => {
     return resultado.recordset[0]?.economico;
   } catch (error) {
     console.error('Error: // Saber el economico, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -107,6 +113,7 @@ const comprobarID = async (id) => {
     return resultado.recordset.length > 0; // El ID exite
   } catch (error) {
     console.error('Error: // Verificar que ID del dispositivo existe para corrobar ejecución, ', error);
+    throw { code: 500 };
   }
 };
 

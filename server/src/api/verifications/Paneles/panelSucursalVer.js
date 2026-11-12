@@ -11,6 +11,7 @@ const IDdelSinEstablecer = async (id) => {
     return economico === '000000'; // Devuelve `true` si es el "000000"
   } catch (error) {
     console.error('Error: // Evitar modificación de la sucursal con económico "000000", ', error);
+    throw { code: 500 };
   }
 };
 
@@ -24,6 +25,7 @@ const EconomicoOcupado = async (economico) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que el economico no esta ocupado, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -37,6 +39,7 @@ const comprobarID = async (id) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que ID de la sucursal existe para corrobar ejecución, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -50,6 +53,7 @@ const IngResponsable = async (ingresponsable) => {
     return resultado.recordset.length > 0;
   } catch (error) {
     console.error('Error: // Verificar que existe el ingresponsable, ', error);
+    throw { code: 500 };
   }
 };
 

@@ -11,6 +11,7 @@ const SucursalExiste = async (economico) => {
     return resultado.recordset.length > 0; // La sucursal existe
   } catch (error) {
     console.error('Error: // Verificar que existe la sucursal antes de cualquier operación con los dispositivos, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -24,6 +25,7 @@ const IpOcupada = async (ip) => {
     return resultado.recordset.length > 0;  // La ip esta ocupada
   } catch (error) {
     console.error('Error: // Verificar que la ip del dispositivo no esta ocupada, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -37,6 +39,7 @@ const comprobarID = async (id) => {
     return resultado.recordset.length > 0; // El ID exite
   } catch (error) {
     console.error('Error: // Verificar que ID del dispositivo existe para corrobar ejecución, ', error);
+    throw { code: 500 };
   }
 };
 

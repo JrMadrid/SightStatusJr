@@ -122,6 +122,7 @@ const deleteDispositivo = async ({ id }) => {
       }
     }
     console.error('Error: // Eliminar un dispositivo, ', error);
+    throw { code: 500 };
   }
 };
 

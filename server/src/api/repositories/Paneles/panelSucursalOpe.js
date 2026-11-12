@@ -146,6 +146,7 @@ const updateSucursal = async ({ economico, canal, nombre, id, ingresponsable, re
       }
     }
     console.error('Error: // Actualizar una sucursal, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -181,6 +182,7 @@ const deleteSucursal = async ({ id }) => {
       }
     }
     console.error('Error: // Eliminar una sucursal, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -194,6 +196,7 @@ const Neconomico = async (id) => {
     return resultado.recordset[0]?.economico;
   } catch (error) {
     console.error('Error: // Conseguir el economico para transacción, ', error);
+    throw { code: 500 };
   }
 };
 

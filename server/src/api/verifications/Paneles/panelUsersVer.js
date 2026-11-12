@@ -11,6 +11,7 @@ const IDdelAdmin = async (id) => {
     return tipo === 'Super Administrador'; // Devuelve `true` si es el super administrador
   } catch (error) {
     console.error('Error: // Evitar modificación del super administrador, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -24,6 +25,7 @@ const NicknameOcupado = async (nickname) => {
     return resultado.recordset.length > 0; // Devuelve `true` si el nickname existe, `false` si no
   } catch (error) {
     console.error('Error: // Verificar que el nickname no está ocupado, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -37,6 +39,7 @@ const comprobarID = async (id) => {
     return resultado.recordset.length > 0; // Devuelve `true` si el ID existe, `false` si no
   } catch (error) {
     console.error('Error: // Verificar que ID del usuario existe para corrobar ejecución, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -50,6 +53,7 @@ const nombreResponsable = async (id) => {
     return resultado.recordset[0]?.nickname;
   } catch (error) {
     console.error('Error: // Conocer el nombre del ing. Responsable por su id, ', error);
+    throw { code: 500 };
   }
 };
 

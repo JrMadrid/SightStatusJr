@@ -23,7 +23,7 @@ const postUser = async ({ nickname, psw, tipo, isAdmin, isActivo }) => {
     requestCrear.input('isActivo', sql.Bit, isActivo);
     await requestCrear.query(query);
     // Crear su respectivo elemento de personal
-    await requestCrear.query( 'INSERT INTO personal (nickname) VALUES (@nickname)');
+    await requestCrear.query('INSERT INTO personal (nickname) VALUES (@nickname)');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
@@ -34,6 +34,7 @@ const postUser = async ({ nickname, psw, tipo, isAdmin, isActivo }) => {
       }
     }
     console.error('Error: // Agregar un nuevo usuario, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -96,6 +97,7 @@ const updateUser = async ({ nickname, psw, id, tipo, isActivo }) => {
       }
     }
     console.error('Error: // Actualizar un usuario, ', error);
+    throw { code: 500 };
   }
 };
 
@@ -127,6 +129,7 @@ const deleteUser = async ({ id }, ingResponsable, Super) => {
       }
     }
     console.error('Error: // Eliminar un usuario, ', error);
+    throw { code: 500 };
   }
 };
 

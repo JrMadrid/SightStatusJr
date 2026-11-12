@@ -11,6 +11,7 @@ const dipositivoExiste = async (dispositivo) => {
     return resultado.recordset.length > 0;  // El dispositivo existe
   } catch (error) {
     console.error('Error: // Verificar que existe el dipositivo, ', error);
+    throw { code: 500 };
   }
 };
 
