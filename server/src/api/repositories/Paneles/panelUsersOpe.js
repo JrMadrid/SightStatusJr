@@ -23,7 +23,7 @@ const postUser = async ({ nickname, psw, tipo, isAdmin, isActivo }) => {
     requestCrear.input('isActivo', sql.Bit, isActivo);
     await requestCrear.query(query);
     // Crear su respectivo elemento de personal
-    await requestCrear.query(`INSERT INTO personal (nickname) VALUES ('${nickname}')`);
+    await requestCrear.query( 'INSERT INTO personal (nickname) VALUES (@nickname)');
     await transaction.commit();
   } catch (error) {
     if (transaction) {
@@ -48,7 +48,7 @@ const updateUser = async ({ nickname, psw, id, tipo, isActivo }) => {
     if (nickname) {
       updates.push('nickname = @nickname');
       const idrequest = new sql.Request();
-      nick = (await idrequest.query(`SELECT nickname FROM users WHERE id = ${id}`)).recordset[0].nickname;
+      nick = (await idrequest.query(`SELECT nickname FROM users WHERE id = ${id}`)).recordset[0]?.nickname;
     }
     if (psw) {
       psw = psw.trim();

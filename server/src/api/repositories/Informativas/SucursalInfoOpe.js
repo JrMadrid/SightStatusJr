@@ -32,7 +32,7 @@ const dispositivoIP = async (ip) => {
   const request = new sql.Request();
   request.input('ip', sql.VarChar, ip);
   const dispositivo = await request.query(`SELECT nombre FROM dispositivos WHERE ip = @ip`);
-  return dispositivo.recordset[0].nombre;
+  return dispositivo.recordset[0]?.nombre;
 };
 
 // Consultar información general y de la sucursal del dispositivo

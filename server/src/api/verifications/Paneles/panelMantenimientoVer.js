@@ -33,7 +33,8 @@ const comprobarFechaRealizada = async (frealizada, id) => {
     const request = new sql.Request();
     request.input('id', sql.Numeric, id);
     const response = await request.query(query);
-    let fechaestimada = response.recordset[0].fechaestimada;
+    const fechaestimada = response.recordset[0]?.fechaestimada;
+    if (!fechaestimada) return false;
     return fechaestimada < frealizada;
   } catch (error) {
     console.error('Error: // Verificar que fecha realizada es mayor que fecha estimada, ', error);
@@ -47,7 +48,8 @@ const ConstanciaExiste = async (id) => {
     const request = new sql.Request();
     request.input('id', sql.VarChar, id);
     const resultado = await request.query(query);
-    return resultado.recordset[0].constancia !== null;// Ya tiene mantenimiento
+    const mantenimiento = resultado.recordset[0];
+    return mantenimiento ? mantenimiento.constancia !== null : false; // Ya tiene mantenimiento
   } catch (error) {
     console.error('Error: // Verificar que la fecha ya tenga mantenimiento, ', error);
   }
@@ -60,7 +62,8 @@ const comprobarSuMantenimiento = async (id, responsable) => {
     const request = new sql.Request();
     request.input('id', sql.VarChar, id);
     const resultado = await request.query(query);
-    const ingeniero = resultado.recordset[0].ingeniero;
+    const ingeniero = resultado.recordset[0]?.ingeniero;
+    if (!ingeniero) return false;
     return responsable.toLowerCase() === ingeniero.toLowerCase(); // Si es su mantenimiento
   } catch (error) {
     console.error('Error: // Verificar que el mantenimiento es de su sucursal - geografia, ', error);
@@ -74,7 +77,7 @@ const ecoSucursal = async (id) => {
     const request = new sql.Request();
     request.input('id', sql.VarChar, id);
     const resultado = await request.query(query);
-    return resultado.recordset[0].economico;
+    return resultado.recordset[0]?.economico;
   } catch (error) {
     console.error('Error: // Saber el economico, ', error);
   }

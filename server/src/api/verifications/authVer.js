@@ -7,7 +7,7 @@ const usuarioExiste = async (nickname) => {
     const query = 'SELECT nickname FROM users WHERE nickname = @nickname';
     const request = new sql.Request();
     request.input('nickname', sql.VarChar, nickname);
-    const resultado = (await request.query(query)).recordset[0].nickname;
+    const resultado = (await request.query(query)).recordset[0]?.nickname;
     return resultado;
   } catch (error) {
     console.error('Error: // Verificar que el usuario existe, ', error);
@@ -21,7 +21,7 @@ const comprobarActivo = async (nickname) => {
     const request = new sql.Request();
     request.input('nickname', sql.VarChar, nickname);
     const resultado = await request.query(query);
-    return resultado.recordset[0].activo;
+    return resultado.recordset[0]?.activo ?? false;
   } catch (error) {
     console.error('Error: // Verificar que el usuario esta activo, ', error);
   }

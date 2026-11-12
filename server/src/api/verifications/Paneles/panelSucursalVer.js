@@ -7,7 +7,7 @@ const IDdelSinEstablecer = async (id) => {
     const query = 'SELECT economico FROM sucursales WHERE id = @id';
     const request = new sql.Request();
     request.input('id', sql.Numeric, id);
-    const economico = ((await request.query(query)).recordset[0].economico);
+    const economico = (await request.query(query)).recordset[0]?.economico;
     return economico === '000000'; // Devuelve `true` si es el "000000"
   } catch (error) {
     console.error('Error: // Evitar modificación de la sucursal con económico "000000", ', error);

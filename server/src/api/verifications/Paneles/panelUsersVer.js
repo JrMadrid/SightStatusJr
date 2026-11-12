@@ -7,7 +7,7 @@ const IDdelAdmin = async (id) => {
     const query = 'SELECT tipo FROM users WHERE id = @id';
     const request = new sql.Request();
     request.input('id', sql.Numeric, id);
-    const tipo = ((await request.query(query)).recordset[0].tipo);
+    const tipo = (await request.query(query)).recordset[0]?.tipo;
     return tipo === 'Super Administrador'; // Devuelve `true` si es el super administrador
   } catch (error) {
     console.error('Error: // Evitar modificación del super administrador, ', error);
@@ -47,7 +47,7 @@ const nombreResponsable = async (id) => {
     const request = new sql.Request();
     request.input('id', sql.VarChar, id);
     const resultado = await request.query(query);
-    return resultado.recordset[0].nickname;
+    return resultado.recordset[0]?.nickname;
   } catch (error) {
     console.error('Error: // Conocer el nombre del ing. Responsable por su id, ', error);
   }

@@ -69,7 +69,7 @@ const updateSucursal = async ({ economico, canal, nombre, id, ingresponsable, re
         economicoRellenar = economico;
       }
       else { // No cambiar el economico ya que serian diferentes
-        economicoRellenar = (await sql.query(`SELECT economico from sucursales WHERE id = '${id}'`)).recordset[0].economico; // Para identificar a que economico se le va a rellenar los dispositivos
+        economicoRellenar = (await sql.query(`SELECT economico from sucursales WHERE id = '${id}'`)).recordset[0]?.economico; // Para identificar a que economico se le va a rellenar los dispositivos
       }
     }
     const updates = [];
@@ -191,7 +191,7 @@ const Neconomico = async (id) => {
     const request = new sql.Request();
     request.input('id', sql.VarChar, id)
     const resultado = await request.query(query);
-    return resultado.recordset[0].economico;
+    return resultado.recordset[0]?.economico;
   } catch (error) {
     console.error('Error: // Conseguir el economico para transacción, ', error);
   }
